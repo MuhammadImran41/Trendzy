@@ -1,0 +1,37 @@
+# ── Secrets (NEVER commit these) ──────────────────────────────────────────────
+backend/.env
+backend/serviceAccountKey.json
+backend/data/
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.env
+
+# ── Node / Angular ────────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/cache/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.idea/
+*.suo
+*.user
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+*.log
+*.sql
