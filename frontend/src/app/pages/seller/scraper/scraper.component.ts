@@ -321,9 +321,32 @@ export class ScraperComponent {
 
   importAll() {
     this.importing.set(true);
-    this.http.post<{ imported: number; skipped: number }>(`${this.importApi}/scraper/import`, { products: this.results() }).subscribe({
-      next: (r) => { this.importResult.set(r); this.results.set([]); this.importing.set(false); },
-      error: () => this.importing.set(false)
+    this.importResult.set(null);
+    this.error.set('');
+
+    this.http.post<any>(`${this.importApi}/scraper/import`, { products: this.results() }).subscribe({
+      next: (r) => {
+        this.importResult.set({
+          imported: r.imported ?? r.count ?? 0,
+          skipped:  r.skipped ?? 0
+        });
+        this.results.set([]);
+        this.importing.set(false);
+      },
+      error: (err) => {
+        // Fallback: try local backend import
+        this.http.post<any>(`${this.localUrl}/scraper/import`, { products: this.results() }).subscribe({
+          next: (r) => {
+            this.importResult.set({ imported: r.imported ?? 0, skipped: r.skipped ?? 0 });
+            this.results.set([]);
+            this.importing.set(false);
+          },
+          error: (e) => {
+            this.error.set('Import failed: ' + (e?.error?.detail || e?.message || 'Unknown error'));
+            this.importing.set(false);
+          }
+        });
+      }
     });
   }
 
