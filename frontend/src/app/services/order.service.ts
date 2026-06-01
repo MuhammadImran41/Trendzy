@@ -3,10 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Order } from '../models/order.model';
 
+// Production API URL - Railway backend
+const RAILWAY_URL = 'https://glow-mart-production.up.railway.app/api';
+
 @Injectable({ providedIn: 'root' })
 export class OrderService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://glow-mart-production.up.railway.app/api';
+  private apiUrl = RAILWAY_URL;
 
   placeOrder(order: Omit<Order, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Observable<Order> {
     return this.http.post<Order>(`${this.apiUrl}/orders`, order);
