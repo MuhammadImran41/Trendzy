@@ -60,28 +60,32 @@ def email_status():
 
 @app.post('/api/test-email')
 def test_email():
+    import smtplib, traceback
     if not SMTP_PASS:
         return {'success': False, 'error': 'SMTP_PASS not set in .env'}
-    dummy = {
-        'id': 'GM-TEST',
-        'buyerName': 'Test Customer',
-        'buyerPhone': '0300-0000000',
-        'buyerCity': 'Karachi',
-        'buyerAddress': 'Test Address, Street 1',
-        'notes': 'This is a test email from GlowMart',
-        'items': [{'productName': 'Test Product', 'quantity': 1, 'price': 1000}],
-        'total': 1000,
-    }
-    import traceback, io
+
+    # Direct SMTP test — bypasses send_order_notification to capture raw error
     error_detail = None
     success = False
     try:
-        success = send_order_notification(dummy)
+        import smtplib
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=15) as server:
+            server.ehlo()
+            server.login(SMTP_USER, SMTP_PASS)
+            from email.mime.text import MIMEText
+            msg = MIMEText('GlowMart test email — SMTP is working!')
+            msg['Subject'] = 'GlowMart Test Email'
+            msg['From'] = f'GlowMart <{SMTP_USER}>'
+            msg['To'] = SELLER_EMAIL
+            server.sendmail(SMTP_USER, SELLER_EMAIL, msg.as_string())
+        success = True
     except Exception as e:
         error_detail = traceback.format_exc()
+
     return {
         'success': success,
         'sent_to': SELLER_EMAIL,
+        'smtp_user': SMTP_USER,
         'smtp_host': 'smtp.gmail.com',
         'smtp_port': 465,
         'error': error_detail,
