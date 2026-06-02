@@ -1,22 +1,33 @@
 """
-Email notification service for GlowMart — powered by Resend.
+Email notification service for GlowMart — powered by Resend SMTP.
+Uses smtp.resend.com:2465 (not blocked by Railway) so emails can be
+sent to ANY recipient, not just the verified Resend account owner.
+
 - Sends order notification to the seller (meharraza371@gmail.com)
 - Sends an order receipt to the customer (if they provided an email)
 """
 import os
-import resend
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from datetime import datetime
 
 RESEND_API_KEY = os.getenv('RESEND_API_KEY', '')
 SELLER_EMAIL   = os.getenv('SELLER_EMAIL', 'meharraza371@gmail.com')
 
-# Resend test domain — swap with your custom domain once you have one
-FROM_ADDRESS = 'GlowMart <onboarding@resend.dev>'
+# Resend test domain — swap FROM_ADDRESS once you have a custom domain
+FROM_ADDRESS   = 'GlowMart <onboarding@resend.dev>'
+FROM_EMAIL     = 'onboarding@resend.dev'
+
+# Resend SMTP — port 2465 bypasses Railway's outbound block on 465/587
+SMTP_HOST = 'smtp.resend.com'
+SMTP_PORT = 2465
 
 # Log config on import
 print(f'[Email] RESEND_API_KEY : {"✓ set (" + str(len(RESEND_API_KEY)) + " chars)" if RESEND_API_KEY else "✗ NOT SET — emails will not send"}')
 print(f'[Email] SELLER_EMAIL  : {SELLER_EMAIL}')
 print(f'[Email] FROM_ADDRESS  : {FROM_ADDRESS}')
+print(f'[Email] SMTP_HOST     : {SMTP_HOST}:{SMTP_PORT}')
 
 
 # ── HTML builders ─────────────────────────────────────────────────────────────
@@ -336,26 +347,37 @@ def _build_customer_html(order: dict) -> str:
 # ── Core send function ────────────────────────────────────────────────────────
 
 def _send_email(to_address: str, subject: str, plain_text: str, html_body: str) -> bool:
-    """Send a single email via Resend's HTTP API (no SMTP, works on Railway)."""
+    """Send a single email via Resend SMTP (smtp.resend.com:2465).
+    Works on Railway and can deliver to ANY recipient address."""
     if not RESEND_API_KEY:
         print('[Email] ✗ RESEND_API_KEY not set — skipping email.')
         return False
 
     try:
-        resend.api_key = RESEND_API_KEY
-        params: resend.Emails.SendParams = {
-            'from':    FROM_ADDRESS,
-            'to':      [to_address],
-            'subject': subject,
-            'html':    html_body,
-            'text':    plain_text,
-        }
-        response = resend.Emails.send(params)
-        print(f'[Email] ✓ Sent via Resend → {to_address} | id={response.get("id", "?")}')
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From']    = FROM_ADDRESS
+        msg['To']      = to_address
+
+        msg.attach(MIMEText(plain_text, 'plain'))
+        msg.attach(MIMEText(html_body,  'html'))
+
+        print(f'[Email] Connecting to {SMTP_HOST}:{SMTP_PORT}...')
+        with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=15) as server:
+            server.login('resend', RESEND_API_KEY)   # username is always "resend"
+            server.sendmail(FROM_EMAIL, to_address, msg.as_string())
+
+        print(f'[Email] ✓ Sent → {to_address} | {subject}')
         return True
 
+    except smtplib.SMTPAuthenticationError:
+        print('[Email] ✗ AUTH FAILED — Check RESEND_API_KEY is correct.')
+        return False
+    except smtplib.SMTPException as e:
+        print(f'[Email] ✗ SMTP error: {e}')
+        return False
     except Exception as e:
-        print(f'[Email] ✗ Resend error: {type(e).__name__}: {e}')
+        print(f'[Email] ✗ Unexpected error: {type(e).__name__}: {e}')
         return False
 
 

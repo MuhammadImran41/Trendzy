@@ -63,32 +63,29 @@ def test_email():
     if not RESEND_API_KEY:
         return {'success': False, 'error': 'RESEND_API_KEY not set'}
 
-    import resend, traceback
+    import smtplib, traceback
+    from email.mime.text import MIMEText
     error_detail = None
     success      = False
-    email_id     = None
 
     try:
-        resend.api_key = RESEND_API_KEY
-        params: resend.Emails.SendParams = {
-            'from':    FROM_ADDRESS,
-            'to':      [SELLER_EMAIL],
-            'subject': '🌸 GlowMart — Test Email',
-            'html':    '<h2>GlowMart test email</h2><p>Resend is working correctly on Railway!</p>',
-            'text':    'GlowMart test email — Resend is working correctly on Railway!',
-        }
-        response = resend.Emails.send(params)
-        email_id = response.get('id')
-        success  = True
+        msg = MIMEText('GlowMart test email — Resend SMTP is working on Railway!')
+        msg['Subject'] = '🌸 GlowMart — Test Email'
+        msg['From']    = FROM_ADDRESS
+        msg['To']      = SELLER_EMAIL
+
+        with smtplib.SMTP_SSL('smtp.resend.com', 2465, timeout=15) as server:
+            server.login('resend', RESEND_API_KEY)
+            server.sendmail('onboarding@resend.dev', SELLER_EMAIL, msg.as_string())
+        success = True
     except Exception:
         error_detail = traceback.format_exc()
 
     return {
-        'success':    success,
-        'sent_to':    SELLER_EMAIL,
-        'from':       FROM_ADDRESS,
-        'email_id':   email_id,
-        'error':      error_detail,
-        'message':    f'Test email sent! Check {SELLER_EMAIL}' if success else
-                      'Failed — see error field for details'
+        'success':  success,
+        'sent_to':  SELLER_EMAIL,
+        'from':     FROM_ADDRESS,
+        'error':    error_detail,
+        'message':  f'Test email sent! Check {SELLER_EMAIL}' if success else
+                    'Failed — see error field for details'
     }
