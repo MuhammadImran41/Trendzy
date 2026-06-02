@@ -13,7 +13,7 @@ load_dotenv()
 
 from app.database import init_db
 from app.routes import products, orders, scraper, reviews
-from app.email_service import send_order_notification, SMTP_USER, SMTP_PASS, SELLER_EMAIL
+from app.email_service import send_order_notification, RESEND_API_KEY, SELLER_EMAIL, FROM_ADDRESS
 
 app = FastAPI(title='GlowMart API', version='1.0.0')
 
@@ -47,48 +47,48 @@ def root():
 
 @app.get('/api/email-status')
 def email_status():
-    configured = bool(SMTP_USER and SMTP_PASS)
+    configured = bool(RESEND_API_KEY)
     return {
-        'configured':    configured,
-        'smtp_user':     SMTP_USER or '(not set)',
-        'seller_email':  SELLER_EMAIL,
-        'smtp_pass_set': bool(SMTP_PASS),
-        'message':       'Ready to send emails' if configured else
-                         'SMTP_PASS missing in .env'
+        'configured':       configured,
+        'from_address':     FROM_ADDRESS,
+        'seller_email':     SELLER_EMAIL,
+        'resend_key_set':   configured,
+        'message':          'Ready to send emails via Resend' if configured else
+                            'RESEND_API_KEY missing in environment variables'
     }
 
 
 @app.post('/api/test-email')
 def test_email():
-    import smtplib, traceback
-    if not SMTP_PASS:
-        return {'success': False, 'error': 'SMTP_PASS not set in .env'}
+    if not RESEND_API_KEY:
+        return {'success': False, 'error': 'RESEND_API_KEY not set'}
 
-    # Direct SMTP test — bypasses send_order_notification to capture raw error
+    import resend, traceback
     error_detail = None
-    success = False
+    success      = False
+    email_id     = None
+
     try:
-        import smtplib
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=15) as server:
-            server.ehlo()
-            server.login(SMTP_USER, SMTP_PASS)
-            from email.mime.text import MIMEText
-            msg = MIMEText('GlowMart test email — SMTP is working!')
-            msg['Subject'] = 'GlowMart Test Email'
-            msg['From'] = f'GlowMart <{SMTP_USER}>'
-            msg['To'] = SELLER_EMAIL
-            server.sendmail(SMTP_USER, SELLER_EMAIL, msg.as_string())
-        success = True
-    except Exception as e:
+        resend.api_key = RESEND_API_KEY
+        params: resend.Emails.SendParams = {
+            'from':    FROM_ADDRESS,
+            'to':      [SELLER_EMAIL],
+            'subject': '🌸 GlowMart — Test Email',
+            'html':    '<h2>GlowMart test email</h2><p>Resend is working correctly on Railway!</p>',
+            'text':    'GlowMart test email — Resend is working correctly on Railway!',
+        }
+        response = resend.Emails.send(params)
+        email_id = response.get('id')
+        success  = True
+    except Exception:
         error_detail = traceback.format_exc()
 
     return {
-        'success': success,
-        'sent_to': SELLER_EMAIL,
-        'smtp_user': SMTP_USER,
-        'smtp_host': 'smtp.gmail.com',
-        'smtp_port': 465,
-        'error': error_detail,
-        'message': 'Test email sent! Check your inbox.' if success else
-                   'Failed — see error field for details'
+        'success':    success,
+        'sent_to':    SELLER_EMAIL,
+        'from':       FROM_ADDRESS,
+        'email_id':   email_id,
+        'error':      error_detail,
+        'message':    f'Test email sent! Check {SELLER_EMAIL}' if success else
+                      'Failed — see error field for details'
     }
