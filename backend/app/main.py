@@ -13,7 +13,7 @@ load_dotenv()
 
 from app.database import init_db
 from app.routes import products, orders, scraper, reviews
-from app.email_service import send_order_notification, RESEND_API_KEY, SELLER_EMAIL, FROM_ADDRESS
+from app.email_service import send_order_notification, BREVO_USER, BREVO_PASS, SELLER_EMAIL, FROM_ADDRESS
 
 app = FastAPI(title='GlowMart API', version='1.0.0')
 
@@ -47,36 +47,38 @@ def root():
 
 @app.get('/api/email-status')
 def email_status():
-    configured = bool(RESEND_API_KEY)
+    configured = bool(BREVO_USER and BREVO_PASS)
     return {
-        'configured':       configured,
-        'from_address':     FROM_ADDRESS,
-        'seller_email':     SELLER_EMAIL,
-        'resend_key_set':   configured,
-        'message':          'Ready to send emails via Resend' if configured else
-                            'RESEND_API_KEY missing in environment variables'
+        'configured':   configured,
+        'from_address': FROM_ADDRESS,
+        'seller_email': SELLER_EMAIL,
+        'brevo_user':   BREVO_USER or '(not set)',
+        'message':      'Ready — Brevo SMTP, sends to any email' if configured else
+                        'BREVO_USER or BREVO_PASS missing in Railway variables'
     }
 
 
 @app.post('/api/test-email')
 def test_email():
-    if not RESEND_API_KEY:
-        return {'success': False, 'error': 'RESEND_API_KEY not set'}
+    if not BREVO_USER or not BREVO_PASS:
+        return {'success': False, 'error': 'BREVO_USER or BREVO_PASS not set'}
 
     import smtplib, traceback
     from email.mime.text import MIMEText
-    error_detail = None
     success      = False
+    error_detail = None
 
     try:
-        msg = MIMEText('GlowMart test email — Resend SMTP is working on Railway!')
-        msg['Subject'] = '🌸 GlowMart — Test Email'
+        msg = MIMEText('GlowMart test — Brevo SMTP works on Railway!')
+        msg['Subject'] = '🌸 GlowMart Test Email'
         msg['From']    = FROM_ADDRESS
         msg['To']      = SELLER_EMAIL
 
-        with smtplib.SMTP_SSL('smtp.resend.com', 2465, timeout=15) as server:
-            server.login('resend', RESEND_API_KEY)
-            server.sendmail('onboarding@resend.dev', SELLER_EMAIL, msg.as_string())
+        with smtplib.SMTP('smtp-relay.brevo.com', 587, timeout=15) as server:
+            server.ehlo()
+            server.starttls()
+            server.login(BREVO_USER, BREVO_PASS)
+            server.sendmail(BREVO_USER, SELLER_EMAIL, msg.as_string())
         success = True
     except Exception:
         error_detail = traceback.format_exc()
@@ -86,6 +88,5 @@ def test_email():
         'sent_to':  SELLER_EMAIL,
         'from':     FROM_ADDRESS,
         'error':    error_detail,
-        'message':  f'Test email sent! Check {SELLER_EMAIL}' if success else
-                    'Failed — see error field for details'
+        'message':  f'Test email sent! Check {SELLER_EMAIL}' if success else 'Failed — see error'
     }
