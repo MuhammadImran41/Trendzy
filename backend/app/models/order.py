@@ -13,6 +13,7 @@ class Order(BaseModel):
     id:            Optional[str] = None
     buyerName:     str
     buyerPhone:    str
+    buyerEmail:    Optional[str] = None
     buyerAddress:  str
     buyerCity:     str
     items:         List[OrderItem]

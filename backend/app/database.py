@@ -45,6 +45,7 @@ class OrderDB(Base):
     id            = Column(String, primary_key=True)
     buyerName     = Column(String, nullable=False)
     buyerPhone    = Column(String, nullable=False)
+    buyerEmail    = Column(String, nullable=True)
     buyerAddress  = Column(Text, nullable=False)
     buyerCity     = Column(String, nullable=False)
     items         = Column(JSON, nullable=False)
