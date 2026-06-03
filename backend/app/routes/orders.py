@@ -60,30 +60,44 @@ def get_order_count(db: Session = Depends(get_db)):
 @router.post('/')
 def place_order(order: Order, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     order_id = f'GM-{str(uuid.uuid4())[:6].upper()}'
-    row = OrderDB(
-        id            = order_id,
-        buyerName     = order.buyerName,
-        buyerPhone    = order.buyerPhone,
-        buyerEmail    = order.buyerEmail,
-        buyerAddress  = order.buyerAddress,
-        buyerCity     = order.buyerCity,
-        items         = [i.model_dump() for i in order.items],
-        total         = order.total,
-        status        = 'pending',
-        paymentMethod = order.paymentMethod,
-        notes         = order.notes,
-        trackingId    = None,
-        createdAt     = datetime.utcnow(),
-        updatedAt     = datetime.utcnow(),
-    )
-    db.add(row)
+
+    # Use raw SQL INSERT to guarantee buyerEmail is written correctly
+    db.execute(text("""
+        INSERT INTO orders
+            (id, "buyerName", "buyerPhone", "buyerEmail",
+             "buyerAddress", "buyerCity", items, total,
+             status, "paymentMethod", notes, "trackingId",
+             "createdAt", "updatedAt")
+        VALUES
+            (:id, :buyerName, :buyerPhone, :buyerEmail,
+             :buyerAddress, :buyerCity, :items::jsonb, :total,
+             'pending', 'cod', :notes, NULL,
+             NOW(), NOW())
+    """), {
+        'id':           order_id,
+        'buyerName':    order.buyerName,
+        'buyerPhone':   order.buyerPhone,
+        'buyerEmail':   order.buyerEmail,
+        'buyerAddress': order.buyerAddress,
+        'buyerCity':    order.buyerCity,
+        'items':        __import__('json').dumps([i.model_dump() for i in order.items]),
+        'total':        order.total,
+        'notes':        order.notes,
+    })
     db.commit()
 
-    # Re-query the row to get all columns including buyerEmail
-    saved = db.query(OrderDB).filter(OrderDB.id == order_id).first()
-    result = _row_to_dict(saved)
-    background_tasks.add_task(send_order_notification, result)
-    return result
+    # Fetch the saved row to return + send email
+    result = db.execute(text("""
+        SELECT id, "buyerName", "buyerPhone", "buyerEmail",
+               "buyerAddress", "buyerCity", items, total,
+               status, "paymentMethod", notes, "trackingId",
+               "createdAt", "updatedAt"
+        FROM orders WHERE id = :id
+    """), {'id': order_id}).mappings().one()
+
+    result_dict = dict(result)
+    background_tasks.add_task(send_order_notification, result_dict)
+    return result_dict
 
 
 @router.patch('/{order_id}', response_model=Order)
