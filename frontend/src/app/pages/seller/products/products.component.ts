@@ -297,9 +297,29 @@ export class SellerProductsComponent implements OnInit {
     if (file.size > 10 * 1024 * 1024) {
       this.formError.set('Image too large — max 10MB.'); return;
     }
-    this.imageFileName = 'Processing...';
+    this.imageFileName = 'Uploading...';
     this.formError.set('');
-    this._compressToBase64(file);
+
+    // Upload to ImgBB — stores full resolution, returns permanent URL
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = (e.target?.result as string).split(',')[1];
+      const formData = new FormData();
+      formData.append('key', 'd3397ed5f3197cb032cfcd2e5bbda70b');
+      formData.append('image', base64);
+
+      this.http.post<any>('https://api.imgbb.com/1/upload', formData).subscribe({
+        next: (res) => {
+          this.form.imageUrl = res.data.url;
+          this.imageFileName = file.name;
+        },
+        error: () => {
+          // Fallback: compress locally if ImgBB fails
+          this._compressToBase64(file);
+        }
+      });
+    };
+    reader.readAsDataURL(file);
   }
 
   private _compressToBase64(file: File) {
@@ -307,7 +327,6 @@ export class SellerProductsComponent implements OnInit {
     const objectUrl = URL.createObjectURL(file);
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      // Resize to max 300px wide — keeps base64 under 50KB, well within Railway limit
       const maxW = 300;
       const scale = img.width > maxW ? maxW / img.width : 1;
       canvas.width  = Math.round(img.width  * scale);
