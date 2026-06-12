@@ -314,30 +314,15 @@ export class SellerProductsComponent implements OnInit {
           this.imageFileName = file.name;
         },
         error: () => {
-          // Fallback: compress locally if ImgBB fails
-          this._compressToBase64(file);
+          this.formError.set('Image upload failed. Try pasting a URL instead.');
+          this.imageFileName = '';
         }
       });
     };
     reader.readAsDataURL(file);
   }
 
-  private _compressToBase64(file: File) {
-    const img = new Image();
-    const objectUrl = URL.createObjectURL(file);
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const maxW = 300;
-      const scale = img.width > maxW ? maxW / img.width : 1;
-      canvas.width  = Math.round(img.width  * scale);
-      canvas.height = Math.round(img.height * scale);
-      canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
-      this.form.imageUrl = canvas.toDataURL('image/jpeg', 0.75);
-      this.imageFileName = file.name;
-      URL.revokeObjectURL(objectUrl);
-    };
-    img.src = objectUrl;
-  }
+  private _compressToBase64(file: File) {} // kept for compatibility
 
   onUrlChange() {
     // If user types a URL, clear the file name
