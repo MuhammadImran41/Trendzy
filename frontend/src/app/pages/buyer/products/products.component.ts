@@ -43,21 +43,40 @@ import { Product } from '../../../models/product.model';
     /* ── Dropdown — fixed to viewport so never clipped ── */
     .cat-dropdown {
       position: fixed;
-      min-width: 200px; max-width: 240px;
+      min-width: 480px; max-width: 640px;
       background: #fff;
       border: 1px solid #e8e0d6;
       box-shadow: 0 8px 32px rgba(26,20,16,0.12);
       z-index: 9999;
-      padding: 0.5rem 0;
+      padding: 0.75rem;
+    }
+    .cat-dropdown-header {
+      font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase; color: #9e9890;
+      padding: 0 0.5rem 0.5rem; margin-bottom: 0.5rem;
+      border-bottom: 1px solid #f0ebe4;
+    }
+    .cat-dropdown-all {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600;
+      color: #1a1410; padding: 0.3rem 0.5rem; margin-bottom: 0.5rem;
+      background: none; border: none; cursor: pointer;
+    }
+    .cat-dropdown-all:hover { color: #c9a96e; }
+    .cat-dropdown-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
     }
     .cat-dropdown-item {
       display: block; width: 100%;
-      padding: 0.5rem 1.25rem;
-      font-family: 'Inter', sans-serif; font-size: 0.8rem;
+      padding: 0.4rem 0.625rem;
+      font-family: 'Inter', sans-serif; font-size: 0.78rem;
       color: #6b6560; text-align: left;
       background: none; border: none; cursor: pointer;
       transition: background 0.15s, color 0.15s;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      border-radius: 2px;
     }
     .cat-dropdown-item:hover { background: #faf7f4; color: #1a1410; }
     .cat-dropdown-item.active { color: #c9a96e; font-weight: 600; }
@@ -134,23 +153,23 @@ import { Product } from '../../../models/product.model';
               }
             </button>
 
-            <!-- Subcategory dropdown — fixed positioned -->
+            <!-- Subcategory dropdown — fixed positioned, multi-column -->
             @if (hoveredCat() === cat.id && cat.subcategories?.length) {
               <div class="cat-dropdown"
                    [style.top.px]="dropdownPos().top"
                    [style.left.px]="dropdownPos().left">
-                <button class="cat-dropdown-item"
-                        [class.active]="selectedCategory() === cat.name && !selectedSub()"
-                        (click)="selectCategory(cat.name, '')">
-                  All {{ cat.name }}
+                <button class="cat-dropdown-all" (click)="selectCategory(cat.name, '')">
+                  All {{ cat.name }} ›
                 </button>
-                @for (sub of cat.subcategories; track sub) {
-                  <button class="cat-dropdown-item"
-                          [class.active]="selectedSub() === sub"
-                          (click)="selectCategory(cat.name, sub)">
-                    {{ sub }}
-                  </button>
-                }
+                <div class="cat-dropdown-grid">
+                  @for (sub of cat.subcategories; track sub) {
+                    <button class="cat-dropdown-item"
+                            [class.active]="selectedSub() === sub"
+                            (click)="selectCategory(cat.name, sub)">
+                      {{ sub }}
+                    </button>
+                  }
+                </div>
               </div>
             }
           </div>
