@@ -241,55 +241,81 @@ import { Product } from '../../../models/product.model';
     }
     .section-title em { font-style: italic; }
 
-    /* ── Category grid — Daraz style ─────────────────────── */
-    .cat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; }
+    /* ── Category grid — Enhanced ────────────────────────── */
+    .cat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
     @media (max-width: 1024px) { .cat-grid { grid-template-columns: repeat(3,1fr); } }
     @media (max-width: 768px)  { .cat-grid { grid-template-columns: repeat(2,1fr); gap: 0.75rem; } }
 
     .cat-card {
-      background: #fff; border: 1px solid #e8e0d6;
-      border-radius: 4px; overflow: hidden;
+      background: #fff;
+      border: 1px solid #ede8e0;
+      border-radius: 12px;
+      padding: 1.25rem 1rem 1rem;
       cursor: pointer; text-decoration: none; display: block;
-      transition: box-shadow 0.25s, transform 0.25s;
-      padding: 1.25rem;
+      transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
     }
-    .cat-card:hover { box-shadow: 0 8px 32px rgba(26,20,16,0.10); transform: translateY(-3px); }
+    .cat-card:hover {
+      box-shadow: 0 12px 40px rgba(26,20,16,0.10);
+      transform: translateY(-4px);
+      border-color: #c9a96e;
+    }
 
     .cat-card-header {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: flex-start; justify-content: space-between;
       margin-bottom: 1rem;
     }
     .cat-card-title {
-      font-family: 'DM Serif Display', serif; font-size: 1rem;
-      font-weight: 400; color: #1a1410; line-height: 1.2;
+      font-family: 'DM Serif Display', serif; font-size: 0.95rem;
+      font-weight: 400; color: #1a1410; line-height: 1.25;
     }
     .cat-card-sub {
-      font-family: 'Inter', sans-serif; font-size: 0.7rem;
-      color: #9e9890; margin-top: 2px;
+      font-family: 'Inter', sans-serif; font-size: 0.65rem;
+      color: #b0a898; margin-top: 3px;
     }
-    .cat-card-arrow { color: #c9a96e; font-size: 1rem; flex-shrink: 0; }
+    .cat-card-arrow {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #f5f0e8; border: 1px solid #e8e0d6;
+      display: flex; align-items: center; justify-content: center;
+      color: #c9a96e; font-size: 0.85rem; flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .cat-card:hover .cat-card-arrow { background: #c9a96e; color: #fff; border-color: #c9a96e; }
 
     .cat-subs-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 0.625rem;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
     }
     .cat-sub-item {
       display: flex; flex-direction: column; align-items: center;
-      gap: 0.375rem; cursor: pointer; text-decoration: none;
+      gap: 0.3rem; cursor: pointer; text-decoration: none;
     }
     .cat-sub-img {
-      width: 52px; height: 52px; border-radius: 50%;
+      width: 48px; height: 48px; border-radius: 50%;
       background: #f5f0e8; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      border: 1px solid #e8e0d6;
-      font-size: 1.4rem;
+      border: 2px solid #f0ebe4;
+      transition: border-color 0.2s;
     }
     .cat-sub-img img { width: 100%; height: 100%; object-fit: cover; }
+    .cat-sub-item:hover .cat-sub-img { border-color: #c9a96e; }
     .cat-sub-name {
-      font-family: 'Inter', sans-serif; font-size: 0.62rem;
+      font-family: 'Inter', sans-serif; font-size: 0.58rem; font-weight: 500;
       color: #6b6560; text-align: center; line-height: 1.3;
     }
-    .cat-sub-item:hover .cat-sub-name { color: #c9a96e; }
+    .cat-sub-item:hover .cat-sub-name { color: #1a1410; }
+
+    /* View More button */
+    .view-more-wrap { text-align: center; margin-top: 2.5rem; }
+    .view-more-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 2.5rem;
+      background: #1a1410; color: #faf7f4;
+      font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      border: none; cursor: pointer; text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      border-radius: 2px;
+    }
+    .view-more-btn:hover { background: #2d2520; transform: translateY(-1px); }
 
     /* ── Products grid ────────────────────────────────────── */
     .products-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; }
@@ -472,14 +498,14 @@ import { Product } from '../../../models/product.model';
             No categories yet — add products from seller panel to see categories here.
           </div>
         }
-        @for (cat of categories(); track cat.name) {
+        @for (cat of categories().slice(0, 8); track cat.name) {
           <a routerLink="/products" [queryParams]="{category: cat.name}" class="cat-card">
             <div class="cat-card-header">
               <div>
                 <div class="cat-card-title">{{ cat.name }}</div>
                 <div class="cat-card-sub">{{ cat.subcategories?.length || 0 }} subcategories</div>
               </div>
-              <span class="cat-card-arrow">›</span>
+              <div class="cat-card-arrow">›</div>
             </div>
             <div class="cat-subs-grid">
               @for (sub of (cat.subcategories || []).slice(0, 8); track sub) {
@@ -493,6 +519,14 @@ import { Product } from '../../../models/product.model';
             </div>
           </a>
         }
+      </div>
+
+      <!-- View More -->
+      <div class="view-more-wrap">
+        <a routerLink="/products" class="view-more-btn">
+          View All Categories
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
       </div>
     </section>
 
