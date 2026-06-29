@@ -160,10 +160,30 @@ import { FormsModule } from '@angular/forms';
         <div>
           <div class="col-title">Contact Us</div>
           <ul class="col-links">
-            <li><a href="https://wa.me/923001234567" target="_blank">📱 WhatsApp</a></li>
-            <li><a href="mailto:support@shopzee.pk">✉️ support&#64;shopzee.pk</a></li>
-            <li><span>📍 Lahore, Pakistan</span></li>
-            <li><span>🕐 Mon–Sat: 9am–9pm</span></li>
+            <li>
+              <a href="https://wa.me/923001234567" target="_blank" style="display:flex;align-items:center;gap:0.5rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                +92 300 1234567
+              </a>
+            </li>
+            <li>
+              <a href="mailto:support@shopzee.pk" style="display:flex;align-items:center;gap:0.5rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                support&#64;shopzee.pk
+              </a>
+            </li>
+            <li>
+              <span style="display:flex;align-items:center;gap:0.5rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Lahore, Pakistan
+              </span>
+            </li>
+            <li>
+              <span style="display:flex;align-items:center;gap:0.5rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+                Mon–Sat: 9am–9pm
+              </span>
+            </li>
           </ul>
         </div>
 
@@ -188,7 +208,12 @@ import { FormsModule } from '@angular/forms';
         <!-- header -->
         <div style="background:#1a1410;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;">
           <div style="display:flex;align-items:center;gap:0.625rem;">
-            <div style="width:36px;height:36px;background:#c9a96e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🛍️</div>
+            <div style="width:38px;height:38px;background:linear-gradient(135deg,#c9a96e,#8b6914);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                <line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="13" y2="14"/>
+              </svg>
+            </div>
             <div>
               <div style="font-family:'DM Serif Display',serif;font-size:0.95rem;color:#faf7f4;">Shopzee Support</div>
               <div style="font-family:'Inter',sans-serif;font-size:0.65rem;color:#c9a96e;display:flex;align-items:center;gap:4px;"><span style="width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;"></span>Online now</div>
@@ -228,13 +253,16 @@ import { FormsModule } from '@angular/forms';
 
     <!-- Chat toggle button -->
     <button (click)="chatOpen.set(!chatOpen())"
-            style="position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:#c9a96e;border:none;border-radius:50%;cursor:pointer;box-shadow:0 8px 24px rgba(201,169,110,0.4);display:flex;align-items:center;justify-content:center;z-index:9999;transition:transform 0.2s;"
-            [style.transform]="chatOpen() ? 'rotate(45deg)' : 'rotate(0)'"
+            style="position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:linear-gradient(135deg,#c9a96e,#8b6914);border:none;border-radius:16px;cursor:pointer;box-shadow:0 8px 24px rgba(201,169,110,0.4);display:flex;align-items:center;justify-content:center;z-index:9999;transition:transform 0.2s,border-radius 0.2s;"
+            [style.border-radius]="chatOpen() ? '50%' : '16px'"
             title="Help Center">
       @if (!chatOpen()) {
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          <line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="13" y2="14"/>
+        </svg>
       } @else {
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       }
     </button>
   `
@@ -244,13 +272,13 @@ export class FooterComponent {
   chatOpen  = signal(false);
   chatInput = '';
   chatMessages = signal([
-    { from: 'bot', text: '👋 Hi! Welcome to Shopzee Help Center. How can I help you today?' }
+    { from: 'bot', text: 'Assalam o Alaikum! 👋 Welcome to Shopzee Help Center. I\'m here to help you with your orders, delivery, returns, and more. How can I assist you today?' }
   ]);
 
-  quickReplies = ['Track my order', 'Return policy', 'Payment methods', 'Delivery time', 'Contact support'];
+  quickReplies = ['Track my order', 'Return policy', 'Cash on Delivery', 'Delivery time', 'Contact support'];
 
   subscribe() {
-    if (this.email) { alert(`Thanks! ${this.email} subscribed.`); this.email = ''; }
+    if (this.email) { alert(`Thank you! ${this.email} has been subscribed.`); this.email = ''; }
   }
 
   openChat() { this.chatOpen.set(true); }
@@ -274,12 +302,31 @@ export class FooterComponent {
 
   botReply(msg: string) {
     const m = msg.toLowerCase();
-    let reply = "I'll connect you with our support team shortly. You can also reach us on WhatsApp: +92 300 1234567";
-    if (m.includes('track') || m.includes('order'))  reply = '📦 To track your order, please share your Order ID (e.g. SZ-ABC123) and we\'ll update you instantly!';
-    if (m.includes('return') || m.includes('refund')) reply = '↩️ We offer 7-day easy returns. Just WhatsApp us your order ID and reason — we\'ll arrange a pickup!';
-    if (m.includes('payment') || m.includes('cash')) reply = '💳 We currently accept Cash on Delivery (COD) across all of Pakistan. No advance payment needed!';
-    if (m.includes('delivery') || m.includes('time')) reply = '🚚 Standard delivery takes 3-5 working days. Express delivery available in major cities!';
-    if (m.includes('contact') || m.includes('support')) reply = '📱 Reach us on WhatsApp: +92 300 1234567\n✉️ Email: support@shopzee.pk\n🕐 Mon–Sat 9am–9pm';
+    let reply = '';
+
+    if (m.includes('track') || m.includes('order id') || m.includes('where is my')) {
+      reply = 'To track your order, please share your Order ID (format: SZ-XXXXXX). You can find it in your order confirmation. Our team will update you within minutes!';
+    } else if (m.includes('return') || m.includes('refund') || m.includes('exchange')) {
+      reply = 'Shopzee offers a 7-day easy return policy. Steps:\n1. WhatsApp us your Order ID\n2. Share reason + photo if defective\n3. We arrange free pickup\n4. Refund/exchange within 3-5 days.';
+    } else if (m.includes('cash') || m.includes('cod') || m.includes('payment')) {
+      reply = 'We accept Cash on Delivery (COD) across all of Pakistan. No advance payment or card required. You pay only when you receive your order!';
+    } else if (m.includes('delivery') || m.includes('time') || m.includes('how long') || m.includes('shipping')) {
+      reply = 'Delivery timelines:\n• Lahore/Karachi/Islamabad: 2-3 days\n• Other cities: 3-5 days\n• Remote areas: 5-7 days\nFree delivery on orders over PKR 2,000!';
+    } else if (m.includes('cancel')) {
+      reply = 'To cancel your order, please contact us within 2 hours of placing it. After dispatch, cancellation is not possible but you can return it within 7 days.';
+    } else if (m.includes('contact') || m.includes('support') || m.includes('human') || m.includes('agent')) {
+      reply = 'Connect with our team:\n📱 WhatsApp: +92 300 1234567\n✉️ Email: support@shopzee.pk\n⏰ Available Mon–Sat, 9am–9pm';
+    } else if (m.includes('discount') || m.includes('coupon') || m.includes('promo') || m.includes('offer')) {
+      reply = 'Current offers at Shopzee:\n• Free delivery on orders over PKR 2,000\n• Follow us on Instagram @shopzee.pk for exclusive promo codes\n• Newsletter subscribers get early access to sales!';
+    } else if (m.includes('product') || m.includes('quality') || m.includes('original')) {
+      reply = 'All Shopzee products are 100% original and quality-checked before dispatch. We source directly from verified suppliers. Not satisfied? Return within 7 days!';
+    } else if (m.includes('size') || m.includes('fit')) {
+      reply = 'Size guides are available on each product page. If unsure, WhatsApp us the product name and we\'ll help you pick the right size!';
+    } else if (m.includes('hello') || m.includes('hi') || m.includes('salam') || m.includes('hey')) {
+      reply = 'Walaikum Assalam! 😊 Welcome to Shopzee. I\'m your virtual assistant. Ask me about orders, returns, delivery, payments or anything else!';
+    } else {
+      reply = 'Thank you for reaching out! For detailed help, please contact our support team:\n📱 WhatsApp: +92 300 1234567\n✉️ support@shopzee.pk\nWe\'re available Mon–Sat 9am–9pm.';
+    }
     this.addMsg(reply, 'bot');
   }
 }
