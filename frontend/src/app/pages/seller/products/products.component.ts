@@ -88,18 +88,19 @@ import { CategoryService, Category } from '../../../services/category.service';
     }
     .modal-box {
       background:#faf7f4; border:1px solid #e8e0d6;
-      width:100%; max-width:520px;
-      max-height:90vh; overflow-y:auto;
+      width:100%; max-width:780px;
+      max-height:95vh; overflow-y:auto;
     }
     .modal-header {
       display:flex; align-items:center; justify-content:space-between;
-      padding:1.25rem 1.5rem; border-bottom:1px solid #e8e0d6;
+      padding:0.875rem 1.25rem; border-bottom:1px solid #e8e0d6;
     }
-    .modal-title { font-family:'DM Serif Display', serif; font-size:1.4rem; font-weight:400; color:#1a1410; }
+    .modal-title { font-family:'DM Serif Display', serif; font-size:1.2rem; font-weight:400; color:#1a1410; }
     .modal-close { background:none; border:none; cursor:pointer; color:#9e9890; padding:0.25rem; transition:color 0.2s; }
     .modal-close:hover { color:#1a1410; }
-    .modal-body { padding:1.5rem; display:flex; flex-direction:column; gap:1rem; }
-    .modal-footer { padding:1rem 1.5rem; border-top:1px solid #e8e0d6; display:flex; gap:0.75rem; }
+    .modal-body { padding:1rem 1.25rem; display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+    .modal-footer { padding:0.75rem 1.25rem; border-top:1px solid #e8e0d6; display:flex; gap:0.75rem; }
+    .full-col { grid-column: 1 / -1; }
 
     .field-label { display:block; font-family:'Inter', sans-serif; font-size:0.62rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:#9e9890; margin-bottom:0.375rem; }
     .field-input {
@@ -188,108 +189,95 @@ import { CategoryService, Category } from '../../../services/category.service';
           </div>
 
           <div class="modal-body">
-            <div>
-              <label class="field-label">Product Name *</label>
-              <input class="field-input" [(ngModel)]="form.name" type="text" placeholder="e.g. HydraFusion Night Cream" />
-            </div>
-            <div>
-              <label class="field-label">Description *</label>
-              <textarea class="field-input" [(ngModel)]="form.description" rows="2" placeholder="Product description..." style="resize:none;"></textarea>
-            </div>
-            <div class="field-grid">
+            <!-- Left col: Name + Description + Image -->
+            <div class="full-col" style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
               <div>
-                <label class="field-label">Original Price (PKR) *</label>
-                <input class="field-input" [(ngModel)]="form.originalPrice" type="number" placeholder="2800" />
+                <label class="field-label">Product Name *</label>
+                <input class="field-input" [(ngModel)]="form.name" type="text" placeholder="e.g. HydraFusion Night Cream" />
               </div>
               <div>
-                <label class="field-label">Sell Price (PKR) *</label>
-                <input class="field-input" [(ngModel)]="form.sellerPrice" type="number" placeholder="2200" />
+                <label class="field-label">Description *</label>
+                <textarea class="field-input" [(ngModel)]="form.description" rows="1" placeholder="Product description..." style="resize:none;"></textarea>
               </div>
             </div>
 
-            <!-- Profit Calculator -->
-            <div style="background:#f5f0e8;border:1px solid #e8e0d6;padding:1rem;border-radius:4px;">
-              <div style="font-family:'Inter',sans-serif;font-size:0.62rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#9e9890;margin-bottom:0.75rem;">
-                Profit Calculator (optional)
-              </div>
-              <div class="field-grid">
-                <div>
-                  <label class="field-label">Cost Price (PKR)</label>
-                  <input class="field-input" [(ngModel)]="form.costPrice" type="number" placeholder="1500" (ngModelChange)="calcProfit()" />
-                </div>
-                <div>
-                  <label class="field-label">Profit %</label>
-                  <input class="field-input" [(ngModel)]="form.profitPct" type="number" placeholder="20" (ngModelChange)="calcProfit()" />
-                </div>
-              </div>
-              @if (form.costPrice && form.profitPct) {
-                <div style="margin-top:0.5rem;font-family:'Inter',sans-serif;font-size:0.75rem;color:#6b6560;">
-                  Sell Price = PKR <strong style="color:#1a1410;">{{ calcSellPrice() | number }}</strong>
-                  &nbsp;·&nbsp; Profit = PKR <strong style="color:#16a34a;">{{ calcProfitAmt() | number }}</strong>
-                </div>
-              }
+            <!-- Prices row -->
+            <div>
+              <label class="field-label">Original Price (PKR)</label>
+              <input class="field-input" [(ngModel)]="form.originalPrice" type="number" placeholder="2800" />
             </div>
+            <div>
+              <label class="field-label">Sell Price (PKR) *</label>
+              <input class="field-input" [(ngModel)]="form.sellerPrice" type="number" placeholder="2200" />
+            </div>
+
+            <!-- Profit calculator -->
+            <div>
+              <label class="field-label">Cost Price (PKR)</label>
+              <input class="field-input" [(ngModel)]="form.costPrice" type="number" placeholder="1500" (ngModelChange)="calcProfit()" />
+            </div>
+            <div>
+              <label class="field-label">Profit %</label>
+              <input class="field-input" [(ngModel)]="form.profitPct" type="number" placeholder="20" (ngModelChange)="calcProfit()" />
+            </div>
+
+            @if (form.costPrice && form.profitPct) {
+              <div class="full-col" style="padding:0.5rem 0.75rem;background:#f5f0e8;border:1px solid #e8e0d6;font-family:'Inter',sans-serif;font-size:0.75rem;color:#6b6560;display:flex;gap:1.5rem;">
+                <span>Sell: <strong style="color:#1a1410;">PKR {{ calcSellPrice() | number }}</strong></span>
+                <span>Profit: <strong style="color:#16a34a;">PKR {{ calcProfitAmt() | number }}</strong></span>
+              </div>
+            }
 
             <!-- Category + Subcategory -->
-            <div class="field-grid">
-              <div>
-                <label class="field-label">Category *</label>
-                <select class="field-input" [(ngModel)]="form.category" (ngModelChange)="onCategoryChange($event)">
-                  <option value="">Select category...</option>
-                  @for (cat of dbCategories(); track cat.id) {
-                    <option [value]="cat.name">{{ cat.name }}</option>
-                  }
-                </select>
-              </div>
-              <div>
-                <label class="field-label">Subcategory</label>
-                <select class="field-input" [(ngModel)]="form.subcategory">
-                  <option value="">Select subcategory...</option>
-                  @for (sub of currentSubcategories(); track sub) {
-                    <option [value]="sub">{{ sub }}</option>
-                  }
-                </select>
-              </div>
+            <div>
+              <label class="field-label">Category *</label>
+              <select class="field-input" [(ngModel)]="form.category" (ngModelChange)="onCategoryChange($event)">
+                <option value="">Select category...</option>
+                @for (cat of dbCategories(); track cat.id) {
+                  <option [value]="cat.name">{{ cat.name }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Subcategory</label>
+              <select class="field-input" [(ngModel)]="form.subcategory">
+                <option value="">Select subcategory...</option>
+                @for (sub of currentSubcategories(); track sub) {
+                  <option [value]="sub">{{ sub }}</option>
+                }
+              </select>
             </div>
 
+            <!-- Stock + Image -->
             <div>
               <label class="field-label">Stock</label>
               <input class="field-input" [(ngModel)]="form.stock" type="number" placeholder="20" />
             </div>
             <div>
-              <label class="field-label">Product Image</label>
-              <div style="display:flex;flex-direction:column;gap:0.5rem;">
-                <!-- File upload -->
-                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.625rem 0.875rem;border:1px dashed #ddd8d0;background:#faf7f4;cursor:pointer;transition:border-color 0.2s;"
-                       [style.border-color]="form.imageUrl ? '#c9a96e' : '#ddd8d0'">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9e9890" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                    <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-                  </svg>
-                  <span style="font-family:'Inter', sans-serif;font-size:0.78rem;color:#9e9890;">
-                    {{ imageFileName || 'Click to upload image from PC' }}
-                  </span>
-                  <input type="file" accept="image/*" style="display:none;" (change)="onImageFileSelected($event)" />
-                </label>
-                <!-- OR URL input -->
-                <div style="display:flex;align-items:center;gap:0.5rem;">
-                  <div style="flex:1;height:1px;background:#e8e0d6;"></div>
-                  <span style="font-family:'Inter', sans-serif;font-size:0.65rem;color:#b0a898;letter-spacing:0.1em;">OR PASTE URL</span>
-                  <div style="flex:1;height:1px;background:#e8e0d6;"></div>
-                </div>
-                <input class="field-input" [(ngModel)]="form.imageUrl" type="url" placeholder="https://..." (ngModelChange)="onUrlChange()" />
-                <!-- Preview -->
-                @if (form.imageUrl) {
-                  <div style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem;background:#f5f0e8;border:1px solid #e8e0d6;">
-                    <img [src]="form.imageUrl" style="width:48px;height:48px;object-fit:cover;background:#e8e0d6;" alt="preview" />
-                    <span style="font-family:'Inter', sans-serif;font-size:0.72rem;color:#9e9890;flex:1;">Preview</span>
-                    <button type="button" (click)="clearImage()" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:0.72rem;font-family:'Inter', sans-serif;">✕ Remove</button>
-                  </div>
-                }
-              </div>
+              <label class="field-label">Image URL</label>
+              <input class="field-input" [(ngModel)]="form.imageUrl" type="url" placeholder="https://..." (ngModelChange)="onUrlChange()" />
             </div>
+
+            <!-- File upload full width -->
+            <div class="full-col">
+              <label style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.875rem;border:1px dashed #ddd8d0;background:#fff;cursor:pointer;"
+                     [style.border-color]="form.imageUrl ? '#c9a96e' : '#ddd8d0'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9e9890" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span style="font-family:'Inter',sans-serif;font-size:0.75rem;color:#9e9890;">{{ imageFileName || 'Or upload image from PC' }}</span>
+                <input type="file" accept="image/*" style="display:none;" (change)="onImageFileSelected($event)" />
+              </label>
+            </div>
+
+            @if (form.imageUrl) {
+              <div class="full-col" style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem;background:#f5f0e8;border:1px solid #e8e0d6;">
+                <img [src]="form.imageUrl" style="width:40px;height:40px;object-fit:cover;" alt="preview" />
+                <span style="font-family:'Inter',sans-serif;font-size:0.72rem;color:#9e9890;flex:1;">Preview</span>
+                <button type="button" (click)="clearImage()" style="background:none;border:none;cursor:pointer;color:#dc2626;font-size:0.72rem;font-family:'Inter',sans-serif;">✕ Remove</button>
+              </div>
+            }
+
             @if (formError()) {
-              <div class="form-error">{{ formError() }}</div>
+              <div class="full-col form-error">{{ formError() }}</div>
             }
           </div>
 
