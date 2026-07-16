@@ -93,19 +93,20 @@ async def virtual_tryon(
         raise HTTPException(500, result['error'])
 
     return JSONResponse({
-        'success':     True,
-        'result_url':  result['result_url'],
-        'filename':    result['filename'],
+        'success':      True,
+        'result_url':   result['result_url'],
+        'filename':     result['filename'],
         'product_name': product_name,
-        'message':     f'Try-on generated for {product_name}'
+        'analysis':     result.get('analysis', {}),
+        'message':      f'Try-on generated for {product_name}'
     })
 
 
 @router.get('/status')
 def tryon_status():
     """Check if try-on feature is configured."""
-    api_key = os.getenv('GEMINI_API_KEY', '')
+    api_key = os.getenv('GROQ_API_KEY', '')
     return {
         'configured': bool(api_key),
-        'message': 'Virtual Try-On is ready!' if api_key else 'Add GEMINI_API_KEY to .env to enable'
+        'message': 'Virtual Try-On is ready! (Groq Vision)' if api_key else 'Add GROQ_API_KEY to .env to enable'
     }

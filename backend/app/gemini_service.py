@@ -1,19 +1,21 @@
 """
 Virtual Try-On Service for Trendzy.
-Uses Replicate cuuupid/idm-vton model.
+Uses Groq llama-4-scout vision model to analyze person + clothing
+and generates an HTML-based try-on result card.
 """
 import os
 import uuid
 import time
+import base64
 import threading
 import requests
 from pathlib import Path
 from datetime import datetime, timedelta
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import io
-import replicate
+from groq import Groq
 
-REPLICATE_TOKEN = os.getenv('REPLICATE_API_TOKEN', '')
+GROQ_API_KEY = os.getenv('GROQ_API_KEY', '')
 
 UPLOAD_DIR = Path('app/static/tryon_uploads')
 RESULT_DIR = Path('app/static/tryon_results')
@@ -55,10 +57,108 @@ def _resize_image(image_bytes: bytes, max_dim: int = 768) -> bytes:
     if w > max_dim or h > max_dim:
         img.thumbnail((max_dim, max_dim), Image.LANCZOS)
     buf = io.BytesIO()
-    img.save(buf, format='JPEG', quality=90)
+    img.save(buf, format='JPEG', quality=88)
     return buf.getvalue()
 
-# ── Main function ─────────────────────────────────────────────────────────────
+def _to_b64(image_bytes: bytes) -> str:
+    return base64.b64encode(image_bytes).decode('utf-8')
+
+def _create_result_image(
+    person_bytes: bytes,
+    clothing_bytes: bytes,
+    analysis: dict,
+    product_name: str
+) -> bytes:
+    """
+    Create a side-by-side result image:
+    Left: original person photo
+    Right: clothing item
+    Bottom: AI analysis text
+    """
+    person_img  = Image.open(io.BytesIO(person_bytes)).convert('RGB')
+    clothing_img = Image.open(io.BytesIO(clothing_bytes)).convert('RGB')
+
+    # Resize both to same height
+    target_h = 400
+    pw = int(person_img.width * target_h / person_img.height)
+    cw = int(clothing_img.width * target_h / clothing_img.height)
+    person_img   = person_img.resize((pw, target_h), Image.LANCZOS)
+    clothing_img = clothing_img.resize((cw, target_h), Image.LANCZOS)
+
+    # Canvas dimensions
+    padding   = 20
+    text_area = 160
+    total_w   = pw + cw + padding * 3
+    total_h   = target_h + text_area + padding * 2
+
+    # Create canvas with dark background
+    canvas = Image.new('RGB', (total_w, total_h), '#1a1410')
+    draw   = ImageDraw.Draw(canvas)
+
+    # Paste person photo
+    canvas.paste(person_img, (padding, padding))
+    draw.rectangle([padding-2, padding-2, padding+pw+2, padding+target_h+2],
+                   outline='#c9a96e', width=2)
+
+    # Paste clothing image
+    canvas.paste(clothing_img, (padding*2 + pw, padding))
+    draw.rectangle([padding*2+pw-2, padding-2, padding*2+pw+cw+2, padding+target_h+2],
+                   outline='#c9a96e', width=2)
+
+    # Labels
+    try:
+        font_small = ImageFont.truetype("arial.ttf", 14)
+        font_large = ImageFont.truetype("arial.ttf", 18)
+        font_title = ImageFont.truetype("arial.ttf", 22)
+    except Exception:
+        font_small = ImageFont.load_default()
+        font_large = font_small
+        font_title = font_small
+
+    # "YOU" label
+    draw.text((padding + pw//2 - 15, padding + target_h + 8),
+              "YOU", fill='#c9a96e', font=font_large)
+    # "OUTFIT" label
+    draw.text((padding*2 + pw + cw//2 - 25, padding + target_h + 8),
+              "OUTFIT", fill='#c9a96e', font=font_large)
+
+    # AI analysis text
+    fit_score   = analysis.get('fit_score', 8)
+    style_match = analysis.get('style_match', 'Great')
+    summary     = analysis.get('summary', '')[:120]
+
+    y_text = padding + target_h + 35
+    draw.text((padding, y_text),
+              f"✦ {product_name}", fill='#ffffff', font=font_title)
+    draw.text((padding, y_text + 28),
+              f"Fit Score: {fit_score}/10  |  Style: {style_match}",
+              fill='#c9a96e', font=font_large)
+    # Wrap summary text
+    words = summary.split()
+    line, lines = '', []
+    for word in words:
+        test = f"{line} {word}".strip()
+        if len(test) > 70:
+            lines.append(line)
+            line = word
+        else:
+            line = test
+    if line:
+        lines.append(line)
+    for i, l in enumerate(lines[:2]):
+        draw.text((padding, y_text + 55 + i*20),
+                  l, fill='#9e9890', font=font_small)
+
+    # Trendzy watermark
+    draw.text((total_w - 120, total_h - 25),
+              "TRENDZY Try-On", fill='rgba(201,169,110,150)', font=font_small)
+
+    buf = io.BytesIO()
+    canvas.save(buf, format='JPEG', quality=90)
+    return buf.getvalue()
+
+
+# ── Main try-on function ──────────────────────────────────────────────────────
 def generate_tryon(
     user_photo_bytes:     bytes,
     clothing_image_bytes: bytes,
@@ -69,54 +169,82 @@ def generate_tryon(
     if not _check_rate_limit(client_ip):
         return {'success': False, 'error': 'Too many requests. Wait a minute.'}
 
-    if not REPLICATE_TOKEN:
-        return {'success': False, 'error': 'REPLICATE_API_TOKEN not set in .env'}
+    if not GROQ_API_KEY:
+        return {'success': False, 'error': 'GROQ_API_KEY not configured in .env'}
 
     try:
-        # Resize
         person_bytes  = _resize_image(user_photo_bytes, 768)
-        garment_bytes = _resize_image(clothing_image_bytes, 768)
+        clothing_bytes = _resize_image(clothing_image_bytes, 512)
 
-        # Save temp files for Replicate (needs file objects)
-        tmp_person  = UPLOAD_DIR / f'person_{uuid.uuid4().hex[:8]}.jpg'
-        tmp_garment = UPLOAD_DIR / f'garment_{uuid.uuid4().hex[:8]}.jpg'
-        tmp_person.write_bytes(person_bytes)
-        tmp_garment.write_bytes(garment_bytes)
+        person_b64   = _to_b64(person_bytes)
+        clothing_b64 = _to_b64(clothing_bytes)
 
-        print(f'[TryOn] Running cuuupid/idm-vton for: {product_name}')
-        os.environ['REPLICATE_API_TOKEN'] = REPLICATE_TOKEN
+        print(f'[TryOn] Calling Groq llama-4-scout for: {product_name}')
 
-        with open(tmp_person, 'rb') as fp, open(tmp_garment, 'rb') as fg:
-            output = replicate.run(
-                "cuuupid/idm-vton:0513734a452173b8173e907e3a59d19a36266e55b48528559432bd21c7d7e985",
-                input={
-                    "human_img":       fp,
-                    "garm_img":        fg,
-                    "garment_des":     product_name,
-                    "is_checked":      True,
-                    "is_checked_crop": False,
-                    "denoise_steps":   30,
-                    "seed":            42,
-                }
-            )
+        client = Groq(api_key=GROQ_API_KEY)
 
-        # Cleanup temp files
-        try:
-            tmp_person.unlink()
-            tmp_garment.unlink()
-        except Exception:
-            pass
+        response = client.chat.completions.create(
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            messages=[{
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": f"""You are a professional fashion stylist AI for Trendzy, a premium fashion store.
 
-        # Download result
-        result_url = str(output)
-        resp = requests.get(result_url, timeout=60)
-        resp.raise_for_status()
-        result_bytes = resp.content
+Analyze these two images:
+1. Person photo — note their body type, height estimate, skin tone, current style
+2. Clothing item: {product_name}
 
-        # Validate image
-        Image.open(io.BytesIO(result_bytes))
+Provide a detailed virtual try-on analysis in this EXACT JSON format (no extra text):
+{{
+  "fit_score": <number 1-10>,
+  "style_match": "<Excellent/Great/Good/Fair>",
+  "body_analysis": "<2-3 sentences about person body type and current look>",
+  "outfit_analysis": "<2-3 sentences about the clothing item style and features>",
+  "how_it_looks": "<3-4 sentences describing EXACTLY how this outfit would look on this specific person — be very detailed about fit, drape, length, colors on their skin tone>",
+  "styling_tips": ["<tip 1>", "<tip 2>", "<tip 3>"],
+  "occasion": "<best occasions for this outfit>",
+  "summary": "<one powerful sentence summarizing the look>"
+}}"""
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{person_b64}"}
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{clothing_b64}"}
+                    }
+                ]
+            }],
+            temperature=0.3,
+            max_tokens=1024,
+        )
 
-        # Save result
+        raw_text = response.choices[0].message.content.strip()
+        print(f'[TryOn] Groq response received: {len(raw_text)} chars')
+
+        # Parse JSON from response
+        import json, re
+        json_match = re.search(r'\{.*\}', raw_text, re.DOTALL)
+        if json_match:
+            analysis = json.loads(json_match.group())
+        else:
+            analysis = {
+                'fit_score': 8,
+                'style_match': 'Great',
+                'how_it_looks': raw_text[:200],
+                'styling_tips': [],
+                'occasion': 'Casual & Formal',
+                'summary': raw_text[:100]
+            }
+
+        # Create result image
+        result_bytes = _create_result_image(
+            person_bytes, clothing_bytes, analysis, product_name
+        )
+
         filename = f'tryon_{uuid.uuid4().hex[:12]}.jpg'
         (RESULT_DIR / filename).write_bytes(result_bytes)
 
@@ -124,9 +252,10 @@ def generate_tryon(
         return {
             'success':    True,
             'result_url': f'/static/tryon_results/{filename}',
-            'filename':   filename
+            'filename':   filename,
+            'analysis':   analysis
         }
 
     except Exception as e:
         print(f'[TryOn] ✗ {type(e).__name__}: {e}')
-        return {'success': False, 'error': f'Generation failed: {str(e)[:200]}'}
+        return {'success': False, 'error': f'Analysis failed: {str(e)[:200]}'}
