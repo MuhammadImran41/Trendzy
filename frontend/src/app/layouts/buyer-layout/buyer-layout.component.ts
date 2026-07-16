@@ -10,7 +10,7 @@ import { FooterComponent } from '../../components/footer/footer.component';
   template: `
     <div style="min-height:100vh;display:flex;flex-direction:column;background:#faf7f4;">
       <app-navbar />
-      <main style="flex:1; padding-top: 106px;">
+      <main style="flex:1; padding-top: 122px;">
         <router-outlet />
       </main>
       <app-footer />
