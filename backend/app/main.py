@@ -12,7 +12,7 @@ if sys.platform == 'win32':
 load_dotenv()
 
 from app.database import init_db
-from app.routes import products, orders, scraper, reviews, categories
+from app.routes import products, orders, scraper, reviews, categories, auth
 from app.email_service import send_order_notification, GMAIL_USER, GMAIL_PASS, SELLER_EMAIL, FROM_ADDRESS
 
 app = FastAPI(title='Trendzy API', version='1.0.0')
@@ -38,6 +38,7 @@ app.include_router(orders.router,     prefix='/api/orders',     tags=['orders'])
 app.include_router(scraper.router,    prefix='/api/scraper',    tags=['scraper'])
 app.include_router(reviews.router,    prefix='/api/reviews',    tags=['reviews'])
 app.include_router(categories.router, prefix='/api/categories', tags=['categories'])
+app.include_router(auth.router,       prefix='/api/auth',       tags=['auth'])
 
 
 @app.get('/')

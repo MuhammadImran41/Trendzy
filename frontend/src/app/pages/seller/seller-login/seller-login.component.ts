@@ -322,12 +322,29 @@ export class SellerLoginComponent {
   email    = '';
   password = '';
   error    = signal('');
+  loading  = signal(false);
 
   login() {
-    if (this.auth.login(this.email, this.password)) {
-      this.router.navigate(['/seller/dashboard']);
-    } else {
-      this.error.set('Invalid email or password.');
+    if (!this.email || !this.password) {
+      this.error.set('Please enter email and password.');
+      return;
     }
+    this.loading.set(true);
+    this.error.set('');
+
+    this.auth.login(this.email, this.password).subscribe({
+      next: (res) => {
+        this.loading.set(false);
+        if (res.user.role === 'seller') {
+          this.router.navigate(['/seller/dashboard']);
+        } else {
+          this.error.set('This account does not have seller access.');
+        }
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.error.set(err.error?.detail || 'Invalid email or password.');
+      }
+    });
   }
 }

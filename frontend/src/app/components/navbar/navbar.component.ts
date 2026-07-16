@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -149,6 +150,24 @@ import { ProductService } from '../../services/product.service';
       display: flex; align-items: center; justify-content: center;
     }
 
+    .auth-btn {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 1rem; border-radius: 6px;
+      font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+      transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .auth-btn.login  { background: #f5f0e8; color: #1a1410; }
+    .auth-btn.login:hover { background: #e8e0d6; }
+    .auth-btn.logout { background: transparent; color: #9e9890; border: 1px solid #e8e0d6; }
+    .auth-btn.logout:hover { color: #1a1410; border-color: #c9a96e; }
+
+    .user-greeting {
+      font-family: 'Inter', sans-serif; font-size: 0.72rem; color: #6b6560;
+      display: flex; align-items: center; gap: 0.35rem;
+    }
+    .user-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; flex-shrink: 0; }
+
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 0.25rem; }
     .hamburger span { display: block; width: 24px; height: 1.5px; background: #1a1410; transition: all 0.3s; }
 
@@ -203,6 +222,17 @@ import { ProductService } from '../../services/product.service';
         </div>
 
         <div class="nav-actions">
+          <!-- Auth buttons -->
+          @if (authService.isLoggedIn()) {
+            <span class="user-greeting">
+              <span class="user-dot"></span>
+              {{ firstName() }}
+            </span>
+            <button class="auth-btn logout" (click)="authService.logout()">Sign Out</button>
+          } @else {
+            <a routerLink="/login" class="auth-btn login">Sign In</a>
+          }
+
           <a routerLink="/cart" class="cart-btn">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -231,6 +261,14 @@ import { ProductService } from '../../services/product.service';
           <a routerLink="/cart" (click)="mobileOpen.set(false)" class="mobile-link">
             Bag @if (cart.totalItems() > 0) { ({{ cart.totalItems() }}) }
           </a>
+          @if (authService.isLoggedIn()) {
+            <button (click)="mobileOpen.set(false); authService.logout()" class="mobile-link" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;color:#dc2626;">
+              Sign Out ({{ firstName() }})
+            </button>
+          } @else {
+            <a routerLink="/login" (click)="mobileOpen.set(false)" class="mobile-link">Sign In</a>
+            <a routerLink="/register" (click)="mobileOpen.set(false)" class="mobile-link">Create Account</a>
+          }
         </div>
       }
     </nav>
@@ -238,12 +276,19 @@ import { ProductService } from '../../services/product.service';
   `
 })
 export class NavbarComponent {
-  cart = inject(CartService);
+  cart        = inject(CartService);
+  authService = inject(AuthService);
   private router = inject(Router);
   mobileOpen = signal(false);
-  shopOpen = signal(false);
-  activeTab = signal('Skincare');
-  scrolled = false;
+  shopOpen   = signal(false);
+  activeTab  = signal('Skincare');
+  scrolled   = false;
+
+  firstName(): string {
+    const name = this.authService.user()?.name;
+    if (!name) return '';
+    return name.split(' ')[0] || '';
+  }
 
   isSellerRoute() {
     return this.router.url.startsWith('/seller');
