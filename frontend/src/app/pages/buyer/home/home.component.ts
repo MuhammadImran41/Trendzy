@@ -116,7 +116,7 @@ import { Product } from '../../../models/product.model';
 
     .c-card {
       position: absolute;
-      width: 165px;
+      width: 220px;
       height: 220px;
       border-radius: 12px;
       overflow: hidden;
@@ -125,7 +125,7 @@ import { Product } from '../../../models/product.model';
       top: 50%;
       left: 50%;
       margin-top: -110px;
-      margin-left: -82px;
+      margin-left: -110px;
     }
 
     .c-card img {
@@ -161,7 +161,7 @@ import { Product } from '../../../models/product.model';
 
     /* LEFT */
     .c-card.pos-left {
-      transform: translate(-200px, 0) scale(1);
+      transform: translate(-240px, 0) scale(1);
       z-index: 3;
       filter: brightness(0.7);
       opacity: 0.9;
@@ -169,7 +169,7 @@ import { Product } from '../../../models/product.model';
 
     /* RIGHT */
     .c-card.pos-right {
-      transform: translate(200px, 0) scale(1);
+      transform: translate(240px, 0) scale(1);
       z-index: 3;
       filter: brightness(0.7);
       opacity: 0.9;
