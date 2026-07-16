@@ -76,6 +76,11 @@ export class ProductService {
     );
   }
 
+  // Alias for tryon component
+  getProduct(id: string): Observable<Product | undefined> {
+    return this.getProductById(id);
+  }
+
   getCategories(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/products/categories/`).pipe(
       catchError(() => {

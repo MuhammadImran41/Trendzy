@@ -15,6 +15,7 @@ export const routes: Routes = [
       { path: 'cart', loadComponent: () => import('./pages/buyer/cart/cart.component').then(m => m.CartComponent) },
       { path: 'checkout', canActivate: [buyerAuthGuard], loadComponent: () => import('./pages/buyer/checkout/checkout.component').then(m => m.CheckoutComponent) },
       { path: 'order-success', loadComponent: () => import('./pages/buyer/order-success/order-success.component').then(m => m.OrderSuccessComponent) },
+      { path: 'try-on', loadComponent: () => import('./pages/buyer/tryon/tryon.component').then(m => m.TryonComponent) },
     ]
   },
 

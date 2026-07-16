@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -122,6 +122,16 @@ import { environment } from '../../../../environments/environment';
       font-family: 'Inter', sans-serif; font-size: 0.72rem;
       color: #9e9890; letter-spacing: 0.05em;
     }
+
+    .btn-tryon {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.25rem; background: linear-gradient(135deg, #c9a96e, #a0782a);
+      color: #fff; border: none; border-radius: 4px;
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+      transition: all 0.2s; white-space: nowrap; text-decoration: none;
+    }
+    .btn-tryon:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,169,110,0.4); }
 
     /* Reviews */
     .reviews-section { max-width: 800px; }
@@ -271,6 +281,12 @@ import { environment } from '../../../../environments/environment';
                 Add to Bag
               </button>
               <a routerLink="/cart" class="btn-outline">View Bag</a>
+              <button class="btn-tryon" (click)="tryOn()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/>
+                </svg>
+                Try On
+              </button>
             </div>
 
             @if (product()!.tags && product()!.tags.length > 0) {
@@ -375,6 +391,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class ProductDetailComponent implements OnInit {
   private route          = inject(ActivatedRoute);
+  private router         = inject(Router);
   private productService = inject(ProductService);
   private cartService    = inject(CartService);
   private http           = inject(HttpClient);
@@ -414,5 +431,10 @@ export class ProductDetailComponent implements OnInit {
 
   addToCart() {
     if (this.product()) this.cartService.addToCart(this.product()!, this.qty);
+  }
+
+  tryOn() {
+    const p = this.product();
+    if (p) this.router.navigate(['/try-on'], { queryParams: { product_id: p.id } });
   }
 }

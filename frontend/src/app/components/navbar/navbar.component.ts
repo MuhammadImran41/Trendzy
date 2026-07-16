@@ -219,6 +219,7 @@ import { AuthService } from '../../services/auth.service';
         <div class="nav-links">
           <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link">Home</a>
           <a routerLink="/products" routerLinkActive="active" class="nav-link">Shop</a>
+          <a routerLink="/try-on" routerLinkActive="active" class="nav-link" style="color:#c9a96e;">✨ Try On</a>
         </div>
 
         <div class="nav-actions">

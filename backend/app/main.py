@@ -12,7 +12,7 @@ if sys.platform == 'win32':
 load_dotenv()
 
 from app.database import init_db
-from app.routes import products, orders, scraper, reviews, categories, auth
+from app.routes import products, orders, scraper, reviews, categories, auth, tryon
 from app.email_service import send_order_notification, GMAIL_USER, GMAIL_PASS, SELLER_EMAIL, FROM_ADDRESS
 
 app = FastAPI(title='Trendzy API', version='1.0.0')
@@ -39,6 +39,14 @@ app.include_router(scraper.router,    prefix='/api/scraper',    tags=['scraper']
 app.include_router(reviews.router,    prefix='/api/reviews',    tags=['reviews'])
 app.include_router(categories.router, prefix='/api/categories', tags=['categories'])
 app.include_router(auth.router,       prefix='/api/auth',       tags=['auth'])
+app.include_router(tryon.router,      prefix='/api/try-on',     tags=['try-on'])
+
+# Serve static files (try-on results)
+from fastapi.staticfiles import StaticFiles
+import pathlib
+pathlib.Path('app/static/tryon_results').mkdir(parents=True, exist_ok=True)
+pathlib.Path('app/static/tryon_uploads').mkdir(parents=True, exist_ok=True)
+app.mount('/static', StaticFiles(directory='app/static'), name='static')
 
 
 @app.get('/')
