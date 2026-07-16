@@ -116,16 +116,16 @@ import { Product } from '../../../models/product.model';
 
     .c-card {
       position: absolute;
-      width: 150px;
-      height: 200px;
-      border-radius: 4px;
+      width: 165px;
+      height: 220px;
+      border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
       transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       top: 50%;
       left: 50%;
-      margin-top: -100px;
-      margin-left: -75px;
+      margin-top: -110px;
+      margin-left: -82px;
     }
 
     .c-card img {
@@ -141,41 +141,37 @@ import { Product } from '../../../models/product.model';
       z-index: 10;
       filter: none;
       box-shadow: 0 20px 50px rgba(26,20,16,0.25);
-      width: 165px;
-      height: 220px;
-      margin-top: -110px;
-      margin-left: -82px;
     }
 
     /* TOP */
     .c-card.pos-top {
-      transform: translate(0, -200px) scale(0.72);
+      transform: translate(0, -200px) scale(1);
       z-index: 3;
-      filter: brightness(0.7);
+      filter: brightness(0.65);
       opacity: 0.85;
     }
 
     /* BOTTOM */
     .c-card.pos-bottom {
-      transform: translate(0, 200px) scale(0.72);
+      transform: translate(0, 200px) scale(1);
       z-index: 3;
-      filter: brightness(0.7);
+      filter: brightness(0.65);
       opacity: 0.85;
     }
 
     /* LEFT */
     .c-card.pos-left {
-      transform: translate(-185px, 0) scale(0.78);
+      transform: translate(-200px, 0) scale(1);
       z-index: 3;
-      filter: brightness(0.72);
+      filter: brightness(0.7);
       opacity: 0.9;
     }
 
     /* RIGHT */
     .c-card.pos-right {
-      transform: translate(185px, 0) scale(0.78);
+      transform: translate(200px, 0) scale(1);
       z-index: 3;
-      filter: brightness(0.72);
+      filter: brightness(0.7);
       opacity: 0.9;
     }
 
