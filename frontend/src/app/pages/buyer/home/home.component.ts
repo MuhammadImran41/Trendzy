@@ -132,6 +132,7 @@ import { Product } from '../../../models/product.model';
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
+      image-rendering: -webkit-optimize-contrast;
     }
 
     /* CENTER — active */
@@ -148,34 +149,34 @@ import { Product } from '../../../models/product.model';
 
     /* TOP */
     .c-card.pos-top {
-      transform: translate(0, -200px) scale(0.6);
+      transform: translate(0, -200px) scale(0.72);
       z-index: 3;
-      filter: blur(2.5px) brightness(0.5);
-      opacity: 0.75;
+      filter: brightness(0.7);
+      opacity: 0.85;
     }
 
     /* BOTTOM */
     .c-card.pos-bottom {
-      transform: translate(0, 200px) scale(0.6);
+      transform: translate(0, 200px) scale(0.72);
       z-index: 3;
-      filter: blur(2.5px) brightness(0.5);
-      opacity: 0.75;
+      filter: brightness(0.7);
+      opacity: 0.85;
     }
 
     /* LEFT */
     .c-card.pos-left {
-      transform: translate(-185px, 0) scale(0.65);
+      transform: translate(-185px, 0) scale(0.78);
       z-index: 3;
-      filter: blur(2px) brightness(0.55);
-      opacity: 0.85;
+      filter: brightness(0.72);
+      opacity: 0.9;
     }
 
     /* RIGHT */
     .c-card.pos-right {
-      transform: translate(185px, 0) scale(0.65);
+      transform: translate(185px, 0) scale(0.78);
       z-index: 3;
-      filter: blur(2px) brightness(0.55);
-      opacity: 0.85;
+      filter: brightness(0.72);
+      opacity: 0.9;
     }
 
     /* Hidden — extra slides waiting off-screen */
