@@ -167,7 +167,7 @@ import { Product } from '../../../models/product.model';
 
     /* ── LEFT ── */
     .c-card.pos-left {
-      transform: translate(-220px, 0);
+      transform: translate(-185px, 0);
       z-index: 5;
       filter: blur(1.5px) brightness(0.65);
       opacity: 0.85;
@@ -175,7 +175,7 @@ import { Product } from '../../../models/product.model';
 
     /* ── RIGHT ── */
     .c-card.pos-right {
-      transform: translate(220px, 0);
+      transform: translate(185px, 0);
       z-index: 5;
       filter: blur(1.5px) brightness(0.65);
       opacity: 0.85;
