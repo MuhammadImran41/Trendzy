@@ -7,6 +7,7 @@ import { ProductService } from '../../../services/product.service';
 import { CartService } from '../../../services/cart.service';
 import { Product } from '../../../models/product.model';
 import { Review } from '../../../models/order.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-product-detail',
@@ -382,7 +383,7 @@ export class ProductDetailComponent implements OnInit {
   reviews = signal<Review[]>([]);
   qty = 1;
 
-  private apiUrl = 'http://localhost:8001/api';
+  private apiUrl = environment.apiUrl;
 
   discount = computed(() => {
     const p = this.product();

@@ -64,8 +64,8 @@ import { ProductService } from '../../services/product.service';
     }
     .logo-text-block { display: flex; flex-direction: column; align-items: flex-start; }
     .logo-wordmark { font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; letter-spacing: 5px; line-height: 1; margin-bottom: 3px; }
-    .logo-wordmark .shop { color: #0a0a0a; }
-    .logo-wordmark .zee { background: linear-gradient(135deg, #8b6010 0%, #c8920a 45%, #7a5008 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .logo-wordmark .trend { color: #0a0a0a; }
+    .logo-wordmark .zy { background: linear-gradient(135deg, #8b6010 0%, #c8920a 45%, #7a5008 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .logo-tagline { font-family: 'Montserrat', 'Inter', sans-serif; font-size: 5px; font-weight: 600; letter-spacing: 2.5px; color: #c9a96e; text-transform: uppercase; }
 
     .nav-links { display: flex; align-items: center; gap: 2.5rem; }
@@ -191,7 +191,7 @@ import { ProductService } from '../../services/product.service';
               <text x="51" y="74" font-family="Georgia, serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">Z</text>
             </svg>
             <div class="logo-text-block">
-              <div class="logo-wordmark"><span class="shop">TREND</span><span class="zee">ZY</span></div>
+              <div class="logo-wordmark"><span class="trend">TREND</span><span class="zy">ZY</span></div>
               <div class="logo-tagline">Premium · Style · Delivered</div>
             </div>
           </div>

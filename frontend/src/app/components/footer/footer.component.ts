@@ -34,8 +34,8 @@ import { FormsModule } from '@angular/forms';
     /* brand col */
     .brand-logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
     .brand-wordmark { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; letter-spacing: 4px; }
-    .brand-wordmark .shop { color: #faf7f4; }
-    .brand-wordmark .zee { background: linear-gradient(135deg, #8b6010, #c8920a, #7a5008); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .brand-wordmark .trend { color: #faf7f4; }
+    .brand-wordmark .zy { background: linear-gradient(135deg, #8b6010, #c8920a, #7a5008); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .brand-tagline { font-family: 'Inter', sans-serif; font-size: 5px; letter-spacing: 2.5px; color: #c9a96e; text-transform: uppercase; }
     .brand-desc { font-family: 'Inter', sans-serif; font-size: 0.82rem; line-height: 1.8; color: #4a4540; margin-bottom: 1.5rem; }
     .brand-pills { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.75rem; }
@@ -91,7 +91,7 @@ import { FormsModule } from '@angular/forms';
               <text x="51" y="74" font-family="Georgia,serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">Z</text>
             </svg>
             <div>
-              <div class="brand-wordmark"><span class="shop">TREND</span><span class="zee">ZY</span></div>
+              <div class="brand-wordmark"><span class="trend">TREND</span><span class="zy">ZY</span></div>
               <div class="brand-tagline">Premium · Style · Delivered</div>
             </div>
           </div>

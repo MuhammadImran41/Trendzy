@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ProductService } from '../../../services/product.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-scraper',
@@ -150,7 +151,7 @@ import { ProductService } from '../../../services/product.service';
 export class ScraperComponent {
   private http           = inject(HttpClient);
   private productService = inject(ProductService);
-  private api            = 'http://localhost:8001/api';
+  private api            = environment.apiUrl;
 
   productUrl = '';
   costPrice  = 0;
