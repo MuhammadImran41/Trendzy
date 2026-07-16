@@ -138,10 +138,10 @@ import { Product } from '../../../models/product.model';
 
     /* ── CENTER — bigger, sharp, elevated ── */
     .c-card.pos-center {
-      width: 200px;
-      height: 260px;
-      margin-top: -130px;
-      margin-left: -100px;
+      width: 260px;
+      height: 340px;
+      margin-top: -170px;
+      margin-left: -130px;
       transform: translate(0, 0) translateZ(0);
       z-index: 10;
       filter: none;
