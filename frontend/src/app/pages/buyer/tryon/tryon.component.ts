@@ -383,7 +383,7 @@ export class TryonComponent implements OnInit {
     this.http.post<any>(`${this.api}/try-on/`, formData).subscribe({
       next: (res) => {
         this.loading.set(false);
-        this.resultUrl.set('http://localhost:8001' + res.result_url);
+        this.resultUrl.set(res.result_url);  // relative URL through proxy
         this.resultProductName.set(res.product_name);
         this.analysis.set(res.analysis || null);
       },
