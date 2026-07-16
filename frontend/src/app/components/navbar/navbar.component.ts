@@ -66,7 +66,7 @@ import { ProductService } from '../../services/product.service';
     .logo-wordmark { font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; letter-spacing: 5px; line-height: 1; margin-bottom: 3px; }
     .logo-wordmark .shop { color: #0a0a0a; }
     .logo-wordmark .zee { background: linear-gradient(135deg, #8b6010 0%, #c8920a 45%, #7a5008 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .logo-tagline { font-family: 'Montserrat', 'Inter', sans-serif; font-size: 5px; font-weight: 600; letter-spacing: 2.5px; color: #0a0a0a; text-transform: uppercase; }
+    .logo-tagline { font-family: 'Montserrat', 'Inter', sans-serif; font-size: 5px; font-weight: 600; letter-spacing: 2.5px; color: #c9a96e; text-transform: uppercase; }
 
     .nav-links { display: flex; align-items: center; gap: 2.5rem; }
 
@@ -187,11 +187,11 @@ import { ProductService } from '../../services/product.service';
               <rect x="6" y="30" width="72" height="58" rx="8" fill="#0a0a0a"/>
               <path d="M28 30 C28 14 56 14 56 30" stroke="#c8960c" stroke-width="5.5" stroke-linecap="round" fill="none"/>
               <rect x="6" y="30" width="72" height="8" rx="4" fill="#c8960c"/>
-              <text x="35" y="74" font-family="Georgia, serif" font-size="28" font-weight="700" fill="#f5d160" text-anchor="middle">S</text>
+              <text x="35" y="74" font-family="Georgia, serif" font-size="28" font-weight="700" fill="#f5d160" text-anchor="middle">T</text>
               <text x="51" y="74" font-family="Georgia, serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">Z</text>
             </svg>
             <div class="logo-text-block">
-              <div class="logo-wordmark"><span class="shop">SHOP</span><span class="zee">ZEE</span></div>
+              <div class="logo-wordmark"><span class="shop">TREND</span><span class="zee">ZY</span></div>
               <div class="logo-tagline">Premium · Style · Delivered</div>
             </div>
           </div>
