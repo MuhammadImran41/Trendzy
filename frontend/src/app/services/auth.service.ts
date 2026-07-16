@@ -6,7 +6,7 @@ export class AuthService {
   private _isLoggedIn = signal(false);
   isLoggedIn = this._isLoggedIn.asReadonly();
 
-  private SELLER_EMAIL = 'seller@shopzee.pk';
+  private SELLER_EMAIL = 'seller@trendzy.pk';
   private SELLER_PASSWORD = 'seller123';
 
   constructor(private router: Router) {}

@@ -91,7 +91,7 @@ import { FormsModule } from '@angular/forms';
               <text x="51" y="74" font-family="Georgia,serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">Z</text>
             </svg>
             <div>
-              <div class="brand-wordmark"><span class="shop">SHOP</span><span class="zee">ZEE</span></div>
+              <div class="brand-wordmark"><span class="shop">TREND</span><span class="zee">ZY</span></div>
               <div class="brand-tagline">Premium · Style · Delivered</div>
             </div>
           </div>
@@ -148,7 +148,7 @@ import { FormsModule } from '@angular/forms';
         <div>
           <div class="col-title">Company</div>
           <ul class="col-links">
-            <li><span>About Shopzee</span></li>
+            <li><span>About Trendzy</span></li>
             <li><span>Careers</span></li>
             <li><span>Press</span></li>
             <li><span>Privacy Policy</span></li>
@@ -167,9 +167,9 @@ import { FormsModule } from '@angular/forms';
               </a>
             </li>
             <li>
-              <a href="mailto:support@shopzee.pk" style="display:flex;align-items:center;gap:0.5rem;">
+              <a href="mailto:support@trendzy.pk" style="display:flex;align-items:center;gap:0.5rem;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                support&#64;shopzee.pk
+                support&#64;trendzy.pk
               </a>
             </li>
             <li>
@@ -192,7 +192,7 @@ import { FormsModule } from '@angular/forms';
       <!-- Bottom bar -->
       <div style="border-top:1px solid rgba(255,255,255,0.05);">
         <div class="footer-bottom">
-          <span class="footer-copy">© 2025 Shopzee. All rights reserved.</span>
+          <span class="footer-copy">© 2025 Trendzy. All rights reserved.</span>
           <div class="footer-badges">
             <span class="payment-badge">Cash on Delivery</span>
             <span class="payment-badge">Easy Returns</span>
@@ -215,7 +215,7 @@ import { FormsModule } from '@angular/forms';
               </svg>
             </div>
             <div>
-              <div style="font-family:'DM Serif Display',serif;font-size:0.95rem;color:#faf7f4;">Shopzee Support</div>
+              <div style="font-family:'DM Serif Display',serif;font-size:0.95rem;color:#faf7f4;">Trendzy Support</div>
               <div style="font-family:'Inter',sans-serif;font-size:0.65rem;color:#c9a96e;display:flex;align-items:center;gap:4px;"><span style="width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;"></span>Online now</div>
             </div>
           </div>
@@ -272,7 +272,7 @@ export class FooterComponent {
   chatOpen  = signal(false);
   chatInput = '';
   chatMessages = signal([
-    { from: 'bot', text: 'Assalam o Alaikum! 👋 Welcome to Shopzee Help Center. I\'m here to help you with your orders, delivery, returns, and more. How can I assist you today?' }
+    { from: 'bot', text: 'Assalam o Alaikum! 👋 Welcome to Trendzy Help Center. I\'m here to help you with your orders, delivery, returns, and more. How can I assist you today?' }
   ]);
 
   quickReplies = ['Track my order', 'Return policy', 'Cash on Delivery', 'Delivery time', 'Contact support'];
@@ -307,7 +307,7 @@ export class FooterComponent {
     if (m.includes('track') || m.includes('order id') || m.includes('where is my')) {
       reply = 'To track your order, please share your Order ID (format: SZ-XXXXXX). You can find it in your order confirmation. Our team will update you within minutes!';
     } else if (m.includes('return') || m.includes('refund') || m.includes('exchange')) {
-      reply = 'Shopzee offers a 7-day easy return policy. Steps:\n1. WhatsApp us your Order ID\n2. Share reason + photo if defective\n3. We arrange free pickup\n4. Refund/exchange within 3-5 days.';
+      reply = 'Trendzy offers a 7-day easy return policy. Steps:\n1. WhatsApp us your Order ID\n2. Share reason + photo if defective\n3. We arrange free pickup\n4. Refund/exchange within 3-5 days.';
     } else if (m.includes('cash') || m.includes('cod') || m.includes('payment')) {
       reply = 'We accept Cash on Delivery (COD) across all of Pakistan. No advance payment or card required. You pay only when you receive your order!';
     } else if (m.includes('delivery') || m.includes('time') || m.includes('how long') || m.includes('shipping')) {
@@ -315,17 +315,17 @@ export class FooterComponent {
     } else if (m.includes('cancel')) {
       reply = 'To cancel your order, please contact us within 2 hours of placing it. After dispatch, cancellation is not possible but you can return it within 7 days.';
     } else if (m.includes('contact') || m.includes('support') || m.includes('human') || m.includes('agent')) {
-      reply = 'Connect with our team:\n📱 WhatsApp: +92 300 1234567\n✉️ Email: support@shopzee.pk\n⏰ Available Mon–Sat, 9am–9pm';
+      reply = 'Connect with our team:\n📱 WhatsApp: +92 300 1234567\n✉️ Email: support@trendzy.pk\n⏰ Available Mon–Sat, 9am–9pm';
     } else if (m.includes('discount') || m.includes('coupon') || m.includes('promo') || m.includes('offer')) {
-      reply = 'Current offers at Shopzee:\n• Free delivery on orders over PKR 2,000\n• Follow us on Instagram @shopzee.pk for exclusive promo codes\n• Newsletter subscribers get early access to sales!';
+      reply = 'Current offers at Trendzy:\n• Free delivery on orders over PKR 2,000\n• Follow us on Instagram @trendzy.pk for exclusive promo codes\n• Newsletter subscribers get early access to sales!';
     } else if (m.includes('product') || m.includes('quality') || m.includes('original')) {
-      reply = 'All Shopzee products are 100% original and quality-checked before dispatch. We source directly from verified suppliers. Not satisfied? Return within 7 days!';
+      reply = 'All Trendzy products are 100% original and quality-checked before dispatch. We source directly from verified suppliers. Not satisfied? Return within 7 days!';
     } else if (m.includes('size') || m.includes('fit')) {
       reply = 'Size guides are available on each product page. If unsure, WhatsApp us the product name and we\'ll help you pick the right size!';
     } else if (m.includes('hello') || m.includes('hi') || m.includes('salam') || m.includes('hey')) {
-      reply = 'Walaikum Assalam! 😊 Welcome to Shopzee. I\'m your virtual assistant. Ask me about orders, returns, delivery, payments or anything else!';
+      reply = 'Walaikum Assalam! 😊 Welcome to Trendzy. I\'m your virtual assistant. Ask me about orders, returns, delivery, payments or anything else!';
     } else {
-      reply = 'Thank you for reaching out! For detailed help, please contact our support team:\n📱 WhatsApp: +92 300 1234567\n✉️ support@shopzee.pk\nWe\'re available Mon–Sat 9am–9pm.';
+      reply = 'Thank you for reaching out! For detailed help, please contact our support team:\n📱 WhatsApp: +92 300 1234567\n✉️ support@trendzy.pk\nWe\'re available Mon–Sat 9am–9pm.';
     }
     this.addMsg(reply, 'bot');
   }

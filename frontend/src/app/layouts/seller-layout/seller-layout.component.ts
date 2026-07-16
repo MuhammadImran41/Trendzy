@@ -230,7 +230,7 @@ import { OrderService } from '../../services/order.service';
             <text x="51" y="74" font-family="Georgia, serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">Z</text>
           </svg>
           <div class="logo-text-block">
-            <div class="logo-wordmark-s"><span class="shop">SHOP</span><span class="zee">ZEE</span></div>
+            <div class="logo-wordmark-s"><span class="shop">TREND</span><span class="zee">ZY</span></div>
             <div class="logo-tagline-s">Premium · Style · Delivered</div>
           </div>
         </div>
@@ -266,7 +266,7 @@ import { OrderService } from '../../services/order.service';
       <div class="main">
         <header class="topbar">
           <div class="topbar-left">
-            <span class="topbar-label">Shopzee</span>
+            <span class="topbar-label">Trendzy</span>
             <div class="topbar-divider"></div>
             <span class="topbar-page">Seller Panel</span>
           </div>

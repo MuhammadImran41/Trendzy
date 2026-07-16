@@ -14,7 +14,7 @@ load_dotenv()
 
 DATABASE_URL = os.getenv(
     'DATABASE_URL',
-    'postgresql://postgres:10220@localhost:5432/shopzee-db'
+    'postgresql://postgres:10220@localhost:5432/trendzy-db'
 )
 
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}

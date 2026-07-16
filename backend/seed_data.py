@@ -1,5 +1,5 @@
 """
-Seed script — inserts all categories with multiple products into shopzee-db
+Seed script — inserts all categories with multiple products into trendzy-db
 Run: python seed_data.py
 """
 import uuid

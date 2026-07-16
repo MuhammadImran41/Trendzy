@@ -15,11 +15,11 @@
   <!-- Full wordmark in one text block using tspan for weight contrast -->
   <!-- Render twice: shadow layer first, then fill -->
 
-  <!-- SHOPZEE — main text -->
+  <!-- TRENDZY — main text -->
   <text y="40"
         font-family="'Cormorant Garamond', 'Playfair Display', Georgia, serif"
         font-size="42">
-    <tspan x="0" font-weight="700" letter-spacing="2" fill="url(#boldGold)">SHOP</tspan><tspan font-weight="300" letter-spacing="2" fill="url(#lightGold)">ZEE</tspan>
+    <tspan x="0" font-weight="700" letter-spacing="2" fill="url(#boldGold)">TREND</tspan><tspan font-weight="300" letter-spacing="2" fill="url(#lightGold)">ZY</tspan>
   </text>
 
   <!-- thin divider line -->
