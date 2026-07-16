@@ -3,7 +3,7 @@ Database connection and table definitions using SQLAlchemy.
 """
 from sqlalchemy import (
     create_engine, Column, String, Float, Integer,
-    Boolean, DateTime, Text, JSON, UniqueConstraint
+    Boolean, DateTime, Text, JSON
 )
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime
@@ -14,7 +14,7 @@ load_dotenv()
 
 DATABASE_URL = os.getenv(
     'DATABASE_URL',
-    'postgresql://postgres:10220@localhost:5432/trendzy-db'
+    'postgresql://postgres:10220@localhost:5432/shopzee-db'
 )
 
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
@@ -26,18 +26,20 @@ Base = declarative_base()
 
 # ── ORM Models ────────────────────────────────────────────────────────────────
 
-class UserDB(Base):
-    __tablename__ = 'users'
+class BuyerProfileDB(Base):
+    """Auto-saved from order details — no login required."""
+    __tablename__ = 'buyer_profiles'
 
-    id          = Column(String, primary_key=True)
-    name        = Column(String, nullable=False)
-    email       = Column(String, nullable=False, unique=True, index=True)
-    phone       = Column(String, nullable=True)
-    password    = Column(String, nullable=False)          # bcrypt hash
-    role        = Column(String, default='buyer')         # 'buyer' | 'seller'
-    isActive    = Column(Boolean, default=True)
-    createdAt   = Column(DateTime, default=datetime.utcnow)
-    lastLoginAt = Column(DateTime, nullable=True)
+    id           = Column(String, primary_key=True)
+    name         = Column(String, nullable=False)
+    phone        = Column(String, nullable=False, index=True)
+    email        = Column(String, nullable=True, index=True)
+    address      = Column(Text, nullable=True)
+    city         = Column(String, nullable=True)
+    orderCount   = Column(Integer, default=1)
+    totalSpent   = Column(Float, default=0)
+    firstOrderAt = Column(DateTime, default=datetime.utcnow)
+    lastOrderAt  = Column(DateTime, default=datetime.utcnow)
 
 
 class CategoryDB(Base):

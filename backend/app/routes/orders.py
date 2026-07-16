@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Depends
 from sqlalchemy.orm import Session
 from app.models.order import Order
-from app.database import OrderDB, get_db
+from app.database import OrderDB, BuyerProfileDB, get_db
 from app.email_service import send_order_notification
 from pydantic import BaseModel
 from typing import Literal, Optional
@@ -35,6 +35,46 @@ def _row_to_dict(row: OrderDB) -> dict:
     }
 
 
+def _save_buyer_profile(db: Session, order: OrderDB):
+    """Auto-save or update buyer profile from order details."""
+    try:
+        # Find existing profile by phone number
+        profile = db.query(BuyerProfileDB).filter(
+            BuyerProfileDB.phone == order.buyerPhone
+        ).first()
+
+        if profile:
+            # Update existing profile
+            profile.name        = order.buyerName
+            profile.address     = order.buyerAddress
+            profile.city        = order.buyerCity
+            profile.lastOrderAt = datetime.utcnow()
+            profile.orderCount  = (profile.orderCount or 0) + 1
+            profile.totalSpent  = (profile.totalSpent or 0) + order.total
+            if order.buyerEmail:
+                profile.email = order.buyerEmail
+        else:
+            # Create new profile
+            profile = BuyerProfileDB(
+                id           = str(uuid.uuid4()),
+                name         = order.buyerName,
+                phone        = order.buyerPhone,
+                email        = order.buyerEmail,
+                address      = order.buyerAddress,
+                city         = order.buyerCity,
+                orderCount   = 1,
+                totalSpent   = order.total,
+                firstOrderAt = datetime.utcnow(),
+                lastOrderAt  = datetime.utcnow(),
+            )
+            db.add(profile)
+
+        db.commit()
+        print(f'[BuyerProfile] ✓ Saved: {order.buyerName} ({order.buyerPhone})')
+    except Exception as e:
+        print(f'[BuyerProfile] ✗ Error: {e}')
+
+
 @router.get('/count')
 def get_order_count(db: Session = Depends(get_db)):
     total   = db.query(OrderDB).count()
@@ -50,28 +90,29 @@ def get_orders(db: Session = Depends(get_db)):
 
 @router.post('/')
 def place_order(order: Order, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
-    import json
-    order_id   = f'TZ-{str(uuid.uuid4())[:6].upper()}'
-    items_json = json.dumps([i.model_dump() for i in order.items])
+    order_id  = f'TZ-{str(uuid.uuid4())[:6].upper()}'
 
     new_order = OrderDB(
-        id           = order_id,
-        buyerName    = order.buyerName,
-        buyerPhone   = order.buyerPhone,
-        buyerEmail   = order.buyerEmail,
-        buyerAddress = order.buyerAddress,
-        buyerCity    = order.buyerCity,
-        items        = [i.model_dump() for i in order.items],
-        total        = order.total,
-        status       = 'pending',
-        paymentMethod= 'cod',
-        notes        = order.notes,
-        createdAt    = datetime.utcnow(),
-        updatedAt    = datetime.utcnow(),
+        id            = order_id,
+        buyerName     = order.buyerName,
+        buyerPhone    = order.buyerPhone,
+        buyerEmail    = order.buyerEmail,
+        buyerAddress  = order.buyerAddress,
+        buyerCity     = order.buyerCity,
+        items         = [i.model_dump() for i in order.items],
+        total         = order.total,
+        status        = 'pending',
+        paymentMethod = 'cod',
+        notes         = order.notes,
+        createdAt     = datetime.utcnow(),
+        updatedAt     = datetime.utcnow(),
     )
     db.add(new_order)
     db.commit()
     db.refresh(new_order)
+
+    # Auto-save buyer profile
+    _save_buyer_profile(db, new_order)
 
     result_dict = _row_to_dict(new_order)
     background_tasks.add_task(send_order_notification, result_dict)

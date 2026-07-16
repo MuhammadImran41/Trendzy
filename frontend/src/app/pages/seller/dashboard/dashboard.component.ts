@@ -1,8 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { ProductService } from '../../../services/product.service';
 import { OrderService } from '../../../services/order.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -183,6 +185,20 @@ import { OrderService } from '../../../services/order.service';
     .s-shipped   { background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.25); color: #7c3aed; }
     .s-delivered { background: rgba(22,163,74,0.08);  border: 1px solid rgba(22,163,74,0.25);  color: #16a34a; }
     .s-cancelled { background: rgba(220,38,38,0.08);  border: 1px solid rgba(220,38,38,0.25);  color: #dc2626; }
+
+    /* ── Buyers table ── */
+    .buyers-table { width:100%; border-collapse:collapse; font-family:'Inter',sans-serif; font-size:0.8rem; }
+    .buyers-table th { padding:10px 14px; text-align:left; font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#9e9890; background:#faf7f4; border-bottom:1px solid #e8e0d6; }
+    .buyers-table td { padding:12px 14px; border-bottom:1px solid #f5f0e8; color:#1a1410; vertical-align:middle; }
+    .buyers-table tr:hover td { background:#faf7f4; }
+    .buyer-name { font-weight:600; color:#1a1410; }
+    .buyer-phone { color:#c9a96e; font-weight:600; }
+    .buyer-email { color:#6b6560; font-size:0.75rem; }
+    .buyer-city { color:#6b6560; }
+    .buyer-orders { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#1a1410; color:#c9a96e; border-radius:50%; font-size:0.7rem; font-weight:700; }
+    .buyer-spent { color:#16a34a; font-weight:700; }
+    .buyer-date { color:#b0a898; font-size:0.72rem; }
+    .buyers-empty { text-align:center; padding:3rem; color:#b0a898; font-family:'Inter',sans-serif; font-size:0.85rem; }
   `],
   template: `
     <div>
@@ -248,41 +264,51 @@ import { OrderService } from '../../../services/order.service';
         </a>
       </div>
 
-      <!-- Recent Orders -->
-      @if (recentOrders().length > 0) {
-        <div class="section-heading">Recent Orders</div>
-        <div class="orders-wrap">
-          <div class="orders-head">
-            <span>Order ID</span>
-            <span>Customer</span>
-            <span>City</span>
-            <span>Amount</span>
-            <span>Status</span>
-          </div>
-          @for (order of recentOrders(); track order.id) {
-            <div class="order-row">
-              <span class="order-id">#{{ order.id }}</span>
-              <span class="order-name">{{ order.buyerName }}</span>
-              <span class="order-city">{{ order.buyerCity }}</span>
-              <span class="order-amount">PKR {{ order.total | number }}</span>
-              <span class="status-pill"
-                [class.s-pending]="order.status==='pending'"
-                [class.s-confirmed]="order.status==='confirmed'"
-                [class.s-shipped]="order.status==='shipped'"
-                [class.s-delivered]="order.status==='delivered'"
-                [class.s-cancelled]="order.status==='cancelled'">
-                {{ order.status }}
-              </span>
-            </div>
-          }
-        </div>
-      }
+      <!-- Buyers List -->
+      <div class="section-heading" style="margin-top:2.5rem;">
+        Customers
+        <span style="font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:400;color:#9e9890;margin-left:0.5rem;">Auto-saved from orders</span>
+      </div>
+      <div style="background:#fff;border:1px solid #e8e0d6;border-radius:8px;overflow:hidden;">
+        @if (buyers().length === 0) {
+          <div class="buyers-empty">No customers yet — buyers appear here when they place orders.</div>
+        } @else {
+          <table class="buyers-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>City</th>
+                <th>Orders</th>
+                <th>Total Spent</th>
+                <th>Last Order</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (b of buyers(); track b.id) {
+                <tr>
+                  <td><div class="buyer-name">{{ b.name }}</div></td>
+                  <td><div class="buyer-phone">{{ b.phone }}</div></td>
+                  <td><div class="buyer-email">{{ b.email }}</div></td>
+                  <td><div class="buyer-city">{{ b.city }}</div></td>
+                  <td><span class="buyer-orders">{{ b.orderCount }}</span></td>
+                  <td><div class="buyer-spent">PKR {{ b.totalSpent | number }}</div></td>
+                  <td><div class="buyer-date">{{ b.lastOrderAt | date:'dd MMM yyyy' }}</div></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
     </div>
   `
 })
 export class DashboardComponent implements OnInit {
   private productService = inject(ProductService);
   private orderService   = inject(OrderService);
+  private http           = inject(HttpClient);
+  private api            = environment.apiUrl;
 
   stats = signal([
     { svg: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', iconColor: '#c9a96e', label: 'Total Products', value: '—', change: 'loading' },
@@ -292,6 +318,7 @@ export class DashboardComponent implements OnInit {
   ]);
 
   recentOrders = signal<any[]>([]);
+  buyers       = signal<any[]>([]);
 
   ngOnInit() {
     this.productService.getProducts().subscribe({
@@ -299,10 +326,11 @@ export class DashboardComponent implements OnInit {
         i === 0 ? { ...st, value: String(p.length), change: 'active' } : st
       ))
     });
+
     this.orderService.getOrders().subscribe({
       next: (orders) => {
-        const pending = orders.filter(o => o.status === 'pending').length;
-        const revenue = orders.reduce((sum, o) => sum + o.total, 0);
+        const pending = orders.filter((o: any) => o.status === 'pending').length;
+        const revenue = orders.reduce((sum: number, o: any) => sum + o.total, 0);
         this.stats.update(s => s.map((st, i) => {
           if (i === 1) return { ...st, value: String(orders.length), change: `${pending} pending` };
           if (i === 2) return { ...st, value: revenue.toLocaleString(), change: 'total' };
@@ -311,14 +339,13 @@ export class DashboardComponent implements OnInit {
         }));
         this.recentOrders.set(orders.slice(0, 5));
       },
-      error: () => {
-        this.stats.set([
-          { svg: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', iconColor: '#c9a96e', label: 'Total Products', value: '6',     change: 'active'    },
-          { svg: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', iconColor: '#c9a96e', label: 'Total Orders',   value: '3',     change: '1 pending' },
-          { svg: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z', iconColor: '#c9a96e', label: 'Revenue (PKR)',  value: '8,150', change: 'total'     },
-          { svg: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', iconColor: '#d97706', label: 'Pending Orders', value: '1',     change: 'need action' },
-        ]);
-      }
+      error: () => {}
+    });
+
+    // Load buyers list
+    this.http.get<any[]>(`${this.api}/buyers`).subscribe({
+      next: (b) => this.buyers.set(b),
+      error: () => this.buyers.set([])
     });
   }
 }

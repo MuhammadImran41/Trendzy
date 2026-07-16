@@ -12,7 +12,7 @@ if sys.platform == 'win32':
 load_dotenv()
 
 from app.database import init_db
-from app.routes import products, orders, scraper, reviews, categories, auth, tryon
+from app.routes import products, orders, scraper, reviews, categories, tryon
 from app.email_service import send_order_notification, GMAIL_USER, GMAIL_PASS, SELLER_EMAIL, FROM_ADDRESS
 
 app = FastAPI(title='Trendzy API', version='1.0.0')
@@ -38,8 +38,28 @@ app.include_router(orders.router,     prefix='/api/orders',     tags=['orders'])
 app.include_router(scraper.router,    prefix='/api/scraper',    tags=['scraper'])
 app.include_router(reviews.router,    prefix='/api/reviews',    tags=['reviews'])
 app.include_router(categories.router, prefix='/api/categories', tags=['categories'])
-app.include_router(auth.router,       prefix='/api/auth',       tags=['auth'])
 app.include_router(tryon.router,      prefix='/api/try-on',     tags=['try-on'])
+
+# Buyers list for seller panel
+from fastapi import Depends
+from app.database import get_db, BuyerProfileDB
+from sqlalchemy.orm import Session
+
+@app.get('/api/buyers', tags=['buyers'])
+def get_buyers(db: Session = Depends(get_db)):
+    buyers = db.query(BuyerProfileDB).order_by(BuyerProfileDB.lastOrderAt.desc()).all()
+    return [{
+        'id':           b.id,
+        'name':         b.name,
+        'phone':        b.phone,
+        'email':        b.email or '—',
+        'city':         b.city,
+        'address':      b.address,
+        'orderCount':   b.orderCount,
+        'totalSpent':   b.totalSpent,
+        'firstOrderAt': b.firstOrderAt,
+        'lastOrderAt':  b.lastOrderAt,
+    } for b in buyers]
 
 # Serve static files (try-on results)
 from fastapi.staticfiles import StaticFiles

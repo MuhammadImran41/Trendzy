@@ -1,12 +1,11 @@
-import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { inject } from '@angular/core';
 
 export const sellerAuthGuard: CanActivateFn = () => {
-  const auth   = inject(AuthService);
   const router = inject(Router);
+  const token  = localStorage.getItem('trendzy_seller_token');
 
-  if (auth.isLoggedIn() && auth.isSeller()) return true;
+  if (token === 'seller_authenticated') return true;
 
   router.navigate(['/seller/login']);
   return false;

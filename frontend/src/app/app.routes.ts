@@ -1,9 +1,8 @@
 import { Routes } from '@angular/router';
 import { sellerAuthGuard } from './guards/seller-auth.guard';
-import { buyerAuthGuard } from './guards/buyer-auth.guard';
 
 export const routes: Routes = [
-  // ── Buyer (public) routes ──────────────────────────────
+  // ── Buyer (public) routes — no login required ──────────
   {
     path: '',
     loadComponent: () => import('./layouts/buyer-layout/buyer-layout.component')
@@ -13,20 +12,10 @@ export const routes: Routes = [
       { path: 'products', loadComponent: () => import('./pages/buyer/products/products.component').then(m => m.ProductsComponent) },
       { path: 'product/:id', loadComponent: () => import('./pages/buyer/product-detail/product-detail.component').then(m => m.ProductDetailComponent) },
       { path: 'cart', loadComponent: () => import('./pages/buyer/cart/cart.component').then(m => m.CartComponent) },
-      { path: 'checkout', canActivate: [buyerAuthGuard], loadComponent: () => import('./pages/buyer/checkout/checkout.component').then(m => m.CheckoutComponent) },
+      { path: 'checkout', loadComponent: () => import('./pages/buyer/checkout/checkout.component').then(m => m.CheckoutComponent) },
       { path: 'order-success', loadComponent: () => import('./pages/buyer/order-success/order-success.component').then(m => m.OrderSuccessComponent) },
       { path: 'try-on', loadComponent: () => import('./pages/buyer/tryon/tryon.component').then(m => m.TryonComponent) },
     ]
-  },
-
-  // ── Buyer auth ─────────────────────────────────────────
-  {
-    path: 'login',
-    loadComponent: () => import('./pages/buyer/login/login.component').then(m => m.LoginComponent)
-  },
-  {
-    path: 'register',
-    loadComponent: () => import('./pages/buyer/register/register.component').then(m => m.RegisterComponent)
   },
 
   // ── Seller auth ────────────────────────────────────────

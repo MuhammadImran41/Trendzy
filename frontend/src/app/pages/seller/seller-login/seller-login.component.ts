@@ -2,7 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-seller-login',
@@ -317,8 +318,10 @@ import { AuthService } from '../../../services/auth.service';
   `
 })
 export class SellerLoginComponent {
-  private auth   = inject(AuthService);
-  private router = inject(Router);
+  private router  = inject(Router);
+  private http    = inject(HttpClient);
+  private api     = environment.apiUrl;
+
   email    = '';
   password = '';
   error    = signal('');
@@ -332,10 +335,14 @@ export class SellerLoginComponent {
     this.loading.set(true);
     this.error.set('');
 
-    this.auth.login(this.email, this.password).subscribe({
+    this.http.post<any>(`${this.api}/auth/login`, {
+      email: this.email,
+      password: this.password
+    }).subscribe({
       next: (res) => {
         this.loading.set(false);
-        if (res.user.role === 'seller') {
+        if (res.user?.role === 'seller') {
+          localStorage.setItem('trendzy_seller_token', 'seller_authenticated');
           this.router.navigate(['/seller/dashboard']);
         } else {
           this.error.set('This account does not have seller access.');
