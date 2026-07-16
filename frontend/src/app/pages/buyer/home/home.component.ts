@@ -109,75 +109,81 @@ import { Product } from '../../../models/product.model';
 
     .carousel-track {
       position: relative;
-      width: 460px;
-      height: 480px;
-      overflow: visible;
+      width: 560px;
+      height: 500px;
+      flex-shrink: 0;
     }
 
+    /* Base card — all same 160x200 */
     .c-card {
       position: absolute;
-      width: 220px;
-      height: 220px;
+      width: 160px;
+      height: 200px;
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
-      transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+      /* default center anchor */
       top: 50%;
       left: 50%;
-      margin-top: -110px;
-      margin-left: -110px;
+      margin-top: -100px;
+      margin-left: -80px;
     }
 
     .c-card img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
-      image-rendering: -webkit-optimize-contrast;
     }
 
-    /* CENTER — active */
+    /* ── CENTER — bigger, sharp, elevated ── */
     .c-card.pos-center {
-      transform: translate(0, 0) scale(1);
+      width: 200px;
+      height: 260px;
+      margin-top: -130px;
+      margin-left: -100px;
+      transform: translate(0, 0) translateZ(0);
       z-index: 10;
       filter: none;
-      box-shadow: 0 20px 50px rgba(26,20,16,0.25);
+      box-shadow: 0 24px 60px rgba(26,20,16,0.30);
+      border-radius: 16px;
     }
 
-    /* TOP */
+    /* ── TOP ── */
     .c-card.pos-top {
-      transform: translate(0, -200px) scale(1);
-      z-index: 3;
-      filter: brightness(0.65);
-      opacity: 0.85;
+      transform: translate(0, -210px);
+      z-index: 5;
+      filter: blur(1.5px) brightness(0.6);
+      opacity: 0.8;
     }
 
-    /* BOTTOM */
+    /* ── BOTTOM ── */
     .c-card.pos-bottom {
-      transform: translate(0, 200px) scale(1);
-      z-index: 3;
-      filter: brightness(0.65);
+      transform: translate(0, 210px);
+      z-index: 5;
+      filter: blur(1.5px) brightness(0.6);
+      opacity: 0.8;
+    }
+
+    /* ── LEFT ── */
+    .c-card.pos-left {
+      transform: translate(-220px, 0);
+      z-index: 5;
+      filter: blur(1.5px) brightness(0.65);
       opacity: 0.85;
     }
 
-    /* LEFT */
-    .c-card.pos-left {
-      transform: translate(-240px, 0) scale(1);
-      z-index: 3;
-      filter: brightness(0.7);
-      opacity: 0.9;
-    }
-
-    /* RIGHT */
+    /* ── RIGHT ── */
     .c-card.pos-right {
-      transform: translate(240px, 0) scale(1);
-      z-index: 3;
-      filter: brightness(0.7);
-      opacity: 0.9;
+      transform: translate(220px, 0);
+      z-index: 5;
+      filter: blur(1.5px) brightness(0.65);
+      opacity: 0.85;
     }
 
-    /* Hidden — extra slides waiting off-screen */
+    /* Hidden */
     .c-card.pos-hidden {
-      transform: translate(0, 0) scale(0.3);
+      transform: translate(0, 0) scale(0.2);
       z-index: 1;
       opacity: 0;
       pointer-events: none;
