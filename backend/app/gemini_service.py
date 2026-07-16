@@ -1,47 +1,41 @@
 """
 Virtual Try-On Service for Trendzy.
-Uses Hugging Face Kolors-Virtual-Try-On model (free tier).
+Uses Replicate cuuupid/idm-vton model.
 """
 import os
 import uuid
 import time
 import threading
 import requests
-import base64
 from pathlib import Path
 from datetime import datetime, timedelta
 from PIL import Image
 import io
+import replicate
 
-HF_TOKEN = os.getenv('HF_TOKEN', '')
+REPLICATE_TOKEN = os.getenv('REPLICATE_API_TOKEN', '')
 
-# API endpoint
-HF_API_URL = "https://api-inference.huggingface.co/models/Kwai-Kolors/Kolors-Virtual-Try-On"
-
-# Folders
 UPLOAD_DIR = Path('app/static/tryon_uploads')
 RESULT_DIR = Path('app/static/tryon_results')
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 RESULT_DIR.mkdir(parents=True, exist_ok=True)
 
-MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+MAX_FILE_SIZE       = 5 * 1024 * 1024
 AUTO_DELETE_MINUTES = 30
 
 # ── Rate limiting ─────────────────────────────────────────────────────────────
 _rate_store: dict = {}
-RATE_LIMIT_CALLS  = 5
-RATE_LIMIT_WINDOW = 60
 
 def _check_rate_limit(client_ip: str) -> bool:
     now   = time.time()
-    calls = [t for t in _rate_store.get(client_ip, []) if now - t < RATE_LIMIT_WINDOW]
-    if len(calls) >= RATE_LIMIT_CALLS:
+    calls = [t for t in _rate_store.get(client_ip, []) if now - t < 60]
+    if len(calls) >= 5:
         return False
     calls.append(now)
     _rate_store[client_ip] = calls
     return True
 
-# ── Auto-delete old uploads ───────────────────────────────────────────────────
+# ── Auto-delete uploads ───────────────────────────────────────────────────────
 def _cleanup_old_files():
     cutoff = datetime.now() - timedelta(minutes=AUTO_DELETE_MINUTES)
     for f in UPLOAD_DIR.glob('*'):
@@ -61,98 +55,78 @@ def _resize_image(image_bytes: bytes, max_dim: int = 768) -> bytes:
     if w > max_dim or h > max_dim:
         img.thumbnail((max_dim, max_dim), Image.LANCZOS)
     buf = io.BytesIO()
-    img.save(buf, format='JPEG', quality=88)
+    img.save(buf, format='JPEG', quality=90)
     return buf.getvalue()
 
-def _to_base64(image_bytes: bytes) -> str:
-    return base64.b64encode(image_bytes).decode('utf-8')
-
-# ── Main try-on function ──────────────────────────────────────────────────────
+# ── Main function ─────────────────────────────────────────────────────────────
 def generate_tryon(
-    user_photo_bytes: bytes,
+    user_photo_bytes:     bytes,
     clothing_image_bytes: bytes,
-    product_name: str = 'clothing item',
-    client_ip: str = '0.0.0.0'
+    product_name:         str = 'clothing item',
+    client_ip:            str = '0.0.0.0'
 ) -> dict:
 
-    # Rate limit
     if not _check_rate_limit(client_ip):
-        return {'success': False, 'error': 'Too many requests. Please wait a minute.'}
+        return {'success': False, 'error': 'Too many requests. Wait a minute.'}
 
-    # Token check
-    if not HF_TOKEN:
-        return {'success': False, 'error': 'HF_TOKEN not configured in .env'}
+    if not REPLICATE_TOKEN:
+        return {'success': False, 'error': 'REPLICATE_API_TOKEN not set in .env'}
 
     try:
-        # Resize images
+        # Resize
         person_bytes  = _resize_image(user_photo_bytes, 768)
         garment_bytes = _resize_image(clothing_image_bytes, 768)
 
-        print(f'[TryOn] Calling HF Kolors Try-On for: {product_name}')
+        # Save temp files for Replicate (needs file objects)
+        tmp_person  = UPLOAD_DIR / f'person_{uuid.uuid4().hex[:8]}.jpg'
+        tmp_garment = UPLOAD_DIR / f'garment_{uuid.uuid4().hex[:8]}.jpg'
+        tmp_person.write_bytes(person_bytes)
+        tmp_garment.write_bytes(garment_bytes)
 
-        # HF Inference API payload
-        payload = {
-            "inputs": {
-                "person_image": _to_base64(person_bytes),
-                "garment_image": _to_base64(garment_bytes),
-            }
-        }
+        print(f'[TryOn] Running cuuupid/idm-vton for: {product_name}')
+        os.environ['REPLICATE_API_TOKEN'] = REPLICATE_TOKEN
 
-        headers = {
-            "Authorization": f"Bearer {HF_TOKEN}",
-            "Content-Type": "application/json"
-        }
-
-        # Retry if model is loading
-        for attempt in range(3):
-            response = requests.post(HF_API_URL, headers=headers, json=payload, timeout=120)
-
-            if response.status_code == 200:
-                break
-            elif response.status_code == 503:
-                # Model loading
-                wait = response.json().get('estimated_time', 20)
-                print(f'[TryOn] Model loading, waiting {wait}s...')
-                time.sleep(min(wait, 30))
-            elif response.status_code == 422:
-                # Try alternative payload format
-                payload = {
-                    "inputs": {
-                        "image": _to_base64(person_bytes),
-                        "garment": _to_base64(garment_bytes),
-                    }
+        with open(tmp_person, 'rb') as fp, open(tmp_garment, 'rb') as fg:
+            output = replicate.run(
+                "cuuupid/idm-vton:0513734a452173b8173e907e3a59d19a36266e55b48528559432bd21c7d7e985",
+                input={
+                    "human_img":       fp,
+                    "garm_img":        fg,
+                    "garment_des":     product_name,
+                    "is_checked":      True,
+                    "is_checked_crop": False,
+                    "denoise_steps":   30,
+                    "seed":            42,
                 }
-            else:
-                err = response.text[:300]
-                print(f'[TryOn] HF error {response.status_code}: {err}')
-                return {'success': False, 'error': f'API error ({response.status_code}). Try again.'}
+            )
 
-        if response.status_code != 200:
-            return {'success': False, 'error': 'Model still loading. Please try again in 30 seconds.'}
-
-        result_bytes = response.content
-
-        # Validate it's an image
+        # Cleanup temp files
         try:
-            Image.open(io.BytesIO(result_bytes))
+            tmp_person.unlink()
+            tmp_garment.unlink()
         except Exception:
-            return {'success': False, 'error': 'Invalid response from AI model. Please try again.'}
+            pass
+
+        # Download result
+        result_url = str(output)
+        resp = requests.get(result_url, timeout=60)
+        resp.raise_for_status()
+        result_bytes = resp.content
+
+        # Validate image
+        Image.open(io.BytesIO(result_bytes))
 
         # Save result
-        filename   = f'tryon_{uuid.uuid4().hex[:12]}.jpg'
-        out_path   = RESULT_DIR / filename
-        with open(out_path, 'wb') as f:
-            f.write(result_bytes)
+        filename = f'tryon_{uuid.uuid4().hex[:12]}.jpg'
+        (RESULT_DIR / filename).write_bytes(result_bytes)
 
-        print(f'[TryOn] ✓ Generated: {filename}')
+        print(f'[TryOn] ✓ Done: {filename}')
         return {
             'success':    True,
             'result_url': f'/static/tryon_results/{filename}',
             'filename':   filename
         }
 
-    except requests.Timeout:
-        return {'success': False, 'error': 'Request timed out. AI model is busy, please try again.'}
     except Exception as e:
         print(f'[TryOn] ✗ {type(e).__name__}: {e}')
         return {'success': False, 'error': f'Generation failed: {str(e)[:200]}'}

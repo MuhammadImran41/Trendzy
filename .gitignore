@@ -36,3 +36,6 @@ desktop.ini
 *.log
 *.sql
 *.db
+# Try-on generated images (temp files)
+backend/app/static/tryon_uploads/
+backend/app/static/tryon_results/
