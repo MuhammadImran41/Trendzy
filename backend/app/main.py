@@ -71,7 +71,33 @@ app.mount('/static', StaticFiles(directory='app/static'), name='static')
 
 @app.get('/')
 def root():
-    return {'status': 'Trendzy API running ✨', 'db': 'SQLite'}
+    return {'status': 'Trendzy API running ✨', 'db': 'PostgreSQL'}
+
+
+# ── Seller auth (simple env-based login) ─────────────────────────────────────
+from pydantic import BaseModel as PB
+from fastapi import HTTPException as _HTTPException
+
+class LoginReq(PB):
+    email:    str
+    password: str
+
+@app.post('/api/auth/login', tags=['auth'])
+def seller_login(data: LoginReq):
+    seller_email = os.getenv('SELLER_EMAIL', 'trendzyofficial.site@gmail.com')
+    seller_pass  = 'seller@trendzy123'
+
+    if data.email.lower().strip() == seller_email.lower() and data.password == seller_pass:
+        return {
+            'token': 'seller_token_valid',
+            'user': {
+                'id':    '1',
+                'name':  'Trendzy Admin',
+                'email': seller_email,
+                'role':  'seller'
+            }
+        }
+    raise _HTTPException(status_code=401, detail='Invalid email or password')
 
 
 @app.get('/api/email-status')
