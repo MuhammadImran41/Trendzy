@@ -26,36 +26,36 @@ from app.database import SessionLocal, ProductDB, init_db
 
 # ── Category URLs ──────────────────────────────────────────────────────────────
 CATEGORIES = {
-    "womens-unstitched":     ("https://www.markaz.app/shop?category=womens-unstitched",     "Women's Unstitched"),
-    "womens-stitched":       ("https://www.markaz.app/shop?category=womens-stitched",       "Women's Stitched"),
-    "mens-unstitched":       ("https://www.markaz.app/shop?category=mens-unstitched",       "Men's Unstitched"),
-    "mens-stitched":         ("https://www.markaz.app/shop?category=mens-stitched",         "Men's Stitched"),
-    "kids-clothing":         ("https://www.markaz.app/shop?category=kids-clothing",         "Kids Clothing"),
-    "kids-accessories":      ("https://www.markaz.app/shop?category=kids-accessories",      "Kids Accessories"),
-    "cosmetics":             ("https://www.markaz.app/shop?category=cosmetics",             "Cosmetics"),
-    "jewellery":             ("https://www.markaz.app/shop?category=jewellery",             "Jewellery"),
-    "shoes":                 ("https://www.markaz.app/shop?category=shoes",                 "Shoes"),
-    "bags":                  ("https://www.markaz.app/shop?category=bags",                  "Bags"),
-    "electronics":           ("https://www.markaz.app/shop?category=electronics",           "Electronics"),
-    "electronic-accessories":("https://www.markaz.app/shop?category=electronic-accessories","Electronic Accessories"),
-    "home-decor":            ("https://www.markaz.app/shop?category=home-decor",            "Home Decor"),
-    "home-essentials":       ("https://www.markaz.app/shop?category=home-essentials",       "Home Essentials"),
-    "home-linen":            ("https://www.markaz.app/shop?category=home-linen",            "Home Linen"),
-    "bedding":               ("https://www.markaz.app/shop?category=bedding",               "Bedding"),
-    "kitchenware":           ("https://www.markaz.app/shop?category=kitchenware",           "Kitchenware"),
-    "fashion-accessories":   ("https://www.markaz.app/shop?category=fashion-accessories",   "Fashion Accessories"),
-    "perfumes":              ("https://www.markaz.app/shop?category=perfumes",              "Perfumes"),
-    "womens-handbags":       ("https://www.markaz.app/shop?category=womens-handbags",       "Women's Handbags"),
-    "fitness":               ("https://www.markaz.app/shop?category=fitness",               "Fitness"),
-    "mother-baby":           ("https://www.markaz.app/shop?category=mother-baby",           "Mother & Baby"),
-    "islamic-accessories":   ("https://www.markaz.app/shop?category=islamic-accessories",   "Islamic Accessories"),
-    "auto-bike":             ("https://www.markaz.app/shop?category=auto-bike",             "Auto & Bike Accessories"),
-    "unisex-clothing":       ("https://www.markaz.app/shop?category=unisex-clothing",       "Unisex Clothing"),
-    "books-stationery":      ("https://www.markaz.app/shop?category=books-stationery",      "Books & Stationery"),
-    "womens-shawls":         ("https://www.markaz.app/shop?category=womens-shawls",         "Women's Shawls"),
-    "mens-shawls":           ("https://www.markaz.app/shop?category=mens-shawls",           "Men's Shawls"),
-    "womens-undergarments":  ("https://www.markaz.app/shop?category=womens-undergarments",  "Women Undergarments"),
-    "festive":               ("https://www.markaz.app/shop?category=festive",               "Festive Collection"),
+    "womens-unstitched":     ("https://www.markaz.app/shop/home-page/Women%27s%20Unstitched",    "Women's Unstitched"),
+    "womens-stitched":       ("https://www.markaz.app/shop/home-page/Women%27s%20Stitched",      "Women's Stitched"),
+    "mens-unstitched":       ("https://www.markaz.app/shop/home-page/Men%27s%20Unstitched",      "Men's Unstitched"),
+    "mens-stitched":         ("https://www.markaz.app/shop/home-page/Men%27s%20Stitched",        "Men's Stitched"),
+    "kids-clothing":         ("https://www.markaz.app/shop/home-page/Kids%20Clothing",           "Kids Clothing"),
+    "kids-accessories":      ("https://www.markaz.app/shop/home-page/Kids%20Accessories",        "Kids Accessories"),
+    "cosmetics":             ("https://www.markaz.app/shop/home-page/Cosmetics",                 "Cosmetics"),
+    "jewellery":             ("https://www.markaz.app/shop/home-page/Jewellery",                 "Jewellery"),
+    "shoes":                 ("https://www.markaz.app/shop/home-page/Shoes",                     "Shoes"),
+    "bags":                  ("https://www.markaz.app/shop/home-page/Bags",                      "Bags"),
+    "electronics":           ("https://www.markaz.app/shop/home-page/Electronics",               "Electronics"),
+    "electronic-accessories":("https://www.markaz.app/shop/home-page/Electronic%20Accessories",  "Electronic Accessories"),
+    "home-decor":            ("https://www.markaz.app/shop/home-page/Home%20Decor",              "Home Decor"),
+    "home-essentials":       ("https://www.markaz.app/shop/home-page/Home%20Essentials",         "Home Essentials"),
+    "home-linen":            ("https://www.markaz.app/shop/home-page/Home%20Linen",              "Home Linen"),
+    "bedding":               ("https://www.markaz.app/shop/home-page/Bedding",                   "Bedding"),
+    "kitchenware":           ("https://www.markaz.app/shop/home-page/Kitchenware",               "Kitchenware"),
+    "fashion-accessories":   ("https://www.markaz.app/shop/home-page/Fashion%20Accessories",     "Fashion Accessories"),
+    "perfumes":              ("https://www.markaz.app/shop/home-page/Perfumes",                  "Perfumes"),
+    "womens-handbags":       ("https://www.markaz.app/shop/home-page/Women%27s%20Handbags",      "Women's Handbags"),
+    "fitness":               ("https://www.markaz.app/shop/home-page/Fitness",                   "Fitness"),
+    "mother-baby":           ("https://www.markaz.app/shop/home-page/Mother%20%26%20Baby",       "Mother & Baby"),
+    "islamic-accessories":   ("https://www.markaz.app/shop/home-page/Islamic%20Accessories",     "Islamic Accessories"),
+    "auto-bike":             ("https://www.markaz.app/shop/home-page/Auto%20%26%20Bike%20Accessories", "Auto & Bike Accessories"),
+    "unisex-clothing":       ("https://www.markaz.app/shop/home-page/Unisex%20Clothing",         "Unisex Clothing"),
+    "books-stationery":      ("https://www.markaz.app/shop/home-page/Books%20%26%20Stationery",  "Books & Stationery"),
+    "womens-shawls":         ("https://www.markaz.app/shop/home-page/Women%27s%20Shawls",        "Women's Shawls"),
+    "mens-shawls":           ("https://www.markaz.app/shop/home-page/Men%27s%20Shawls",          "Men's Shawls"),
+    "womens-undergarments":  ("https://www.markaz.app/shop/home-page/Women%20Undergarments",     "Women Undergarments"),
+    "festive":               ("https://www.markaz.app/shop/home-page/Festive%20Collection",      "Festive Collection"),
 }
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36"
@@ -300,7 +300,8 @@ def save_to_db(products: list[dict], markup: float = 30.0) -> tuple[int, int]:
 # ── Main ───────────────────────────────────────────────────────────────────────
 async def main():
     parser = argparse.ArgumentParser(description="Markaz.app → Trendzy Importer")
-    parser.add_argument("--category", choices=list(CATEGORIES.keys()), help="Single category slug")    parser.add_argument("--limit",    type=int,   default=50,   help="Products per category (default: 50)")
+    parser.add_argument("--category", choices=list(CATEGORIES.keys()), help="Single category slug")
+    parser.add_argument("--limit",    type=int,   default=50,   help="Products per category (default: 50)")
     parser.add_argument("--markup",   type=float, default=30.0, help="Markup %% on cost price (default: 30)")
     args = parser.parse_args()
 
