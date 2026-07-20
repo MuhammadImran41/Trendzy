@@ -31,7 +31,10 @@ import { CartService } from '../../services/cart.service';
     .img-wrap img {
       width: 100%; height: 100%;
       object-fit: cover;
+      object-position: center top;
       transition: transform 0.6s ease;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
     }
     .card:hover .img-wrap img { transform: scale(1.06); }
 
@@ -182,7 +185,9 @@ import { CartService } from '../../services/cart.service';
     <div class="card">
       <!-- Image -->
       <a [routerLink]="['/product', product.id]" class="img-wrap">
-        <img [src]="product.images[0]" [alt]="product.name" loading="lazy" />
+        <img [src]="product.images[0]" [alt]="product.name"
+             loading="lazy" decoding="async"
+             onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&q=85&fit=crop'" />
 
         <span class="cat-pill">{{ product.category }}</span>
 
