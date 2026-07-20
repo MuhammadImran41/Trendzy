@@ -307,8 +307,8 @@ import { environment } from '../../../../environments/environment';
             </div>
           }
 
-          <button class="login-btn" (click)="login()">
-            Sign In to Dashboard
+          <button class="login-btn" (click)="login()" [disabled]="loading()">
+            {{ loading() ? 'Signing in...' : 'Sign In to Dashboard' }}
           </button>
 
         </div>

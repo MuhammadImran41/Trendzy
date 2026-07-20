@@ -39,10 +39,11 @@ import { Product } from '../../../models/product.model';
 
     /* Left content */
     .hero-content {
-      padding: 2rem 3rem 2rem 10rem;
+      padding: 2rem 3rem 2rem 5rem;
       display: flex; flex-direction: column; justify-content: center;
     }
-    @media (max-width: 1200px) { .hero-content { padding: 2rem 2rem 2rem 5rem; } }
+    @media (max-width: 1200px) { .hero-content { padding: 2rem 2rem 2rem 3rem; } }
+    @media (max-width: 768px)  { .hero-content { padding: 2rem 1.5rem !important; } }
 
     .hero-eyebrow {
       font-family: 'Inter', sans-serif;
@@ -408,6 +409,32 @@ import { Product } from '../../../models/product.model';
     .cta-sub { font-family: 'Inter', sans-serif; font-size: 0.85rem; letter-spacing: 0.1em; color: #6b6560; margin-bottom: 2.5rem; max-width: 400px; margin-left: auto; margin-right: auto; }
     .cta-eyebrow { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: #c9a96e; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem; }
     .cta-eyebrow::before, .cta-eyebrow::after { content: ''; width: 40px; height: 1px; background: rgba(201,169,110,0.5); }
+
+    /* Local button overrides for home */
+    .btn-outline {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.875rem 2.5rem;
+      background: transparent; color: #1a1410;
+      border: 1.5px solid #1a1410;
+      font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer;
+      transition: all 0.3s ease; border-radius: 2px;
+    }
+    .btn-outline:hover { background: #1a1410; color: #faf7f4; }
+
+    .btn-gold {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.875rem 2.5rem;
+      background: linear-gradient(135deg, #c9a96e, #8b6914);
+      color: #fff; border: none;
+      font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer;
+      transition: all 0.3s ease; border-radius: 2px;
+      box-shadow: 0 4px 20px rgba(201,169,110,0.4);
+    }
+    .btn-gold:hover { filter: brightness(1.1); box-shadow: 0 6px 28px rgba(201,169,110,0.5); }
   `],
   template: `
 

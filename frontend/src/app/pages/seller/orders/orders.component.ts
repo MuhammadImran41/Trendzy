@@ -235,7 +235,9 @@ import { Order } from '../../../models/order.model';
                     <div class="order-items">
                       @for (item of order.items; track item.productId) {
                         <div class="order-item">
-                          <img [src]="item.productImage" class="item-img" [alt]="item.productName" />
+                          <img [src]="item.productImage || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=100'"
+                               class="item-img" [alt]="item.productName"
+                               onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=100'" />
                           <span class="item-name">{{ item.productName }}</span>
                           <span class="item-qty">×{{ item.quantity }}</span>
                           <span class="item-price">PKR {{ (item.price * item.quantity) | number }}</span>
