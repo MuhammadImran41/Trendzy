@@ -54,7 +54,7 @@ CATEGORIES = {
     "books-stationery":      ("https://www.markaz.app/shop/home-page/Books%20%26%20Stationery",  "Books & Stationery"),
     "womens-shawls":         ("https://www.markaz.app/shop/home-page/Women%27s%20Shawls",        "Women's Shawls"),
     "mens-shawls":           ("https://www.markaz.app/shop/home-page/Men%27s%20Shawls",          "Men's Shawls"),
-    "womens-undergarments":  ("https://www.markaz.app/shop/home-page/Women%20Undergarments",     "Women Undergarments"),
+    "mens-undergarments":    ("https://www.markaz.app/shop/home-page/Men%27s%20Undergarments",   "Men's Undergarments"),
     "festive":               ("https://www.markaz.app/shop/home-page/Festive%20Collection",      "Festive Collection"),
 }
 
