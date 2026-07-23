@@ -89,17 +89,8 @@ import { FormsModule } from '@angular/forms';
         <!-- Brand -->
         <div>
           <div class="brand-logo-row">
-            <svg width="36" height="40" viewBox="0 0 84 96" fill="none">
-              <rect x="6" y="30" width="72" height="58" rx="8" fill="#2a2520"/>
-              <path d="M28 30 C28 14 56 14 56 30" stroke="#c8960c" stroke-width="5.5" stroke-linecap="round" fill="none"/>
-              <rect x="6" y="30" width="72" height="8" rx="4" fill="#c8960c"/>
-              <text x="35" y="74" font-family="Georgia,serif" font-size="28" font-weight="700" fill="#f5d160" text-anchor="middle">T</text>
-              <text x="51" y="74" font-family="Georgia,serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">Z</text>
-            </svg>
-            <div>
-              <div class="brand-wordmark"><span class="trend">TREND</span><span class="zy">ZY</span></div>
-              <div class="brand-tagline">Premium · Style · Delivered</div>
-            </div>
+            <img src="logo.png" alt="Trendzy"
+                 style="height:40px;width:auto;object-fit:contain;display:block;" />
           </div>
           <p class="brand-desc">Your one-stop shop for fashion, beauty, electronics & more. Delivered across Pakistan with cash on delivery.</p>
           <div class="brand-pills">

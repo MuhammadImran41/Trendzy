@@ -222,17 +222,8 @@ import { OrderService } from '../../services/order.service';
       <!-- Sidebar -->
       <aside class="sidebar">
         <div class="sidebar-logo">
-          <svg width="34" height="38" viewBox="0 0 84 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="6" y="30" width="72" height="58" rx="8" fill="#1a1a1a"/>
-            <path d="M28 30 C28 14 56 14 56 30" stroke="#c8960c" stroke-width="5.5" stroke-linecap="round" fill="none"/>
-            <rect x="6" y="30" width="72" height="8" rx="4" fill="#c8960c"/>
-            <text x="35" y="74" font-family="Georgia, serif" font-size="28" font-weight="700" fill="#f5d160" text-anchor="middle">T</text>
-            <text x="51" y="74" font-family="Georgia, serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">Z</text>
-          </svg>
-          <div class="logo-text-block">
-            <div class="logo-wordmark-s"><span class="trend">TREND</span><span class="zy">ZY</span></div>
-            <div class="logo-tagline-s">Premium · Style · Delivered</div>
-          </div>
+          <img src="logo.png" alt="Trendzy"
+               style="height:32px;width:auto;object-fit:contain;display:block;" />
         </div>
 
         <nav class="sidebar-nav">
