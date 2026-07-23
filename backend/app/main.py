@@ -84,7 +84,7 @@ class LoginReq(PB):
 
 @app.post('/api/auth/login', tags=['auth'])
 def seller_login(data: LoginReq):
-    seller_email = os.getenv('SELLER_EMAIL', 'trendzyofficial.site@gmail.com')
+    seller_email = os.getenv('SELLER_EMAIL', 'trendzyofficial.store@gmail.com')
     seller_pass  = 'seller@trendzy123'
 
     if data.email.lower().strip() == seller_email.lower() and data.password == seller_pass:

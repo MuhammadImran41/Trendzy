@@ -9,7 +9,7 @@ from app.database import SessionLocal, UserDB, init_db
 init_db()
 db = SessionLocal()
 
-SELLER_EMAIL    = 'trendzyofficial.site@gmail.com'
+SELLER_EMAIL    = 'trendzyofficial.store@gmail.com'
 SELLER_PASSWORD = 'seller@trendzy123'
 SELLER_NAME     = 'Trendzy Admin'
 

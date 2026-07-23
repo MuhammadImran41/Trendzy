@@ -8,7 +8,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
 
-SELLER_EMAIL = os.getenv('SELLER_EMAIL', 'trendzyofficial.site@gmail.com')
+SELLER_EMAIL = os.getenv('SELLER_EMAIL', 'trendzyofficial.store@gmail.com')
 GMAIL_USER   = os.getenv('GMAIL_USER',   '')
 GMAIL_PASS   = os.getenv('GMAIL_PASS',   '')
 FROM_ADDRESS = f'Trendzy <{GMAIL_USER}>' if GMAIL_USER else 'Trendzy <noreply@trendzy.pk>'
