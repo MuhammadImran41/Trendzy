@@ -40,6 +40,7 @@ import { ProductService } from '../../services/product.service';
       height: 68px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.25);
       transition: background 0.3s, box-shadow 0.3s;
+      position: relative;
     }
     nav.scrolled {
       background: rgba(20,16,10,0.92);
@@ -68,7 +69,7 @@ import { ProductService } from '../../services/product.service';
     /* ── Center nav links ── */
     .nav-links {
       display: flex; align-items: center; gap: 0.25rem;
-      flex: 1;
+      position: absolute; left: 50%; transform: translateX(-50%);
     }
     .nav-link {
       font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 400;
