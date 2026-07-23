@@ -48,24 +48,18 @@ import { ProductService } from '../../services/product.service';
 
     /* ── Logo ── */
     .logo {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: center;
       text-decoration: none; flex-shrink: 0; margin-right: 28px;
     }
     .logo-wordmark {
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: 22px; font-weight: 700; letter-spacing: 6px; line-height: 1;
+      font-size: 28px; font-weight: 700; letter-spacing: 7px; line-height: 1;
       position: relative;
     }
     .logo-wordmark .shop { color: #ffffff; }
     .logo-wordmark .zee {
       background: linear-gradient(135deg, #c8920a, #f5d160, #c8920a);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .logo-tagline {
-      font-family: 'Inter', sans-serif;
-      font-size: 7px; letter-spacing: 3px;
-      color: rgba(201,169,110,0.8); text-transform: uppercase;
-      display: block; margin-top: 3px;
     }
     .logo-wrap {
       display: flex; flex-direction: column; align-items: flex-start;
@@ -171,10 +165,7 @@ import { ProductService } from '../../services/product.service';
 
         <!-- Logo -->
         <a routerLink="/" class="logo">
-          <div class="logo-wrap">
-            <div class="logo-wordmark"><span class="shop">TREND</span><span class="zee">ZY</span></div>
-            <span class="logo-tagline">Premium · Style · Delivered</span>
-          </div>
+          <div class="logo-wordmark"><span class="shop">TREND</span><span class="zee">ZY</span></div>
         </a>
 
         <!-- Center links -->
