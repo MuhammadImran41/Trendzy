@@ -222,8 +222,10 @@ import { OrderService } from '../../services/order.service';
       <!-- Sidebar -->
       <aside class="sidebar">
         <div class="sidebar-logo">
-          <img src="logo.png" alt="Trendzy"
-               style="height:32px;width:auto;object-fit:contain;display:block;" />
+          <div class="logo-text-block">
+            <div class="logo-wordmark-s"><span class="trend">TREND</span><span class="zy">ZY</span></div>
+            <div class="logo-tagline-s">Seller Panel</div>
+          </div>
         </div>
 
         <nav class="sidebar-nav">

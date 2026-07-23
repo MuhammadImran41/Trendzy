@@ -171,8 +171,10 @@ import { ProductService } from '../../services/product.service';
 
         <!-- Logo -->
         <a routerLink="/" class="logo">
-          <img src="logo.png" alt="Trendzy"
-               style="height:36px;width:auto;object-fit:contain;display:block;" />
+          <div class="logo-wrap">
+            <div class="logo-wordmark"><span class="shop">TREND</span><span class="zee">ZY</span></div>
+            <span class="logo-tagline">Premium · Style · Delivered</span>
+          </div>
         </a>
 
         <!-- Center links -->

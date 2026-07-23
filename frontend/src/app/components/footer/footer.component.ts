@@ -89,8 +89,7 @@ import { FormsModule } from '@angular/forms';
         <!-- Brand -->
         <div>
           <div class="brand-logo-row">
-            <img src="logo.png" alt="Trendzy"
-                 style="height:40px;width:auto;object-fit:contain;display:block;" />
+            <div class="brand-wordmark"><span class="trend">TREND</span><span class="zy">ZY</span></div>
           </div>
           <p class="brand-desc">Your one-stop shop for fashion, beauty, electronics & more. Delivered across Pakistan with cash on delivery.</p>
           <div class="brand-pills">
