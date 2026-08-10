@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://trendzy-api.onrender.com/api'
+  apiUrl: 'https://trendzy-api.up.railway.app/api'
 };
