@@ -7,7 +7,11 @@ frontend:
         - npm install --legacy-peer-deps
     build:
       commands:
+        - echo "Building with production configuration..."
+        - cat src/environments/environment.ts
         - npm run build -- --configuration production
+        - echo "Build complete. Checking output..."
+        - ls dist/trendzy/browser/ || true
   artifacts:
     baseDirectory: frontend/dist/trendzy/browser
     files:
