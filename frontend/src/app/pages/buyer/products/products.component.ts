@@ -135,9 +135,6 @@ const NAV_CATS: NavCat[] = [
 
     <div class="cat-nav">
       <div class="cat-nav-inner">
-        <div class="cat-tab-wrap">
-          <button class="cat-tab" [class.active]="!activeCat()" (click)="setFilter(null,null)">All</button>
-        </div>
         @for (cat of navCats; track cat.label) {
           <div class="cat-tab-wrap"
                (mouseenter)="cat.sub?.length ? hovered.set(cat.label) : null"
@@ -260,12 +257,14 @@ export class ProductsComponent implements OnInit {
         const found = NAV_CATS.find(c =>
           c.filter === params['category'] ||
           c.label.toLowerCase() === params['category'].toLowerCase());
-        if (found) this.setFilter(found, null);
+        if (found) { this.setFilter(found, null); return; }
       }
       if (params['sort'] === 'sale') {
-        this.setFilter(NAV_CATS.find(c => c.label === 'Sale')!, null);
+        this.setFilter(NAV_CATS.find(c => c.label === 'Sale')!, null); return;
       }
-      if (params['q']) this.searchQuery.set(params['q']);
+      if (params['q']) { this.searchQuery.set(params['q']); return; }
+      // Default: show Women
+      this.setFilter(NAV_CATS[0], null);
     });
   }
 }
