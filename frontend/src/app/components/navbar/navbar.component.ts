@@ -239,8 +239,8 @@ import { CartService } from '../../services/cart.service';
 
         <!-- Center links -->
         <nav class="nav-links">
-          <a routerLink="/products" [queryParams]="{category:'Clothing'}" class="nav-link">Women</a>
-          <a routerLink="/products" [queryParams]="{category:'Clothing'}" class="nav-link">Men</a>
+          <a routerLink="/products" [queryParams]="{category:'Women'}" class="nav-link">Women</a>
+          <a routerLink="/products" [queryParams]="{category:'Men'}" class="nav-link">Men</a>
           <a routerLink="/products" [queryParams]="{category:'Beauty'}" class="nav-link">Beauty</a>
           <a routerLink="/products" [queryParams]="{category:'Footwear'}" class="nav-link">Footwear</a>
           <a routerLink="/products" [queryParams]="{category:'Accessories'}" class="nav-link">Handbags</a>
@@ -313,8 +313,8 @@ import { CartService } from '../../services/cart.service';
             </svg>
             <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" (keyup.enter)="doSearch(); mobileOpen.set(false)" />
           </div>
-          <a routerLink="/products" [queryParams]="{category:'Clothing'}" (click)="mobileOpen.set(false)" class="mobile-link">Women <span>›</span></a>
-          <a routerLink="/products" [queryParams]="{category:'Clothing'}" (click)="mobileOpen.set(false)" class="mobile-link">Men <span>›</span></a>
+          <a routerLink="/products" [queryParams]="{category:'Women'}" (click)="mobileOpen.set(false)" class="mobile-link">Women <span>›</span></a>
+          <a routerLink="/products" [queryParams]="{category:'Men'}" (click)="mobileOpen.set(false)" class="mobile-link">Men <span>›</span></a>
           <a routerLink="/products" [queryParams]="{category:'Beauty'}" (click)="mobileOpen.set(false)" class="mobile-link">Beauty <span>›</span></a>
           <a routerLink="/products" [queryParams]="{category:'Footwear'}" (click)="mobileOpen.set(false)" class="mobile-link">Footwear <span>›</span></a>
           <a routerLink="/products" [queryParams]="{category:'Accessories'}" (click)="mobileOpen.set(false)" class="mobile-link">Handbags <span>›</span></a>

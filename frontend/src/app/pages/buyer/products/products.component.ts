@@ -36,8 +36,9 @@ const NAV_CATS: NavCat[] = [
   styles: [`
     .cat-nav {
       border-bottom: 1px solid #e8e0d6;
-      background: #fff;
-      position: sticky; top: 96px; z-index: 50;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 86px; z-index: 49;
     }
     .cat-nav-inner {
       max-width: 1280px; margin: 0 auto; padding: 0 2rem;
@@ -125,13 +126,13 @@ const NAV_CATS: NavCat[] = [
     }
 
     @media (max-width: 768px) {
-      .cat-nav { top: 84px; }
+      .cat-nav { top: 76px; }
       .cat-nav-inner { padding: 0 1rem; }
       .cat-tab { padding: 0.875rem 0.75rem; font-size: 0.72rem; }
       .cat-dropdown { position: fixed; top: auto !important; left: 0 !important; right: 0; border-radius: 0 0 12px 12px; }
     }
   `],
-  template: `<div style="padding-top:96px;">
+  template: `<div style="padding-top:86px;">
 
     <div class="cat-nav">
       <div class="cat-nav-inner">
@@ -271,20 +272,29 @@ export class ProductsComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.productService.getProducts().subscribe(p => this.allProducts.set(p));
+    let paramHandled = false;
+
     this.route.queryParams.subscribe(params => {
+      paramHandled = true;
       if (params['category']) {
-        const found = NAV_CATS.find(c =>
-          c.filter === params['category'] ||
-          c.label.toLowerCase() === params['category'].toLowerCase());
-        if (found) { this.setFilter(found, null); return; }
+        // Direct label match
+        const found = NAV_CATS.find(c => c.label.toLowerCase() === params['category'].toLowerCase());
+        if (found) { this.setFilter(found, null); }
+        else { this.setFilter(NAV_CATS[0], null); }
+        return;
       }
       if (params['sort'] === 'sale') {
         this.setFilter(NAV_CATS.find(c => c.label === 'Sale')!, null); return;
       }
-      if (params['q']) { this.searchQuery.set(params['q']); return; }
-      // Default: show Women
+      if (params['q']) {
+        this.searchQuery.set(params['q']); return;
+      }
+      // Default: Women
       this.setFilter(NAV_CATS[0], null);
+    });
+
+    this.productService.getProducts().subscribe(p => {
+      this.allProducts.set(p);
     });
   }
 }
