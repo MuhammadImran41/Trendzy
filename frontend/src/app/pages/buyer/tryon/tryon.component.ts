@@ -270,7 +270,7 @@ import { Product } from '../../../models/product.model';
           }
 
           <div class="result-actions">
-            <a [href]="resultUrl()" [download]="'trendzy-tryon.jpg'" class="btn-download">
+            <a [href]="resultUrl()" [download]="'shopzee-tryon.jpg'" class="btn-download">
               ⬇ Download
             </a>
             <button class="btn-retry" (click)="resultUrl.set(''); analysis.set(null); error.set('')">

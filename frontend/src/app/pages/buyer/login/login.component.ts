@@ -50,7 +50,7 @@ import { AuthService } from '../../../services/auth.service';
     <div class="auth-page">
       <div class="auth-card">
         <div class="brand">
-          <div class="brand-logo"><span class="t">TREND</span><span class="z">ZY</span></div>
+          <div class="brand-logo"><span class="t">SHOP</span><span class="z">ZEE</span></div>
           <div class="brand-sub">Premium Fashion Store</div>
         </div>
 
@@ -77,7 +77,7 @@ import { AuthService } from '../../../services/auth.service';
         <div class="divider"></div>
 
         <div class="footer-link">
-          New to Trendzy? <a routerLink="/register">Create account</a>
+          New to Shopzee? <a routerLink="/register">Create account</a>
         </div>
         <div class="footer-link" style="margin-top:0.5rem;">
           <a routerLink="/">← Continue shopping</a>
@@ -109,8 +109,8 @@ export class LoginComponent {
         if (res.user.role === 'seller') {
           this.router.navigate(['/seller/dashboard']);
         } else {
-          const redirect = localStorage.getItem('trendzy_redirect') || '/';
-          localStorage.removeItem('trendzy_redirect');
+          const redirect = localStorage.getItem('shopzee_redirect') || '/';
+          localStorage.removeItem('shopzee_redirect');
           this.router.navigate([redirect]);
         }
       },

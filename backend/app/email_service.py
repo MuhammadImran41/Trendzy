@@ -1,5 +1,5 @@
 """
-Email notification service for Trendzy — Gmail SMTP.
+Email notification service for Shopzee — Gmail SMTP.
 Premium designed emails for seller notifications and customer receipts.
 """
 import os
@@ -8,10 +8,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
 
-SELLER_EMAIL = os.getenv('SELLER_EMAIL', 'trendzyofficial.store@gmail.com')
+SELLER_EMAIL = os.getenv('SELLER_EMAIL', 'Shopzeeofficial.store@gmail.com')
 GMAIL_USER   = os.getenv('GMAIL_USER',   '')
 GMAIL_PASS   = os.getenv('GMAIL_PASS',   '')
-FROM_ADDRESS = f'Trendzy <{GMAIL_USER}>' if GMAIL_USER else 'Trendzy <noreply@trendzy.pk>'
+FROM_ADDRESS = f'Shopzee <{GMAIL_USER}>' if GMAIL_USER else 'Shopzee <noreply@Shopzee.pk>'
 
 SMTP_HOST = 'smtp.gmail.com'
 SMTP_PORT = 587
@@ -48,7 +48,7 @@ def _build_seller_html(order: dict) -> str:
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>New Order — Trendzy</title>
+<title>New Order — Shopzee</title>
 </head>
 <body style="margin:0;padding:0;background:#f0ebe4;font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0ebe4;padding:40px 0;">
@@ -58,7 +58,7 @@ def _build_seller_html(order: dict) -> str:
   <!-- HEADER -->
   <tr><td style="background:#1a1410;padding:36px 40px;border-radius:16px 16px 0 0;text-align:center;">
     <div style="font-size:11px;letter-spacing:6px;color:#c9a96e;text-transform:uppercase;margin-bottom:10px;">Premium Fashion Store</div>
-    <div style="font-size:36px;font-weight:800;color:#ffffff;letter-spacing:8px;margin-bottom:6px;">TRENDZY</div>
+    <div style="font-size:36px;font-weight:800;color:#ffffff;letter-spacing:8px;margin-bottom:6px;">Shopzee</div>
     <div style="width:60px;height:2px;background:linear-gradient(90deg,transparent,#c9a96e,transparent);margin:12px auto;"></div>
     <div style="font-size:13px;color:rgba(255,255,255,0.5);letter-spacing:3px;text-transform:uppercase;">New Order Alert</div>
   </td></tr>
@@ -154,7 +154,7 @@ def _build_seller_html(order: dict) -> str:
 
   <!-- FOOTER -->
   <tr><td style="background:#1a1410;padding:24px 40px;border-radius:0 0 16px 16px;text-align:center;">
-    <div style="font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:1px;">© 2025 TRENDZY · Automated Order Notification</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:1px;">© 2025 Shopzee · Automated Order Notification</div>
   </td></tr>
 
 </table>
@@ -189,7 +189,7 @@ def _build_customer_html(order: dict) -> str:
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Order Confirmed — Trendzy</title>
+<title>Order Confirmed — Shopzee</title>
 </head>
 <body style="margin:0;padding:0;background:#f0ebe4;font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0ebe4;padding:40px 0;">
@@ -199,7 +199,7 @@ def _build_customer_html(order: dict) -> str:
   <!-- HEADER -->
   <tr><td style="background:#1a1410;padding:40px 40px 32px;border-radius:16px 16px 0 0;text-align:center;">
     <div style="font-size:11px;letter-spacing:6px;color:#c9a96e;text-transform:uppercase;margin-bottom:12px;">Premium Fashion Store</div>
-    <div style="font-size:38px;font-weight:800;color:#ffffff;letter-spacing:8px;margin-bottom:8px;">TRENDZY</div>
+    <div style="font-size:38px;font-weight:800;color:#ffffff;letter-spacing:8px;margin-bottom:8px;">Shopzee</div>
     <div style="width:60px;height:2px;background:linear-gradient(90deg,transparent,#c9a96e,transparent);margin:14px auto;"></div>
     <div style="font-size:22px;font-weight:300;color:rgba(255,255,255,0.85);letter-spacing:2px;">Order Confirmed ✓</div>
   </td></tr>
@@ -354,7 +354,7 @@ def _build_customer_html(order: dict) -> str:
       </tr>
       <tr><td colspan="2" height="12"></td></tr>
       <tr><td colspan="2" style="text-align:center;font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:1px;">
-        © 2025 TRENDZY · Premium Fashion Delivered Across Pakistan
+        © 2025 Shopzee · Premium Fashion Delivered Across Pakistan
       </td></tr>
     </table>
   </td></tr>
@@ -422,17 +422,17 @@ def send_order_notification(order: dict) -> bool:
     customer_email = (order.get('buyerEmail') or '').strip()
     if customer_email:
         customer_plain = (
-            f"Hi {buyer},\n\nThank you for your order at Trendzy!\n\n"
+            f"Hi {buyer},\n\nThank you for your order at Shopzee!\n\n"
             f"Order ID: {order_id}\nTotal: PKR {total:,.0f}\nPayment: Cash on Delivery\n"
             f"Deliver to: {order.get('buyerAddress','')}, {order.get('buyerCity','')}\n\nItems:\n"
         )
         for item in order.get('items', []):
             customer_plain += f"  - {item['productName']} x{item['quantity']} @ PKR {item['price']:,.0f}\n"
-        customer_plain += f"\nQuestions? Email: {SELLER_EMAIL}\n\nThank you for shopping with Trendzy!"
+        customer_plain += f"\nQuestions? Email: {SELLER_EMAIL}\n\nThank you for shopping with Shopzee!"
 
         _send_email(
             to_address = customer_email,
-            subject    = f'✅ Your Trendzy Order #{order_id} is Confirmed!',
+            subject    = f'✅ Your Shopzee Order #{order_id} is Confirmed!',
             plain_text = customer_plain,
             html_body  = _build_customer_html(order),
         )

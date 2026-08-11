@@ -9,7 +9,7 @@ export const buyerAuthGuard: CanActivateFn = () => {
   if (auth.isLoggedIn()) return true;
 
   // Save intended URL so we redirect back after login
-  localStorage.setItem('trendzy_redirect', '/checkout');
+  localStorage.setItem('shopzee_redirect', '/checkout');
   router.navigate(['/login']);
   return false;
 };

@@ -18,7 +18,7 @@ try:
 except Exception:
     tryon_available = False
 
-app = FastAPI(title='Trendzy API', version='1.0.0')
+app = FastAPI(title='Shopzee API', version='1.0.0')
 
 app.add_middleware(
     CORSMiddleware,
@@ -75,7 +75,7 @@ app.mount('/static', StaticFiles(directory='app/static'), name='static')
 
 @app.get('/')
 def root():
-    return {'status': 'Trendzy API running ✨', 'db': 'PostgreSQL'}
+    return {'status': 'Shopzee API running ✨', 'db': 'PostgreSQL'}
 
 
 # ── Seller auth (simple env-based login) ─────────────────────────────────────
@@ -96,7 +96,7 @@ def seller_login(data: LoginReq):
             'token': 'seller_token_valid',
             'user': {
                 'id':    '1',
-                'name':  'Trendzy Admin',
+                'name':  'Shopzee Admin',
                 'email': seller_email,
                 'role':  'seller'
             }
@@ -124,7 +124,7 @@ def test_email_endpoint():
         to_address = SELLER_EMAIL,
         subject    = '✅ Trendzy — Email System Test',
         plain_text = 'Email system is working correctly!',
-        html_body  = f'<h2 style="color:#c9a96e;">TRENDZY</h2><p>Gmail SMTP is working! Orders will be sent to <strong>{SELLER_EMAIL}</strong></p>'
+        html_body  = f'<h2 style="color:#c9a96e;">SHOPZEE</h2><p>Gmail SMTP is working! Orders will be sent to <strong>{SELLER_EMAIL}</strong></p>'
     )
     return {
         'success':  success,

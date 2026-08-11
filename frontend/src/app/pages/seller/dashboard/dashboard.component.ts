@@ -216,7 +216,7 @@ import { environment } from '../../../../environments/environment';
     <div>
       <div class="page-eyebrow">Overview</div>
       <h1 class="page-title">Dashboard</h1>
-      <p class="page-sub">Welcome back to Trendzy Seller Panel</p>
+      <p class="page-sub">Welcome back to Shopzee Seller Panel</p>
       <div class="gold-divider"></div>
 
       <!-- Stats -->

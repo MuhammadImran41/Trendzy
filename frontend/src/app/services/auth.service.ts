@@ -39,25 +39,25 @@ export class AuthService {
 
   private _loadUser(): User | null {
     try {
-      const u = localStorage.getItem('trendzy_user');
+      const u = localStorage.getItem('shopzee_user');
       return u ? JSON.parse(u) : null;
     } catch { return null; }
   }
 
   private _loadToken(): string | null {
-    return localStorage.getItem('trendzy_token');
+    return localStorage.getItem('shopzee_token');
   }
 
   private _saveSession(token: string, user: User): void {
-    localStorage.setItem('trendzy_token', token);
-    localStorage.setItem('trendzy_user', JSON.stringify(user));
+    localStorage.setItem('shopzee_token', token);
+    localStorage.setItem('shopzee_user', JSON.stringify(user));
     this._token.set(token);
     this._user.set(user);
   }
 
   private _clearSession(): void {
-    localStorage.removeItem('trendzy_token');
-    localStorage.removeItem('trendzy_user');
+    localStorage.removeItem('shopzee_token');
+    localStorage.removeItem('shopzee_user');
     this._token.set(null);
     this._user.set(null);
   }

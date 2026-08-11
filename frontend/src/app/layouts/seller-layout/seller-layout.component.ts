@@ -266,7 +266,7 @@ import { OrderService } from '../../services/order.service';
       <aside class="sidebar" [class.open]="sidebarOpen()">
         <div class="sidebar-logo">
           <div class="logo-text-block">
-            <div class="logo-wordmark-s"><span class="trend">TREND</span><span class="zy">ZY</span></div>
+            <div class="logo-wordmark-s"><span class="trend">SHOP</span><span class="zy">ZEE</span></div>
             <div class="logo-tagline-s">Seller Panel</div>
           </div>
         </div>
@@ -307,9 +307,9 @@ import { OrderService } from '../../services/order.service';
             <button class="mobile-menu-btn" (click)="sidebarOpen.set(!sidebarOpen())" aria-label="Menu">
               <span></span><span></span><span></span>
             </button>
-            <span class="topbar-label">Trendzy</span>
+            <span class="topbar-label">Shopzee</span>
             <div class="topbar-divider"></div>
-            <span class="topbar-page">Seller Panel</span>
+            <span class="topbar-page">Shopzee Seller Panel</span>
           </div>
           @if (pendingCount() > 0) {
             <div class="pending-alert">

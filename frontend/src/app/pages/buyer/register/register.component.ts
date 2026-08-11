@@ -52,12 +52,12 @@ import { AuthService } from '../../../services/auth.service';
     <div class="auth-page">
       <div class="auth-card">
         <div class="brand">
-          <div class="brand-logo"><span class="t">TREND</span><span class="z">ZY</span></div>
+          <div class="brand-logo"><span class="t">SHOP</span><span class="z">ZEE</span></div>
           <div class="brand-sub">Premium Fashion Store</div>
         </div>
 
         <h2>Create Account</h2>
-        <p class="sub">Join Trendzy to track your orders</p>
+        <p class="sub">Join Shopzee to track your orders</p>
 
         @if (error()) {
           <div class="error">{{ error() }}</div>
@@ -127,8 +127,8 @@ export class RegisterComponent {
     this.auth.register(this.name, this.email, this.password, this.phone || undefined).subscribe({
       next: () => {
         this.loading.set(false);
-        const redirect = localStorage.getItem('trendzy_redirect') || '/';
-        localStorage.removeItem('trendzy_redirect');
+        const redirect = localStorage.getItem('shopzee_redirect') || '/';
+        localStorage.removeItem('shopzee_redirect');
         this.router.navigate([redirect]);
       },
       error: (err) => {
