@@ -11,36 +11,13 @@ import { CartService } from '../../services/cart.service';
   styles: [`
     :host { display: block; }
 
-    /* ── Announcement bar ── */
-    .topbar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
-      background: #1a1410; color: #c9a96e;
-      text-align: center; padding: 0.38rem 1rem;
-      font-family: 'Inter', sans-serif; font-size: 0.68rem;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      overflow: hidden;
-    }
-    .topbar-marquee {
-      display: inline-flex; gap: 3rem; align-items: center;
-      animation: topScroll 28s linear infinite;
-      white-space: nowrap;
-    }
-    .topbar-marquee:hover { animation-play-state: paused; }
-    @keyframes topScroll {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .top-sep { color: rgba(201,169,110,0.4); margin: 0 0.5rem; }
-
     /* ── Nav outer wrapper ── */
     .nav-outer {
-      position: fixed; top: 30px; left: 0; right: 0; z-index: 200;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
       display: flex; justify-content: center;
       padding: 12px 24px;
       pointer-events: none;
-      transition: top 0.3s ease;
     }
-    .nav-outer.no-topbar { top: 0; }
 
     /* ── Floating pill nav ── */
     .nav-pill {
@@ -250,27 +227,6 @@ import { CartService } from '../../services/cart.service';
   `],
   template: `
     @if (!isSellerRoute()) {
-
-    <!-- Announcement bar -->
-    <div class="topbar">
-      <div class="topbar-marquee">
-        <span>🚚 Free Delivery on orders over PKR 2,000</span>
-        <span class="top-sep">✦</span>
-        <span>💰 Cash on Delivery — Pay when you receive</span>
-        <span class="top-sep">✦</span>
-        <span>↩️ 7-Day Easy Returns</span>
-        <span class="top-sep">✦</span>
-        <span>✅ 100% Original Products</span>
-        <span class="top-sep">✦</span>
-        <span>🚚 Free Delivery on orders over PKR 2,000</span>
-        <span class="top-sep">✦</span>
-        <span>💰 Cash on Delivery — Pay when you receive</span>
-        <span class="top-sep">✦</span>
-        <span>↩️ 7-Day Easy Returns</span>
-        <span class="top-sep">✦</span>
-        <span>✅ 100% Original Products</span>
-      </div>
-    </div>
 
     <!-- Floating pill navbar -->
     <div class="nav-outer">
