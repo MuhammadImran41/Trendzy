@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -6,28 +6,27 @@ import { ProductCardComponent } from '../../../components/product-card/product-c
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../models/product.model';
 
-// Fixed nav categories matching the header
 interface NavCat {
   label: string;
-  filter: string;     // maps to product.category
+  filter: string;
   sub?: { label: string; filter: string }[];
 }
 
 const NAV_CATS: NavCat[] = [
   { label: 'Women', filter: 'Clothing', sub: [
-    { label: "Women's Stitched",    filter: "Women's Stitched" },
-    { label: "Women's Unstitched",  filter: "Women's Unstitched" },
-    { label: "Abayas & Modest",     filter: "Abayas" },
+    { label: "Women's Stitched",   filter: "Women's Stitched" },
+    { label: "Women's Unstitched", filter: "Women's Unstitched" },
+    { label: "Abayas & Modest",    filter: "Abayas" },
   ]},
   { label: 'Men', filter: 'Clothing', sub: [
-    { label: "Men's Stitched",      filter: "Men's Stitched" },
-    { label: "Men's Unstitched",    filter: "Men's Unstitched" },
-    { label: "Men's Casual",        filter: "Men's Casual" },
+    { label: "Men's Stitched",   filter: "Men's Stitched" },
+    { label: "Men's Unstitched", filter: "Men's Unstitched" },
+    { label: "Men's Casual",     filter: "Men's Casual" },
   ]},
   { label: 'Beauty',   filter: 'Beauty' },
   { label: 'Footwear', filter: 'Footwear' },
   { label: 'Handbags', filter: 'Accessories' },
-  { label: 'Sale',     filter: 'sale', sub: [] },
+  { label: 'Sale',     filter: 'sale' },
 ];
 
 @Component({
@@ -35,17 +34,14 @@ const NAV_CATS: NavCat[] = [
   standalone: true,
   imports: [CommonModule, FormsModule, ProductCardComponent],
   styles: [`
-    /* ── Fixed category nav ── */
     .cat-nav {
       border-bottom: 1px solid #e8e0d6;
       background: #fff;
       position: sticky; top: 96px; z-index: 50;
     }
     .cat-nav-inner {
-      max-width: 1280px; margin: 0 auto;
-      padding: 0 2rem;
-      display: flex; align-items: center; gap: 0;
-      overflow-x: auto;
+      max-width: 1280px; margin: 0 auto; padding: 0 2rem;
+      display: flex; align-items: center; overflow-x: auto;
     }
     .cat-nav-inner::-webkit-scrollbar { display: none; }
 
@@ -65,35 +61,27 @@ const NAV_CATS: NavCat[] = [
     .cat-tab.active { color: #1a1410; border-bottom-color: #1a1410; }
     .cat-tab.sale-tab { color: #c9a96e; }
     .cat-tab.sale-tab.active { border-bottom-color: #c9a96e; }
-    .cat-tab .chevron { font-size: 0.55rem; opacity: 0.6; margin-top: 1px; }
+    .cat-tab .chevron { font-size: 0.55rem; opacity: 0.6; }
 
-    /* ── Dropdown ── */
     .cat-dropdown {
       position: absolute; top: calc(100% + 1px); left: 0;
-      min-width: 200px;
-      background: #fff;
+      min-width: 200px; background: #fff;
       border: 1px solid #e8e0d6;
       box-shadow: 0 12px 32px rgba(26,20,16,0.1);
-      z-index: 9999;
-      padding: 0.5rem 0;
+      z-index: 9999; padding: 0.5rem 0;
       border-radius: 0 0 8px 8px;
     }
     .cat-dropdown-item {
-      display: block; width: 100%;
-      padding: 0.6rem 1.25rem;
+      display: block; width: 100%; padding: 0.6rem 1.25rem;
       font-family: 'Inter', sans-serif; font-size: 0.82rem;
       color: #6b6560; text-align: left;
       background: none; border: none; cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      white-space: nowrap;
+      transition: background 0.15s, color 0.15s; white-space: nowrap;
     }
     .cat-dropdown-item:hover { background: #faf7f4; color: #1a1410; }
     .cat-dropdown-item.active { color: #c9a96e; font-weight: 600; }
-    .cat-dropdown-divider {
-      height: 1px; background: #f0ebe4; margin: 0.375rem 0;
-    }
+    .cat-dropdown-divider { height: 1px; background: #f0ebe4; margin: 0.375rem 0; }
 
-    /* ── Page layout ── */
     .page { max-width: 1280px; margin: 0 auto; padding: 2.5rem 2rem; }
     @media (max-width: 600px) {
       .page { padding: 1.25rem 1rem; }
@@ -127,7 +115,6 @@ const NAV_CATS: NavCat[] = [
       outline: none; cursor: pointer; border-radius: 6px;
     }
 
-    /* ── Grid ── */
     .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
     @media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 900px)  { .products-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -137,7 +124,6 @@ const NAV_CATS: NavCat[] = [
       font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: #b0a898;
     }
 
-    /* ── Mobile nav ── */
     @media (max-width: 768px) {
       .cat-nav { top: 84px; }
       .cat-nav-inner { padding: 0 1rem; }
@@ -147,61 +133,43 @@ const NAV_CATS: NavCat[] = [
   `],
   template: `<div style="padding-top:96px;">
 
-    <!-- ── Fixed category nav ── -->
     <div class="cat-nav">
       <div class="cat-nav-inner">
-
-        <!-- All -->
         <div class="cat-tab-wrap">
-          <button class="cat-tab"
-                  [class.active]="!activeCat() && !activeSub()"
-                  (click)="setFilter(null, null)">
-            All
-          </button>
+          <button class="cat-tab" [class.active]="!activeCat()" (click)="setFilter(null,null)">All</button>
         </div>
-
-        <!-- Fixed nav cats -->
         @for (cat of navCats; track cat.label) {
           <div class="cat-tab-wrap"
                (mouseenter)="cat.sub?.length ? hovered.set(cat.label) : null"
                (mouseleave)="hovered.set('')">
             <button class="cat-tab"
-                    [class.active]="activeCat() === cat.label"
-                    [class.sale-tab]="cat.label === 'Sale'"
-                    (click)="setFilter(cat, null)">
+                    [class.active]="activeCat()===cat.label"
+                    [class.sale-tab]="cat.label==='Sale'"
+                    (click)="setFilter(cat,null)">
               {{ cat.label }}
               @if (cat.sub?.length) { <span class="chevron">▾</span> }
             </button>
-
-            @if (hovered() === cat.label && cat.sub?.length) {
+            @if (hovered()===cat.label && cat.sub?.length) {
               <div class="cat-dropdown">
-                <button class="cat-dropdown-item" (click)="setFilter(cat, null)">
-                  All {{ cat.label }}
-                </button>
+                <button class="cat-dropdown-item" (click)="setFilter(cat,null)">All {{ cat.label }}</button>
                 <div class="cat-dropdown-divider"></div>
                 @for (s of cat.sub; track s.label) {
                   <button class="cat-dropdown-item"
-                          [class.active]="activeSub() === s.label"
-                          (click)="setFilter(cat, s)">
-                    {{ s.label }}
-                  </button>
+                          [class.active]="activeSub()===s.label"
+                          (click)="setFilter(cat,s)">{{ s.label }}</button>
                 }
               </div>
             }
           </div>
         }
-
       </div>
     </div>
 
-    <!-- ── Products page ── -->
     <div class="page">
       <div class="page-header">
         <div>
-          <h1 class="page-title">
-            {{ activeSub() || activeCat() || 'All Products' }}
-          </h1>
-          <p class="page-count">{{ filtered().length }} product{{ filtered().length !== 1 ? 's' : '' }} found</p>
+          <h1 class="page-title">{{ activeSub() || activeCat() || 'All Products' }}</h1>
+          <p class="page-count">{{ filtered().length }} product{{ filtered().length!==1?'s':'' }} found</p>
         </div>
         <div class="header-right">
           <div class="ctrl-group">
@@ -221,243 +189,7 @@ const NAV_CATS: NavCat[] = [
       </div>
 
       <div class="products-grid">
-        @if (filtered().length === 0) {
-          <div class="empty">No products found.</div>
-        } @else {
-          @for (product of filtered(); track product.id) {
-            <app-product-card [product]="product" />
-          }
-        }
-      </div>
-    </div>
-  </div>`
-    .cat-nav-wrap {
-      position: relative;
-      max-width: 1280px; margin: 0 auto;
-    }
-    .cat-nav-inner {
-      padding: 0 2.5rem;
-      display: flex; overflow-x: auto; overflow-y: visible; gap: 0;
-    }
-    .cat-nav-inner::-webkit-scrollbar { display: none; }
-
-    /* scroll arrows */
-    .scroll-arrow {
-      position: absolute; top: 0; bottom: 0;
-      width: 2.5rem;
-      display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(to right, #faf7f4 60%, transparent);
-      border: none; cursor: pointer; z-index: 10;
-      color: #6b6560; font-size: 1rem;
-      transition: color 0.2s;
-    }
-    .scroll-arrow:hover { color: #1a1410; }
-    .scroll-arrow.left  { left: 0; background: linear-gradient(to right, #faf7f4 60%, transparent); }
-    .scroll-arrow.right { right: 0; background: linear-gradient(to left, #faf7f4 60%, transparent); }
-
-    .cat-tab-wrap { position: relative; flex-shrink: 0; }
-
-    .cat-tab {
-      font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 500;
-      letter-spacing: 0.03em; color: #6b6560; white-space: nowrap;
-      padding: 0.875rem 1rem; cursor: pointer;
-      border-bottom: 2px solid transparent; margin-bottom: -1px;
-      background: none; border-top: none; border-left: none; border-right: none;
-      transition: color 0.2s;
-      display: flex; align-items: center; gap: 4px;
-    }
-    .cat-tab:hover { color: #1a1410; }
-    .cat-tab.active { color: #1a1410; border-bottom: 2px solid #c9a96e; font-weight: 600; }
-    .cat-tab.all-tab.active { border-bottom-color: #1a1410; }
-    .cat-tab .chevron { font-size: 0.6rem; opacity: 0.5; }
-
-    /* ── Dropdown — fixed to viewport so never clipped ── */
-    .cat-dropdown {
-      position: fixed;
-      min-width: 480px; max-width: 640px;
-      background: #fff;
-      border: 1px solid #e8e0d6;
-      box-shadow: 0 8px 32px rgba(26,20,16,0.12);
-      z-index: 9999;
-      padding: 0.75rem;
-    }
-    .cat-dropdown-header {
-      font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 600;
-      letter-spacing: 0.18em; text-transform: uppercase; color: #9e9890;
-      padding: 0 0.5rem 0.5rem; margin-bottom: 0.5rem;
-      border-bottom: 1px solid #f0ebe4;
-    }
-    .cat-dropdown-all {
-      display: inline-flex; align-items: center; gap: 0.3rem;
-      font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600;
-      color: #1a1410; padding: 0.3rem 0.5rem; margin-bottom: 0.5rem;
-      background: none; border: none; cursor: pointer;
-    }
-    .cat-dropdown-all:hover { color: #c9a96e; }
-    .cat-dropdown-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-    }
-    .cat-dropdown-item {
-      display: block; width: 100%;
-      padding: 0.4rem 0.625rem;
-      font-family: 'Inter', sans-serif; font-size: 0.78rem;
-      color: #6b6560; text-align: left;
-      background: none; border: none; cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      border-radius: 2px;
-    }
-    .cat-dropdown-item:hover { background: #faf7f4; color: #1a1410; }
-    .cat-dropdown-item.active { color: #c9a96e; font-weight: 600; }
-
-    /* ── Page ── */
-    .page { max-width: 1280px; margin: 0 auto; padding: 3rem 2rem; }
-    @media (max-width: 600px) {
-      .page { padding: 1.5rem 1rem; }
-      .page-header { flex-direction: column; gap: 1rem; }
-      .page-title { font-size: 1.75rem; }
-      .header-right { width: 100%; flex-direction: column; gap: 0.75rem; }
-      .search-input, .sort-select { width: 100%; }
-      .cat-nav-inner { padding: 0 0.75rem; }
-    }
-
-    .page-header {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      gap: 2rem; flex-wrap: wrap;
-      margin-bottom: 2.5rem; border-bottom: 1px solid #e8e0d6; padding-bottom: 2rem;
-    }
-    .page-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 2.5rem; font-weight: 400; color: #1a1410; margin-bottom: 0.375rem; }
-    .page-count { font-family: 'Inter', sans-serif; font-size: 0.8rem; letter-spacing: 0.08em; color: #9e9890; }
-
-    .header-right { display: flex; align-items: flex-end; gap: 1.5rem; flex-wrap: wrap; }
-    .ctrl-group { display: flex; flex-direction: column; gap: 0.4rem; }
-    .ctrl-label { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #1a1410; }
-    .search-input {
-      background: #fff; border: 1px solid #ddd8d0; padding: 0.55rem 0.875rem;
-      font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #1a1410;
-      outline: none; transition: border-color 0.2s; width: 220px;
-    }
-    .search-input::placeholder { color: #b0a898; }
-    .search-input:focus { border-color: #c9a96e; }
-    .sort-select {
-      background: #fff; border: 1px solid #ddd8d0; padding: 0.55rem 0.875rem;
-      font-family: 'Inter', sans-serif; font-size: 0.82rem; color: #1a1410;
-      outline: none; cursor: pointer;
-    }
-
-    /* ── Grid ── */
-    .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
-    @media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 900px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px) { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; } }
-    .empty {
-      grid-column: 1/-1; text-align: center; padding: 5rem 2rem;
-      font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: #b0a898;
-    }
-
-    /* ── Cat nav responsive ── */
-    @media (max-width: 768px) {
-      .cat-nav { top: 88px; }
-      .cat-nav-inner { padding: 0 0.75rem; }
-      .cat-dropdown { min-width: calc(100vw - 2rem); max-width: calc(100vw - 2rem); left: 1rem !important; }
-      .cat-dropdown-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 480px) {
-      .cat-nav { top: 82px; }
-      .cat-dropdown-grid { grid-template-columns: 1fr 1fr; }
-    }
-  `],
-  template: `<div style="padding-top:96px;">
-    <!-- ── Category tab bar with dropdowns ── -->
-    <div class="cat-nav">
-      <div class="cat-nav-wrap">
-        <!-- Left arrow -->
-        <button class="scroll-arrow left" (click)="scrollNav(-200)">‹</button>
-
-        <div class="cat-nav-inner" #navInner>
-
-          <!-- All tab -->
-          <div class="cat-tab-wrap">
-            <button class="cat-tab all-tab"
-                    [class.active]="selectedCategory() === '' && !selectedSub()"
-                    (click)="selectCategory('', '')">
-              All
-            </button>
-          </div>
-
-          <!-- Category tabs with subcategory dropdown -->
-          @for (cat of dbCategories(); track cat.id) {
-            <div class="cat-tab-wrap"
-                 (mouseenter)="onTabMouseEnter($event, cat.id)"
-                 (mouseleave)="hoveredCat.set('')">
-              <button class="cat-tab"
-                      [class.active]="selectedCategory() === cat.name"
-                      (click)="selectCategory(cat.name, '')">
-                {{ cat.name }}
-                @if (cat.subcategories?.length) {
-                  <span class="chevron">▾</span>
-                }
-              </button>
-
-              <!-- Subcategory dropdown — fixed positioned, multi-column -->
-              @if (hoveredCat() === cat.id && cat.subcategories?.length) {
-                <div class="cat-dropdown"
-                     [style.top.px]="dropdownPos().top"
-                     [style.left.px]="dropdownPos().left">
-                  <button class="cat-dropdown-all" (click)="selectCategory(cat.name, '')">
-                    All {{ cat.name }} ›
-                  </button>
-                  <div class="cat-dropdown-grid">
-                    @for (sub of cat.subcategories; track sub) {
-                      <button class="cat-dropdown-item"
-                              [class.active]="selectedSub() === sub"
-                              (click)="selectCategory(cat.name, sub)">
-                        {{ sub }}
-                      </button>
-                    }
-                  </div>
-                </div>
-              }
-            </div>
-          }
-
-        </div>
-
-        <!-- Right arrow -->
-        <button class="scroll-arrow right" (click)="scrollNav(200)">›</button>
-      </div>
-    </div>
-
-    <!-- ── Products page ── -->
-    <div class="page">
-      <div class="page-header">
-        <div>
-          <h1 class="page-title">
-            {{ selectedSub() || selectedCategory() || 'All Products' }}
-          </h1>
-          <p class="page-count">{{ filtered().length }} product{{ filtered().length !== 1 ? 's' : '' }} found</p>
-        </div>
-        <div class="header-right">
-          <div class="ctrl-group">
-            <span class="ctrl-label">Search</span>
-            <input type="text" class="search-input" placeholder="Search products..."
-              [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" />
-          </div>
-          <div class="ctrl-group">
-            <span class="ctrl-label">Sort By</span>
-            <select class="sort-select" [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
-              <option value="default">Default</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="products-grid">
-        @if (filtered().length === 0) {
+        @if (filtered().length===0) {
           <div class="empty">No products found.</div>
         } @else {
           @for (product of filtered(); track product.id) {
@@ -478,16 +210,14 @@ export class ProductsComponent implements OnInit {
   activeCat   = signal<string | null>(null);
   activeSub   = signal<string | null>(null);
   hovered     = signal('');
+  navCats     = NAV_CATS;
 
-  navCats = NAV_CATS;
-
-  // Map nav cat label → active filter cat/sub for display
-  private activeNavCat = signal<NavCat | null>(null);
-  private activeNavSub = signal<{ label: string; filter: string } | null>(null);
+  private _activeNavCat = signal<NavCat | null>(null);
+  private _activeNavSub = signal<{ label: string; filter: string } | null>(null);
 
   setFilter(cat: NavCat | null, sub: { label: string; filter: string } | null) {
-    this.activeNavCat.set(cat);
-    this.activeNavSub.set(sub);
+    this._activeNavCat.set(cat);
+    this._activeNavSub.set(sub);
     this.activeCat.set(cat?.label ?? null);
     this.activeSub.set(sub?.label ?? null);
     this.searchQuery.set('');
@@ -497,29 +227,23 @@ export class ProductsComponent implements OnInit {
   filtered = computed(() => {
     let items = this.allProducts();
     const q    = this.searchQuery().toLowerCase();
-    const cat  = this.activeNavCat();
-    const sub  = this.activeNavSub();
+    const cat  = this._activeNavCat();
+    const sub  = this._activeNavSub();
     const sort = this.sortBy();
 
-    if (q) {
-      items = items.filter(p =>
-        p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
-    }
+    if (q) items = items.filter(p =>
+      p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
 
     if (cat) {
       if (cat.label === 'Sale') {
-        // Sale: show items with discount
         items = items.filter(p => p.originalPrice > p.sellerPrice);
       } else if (sub) {
-        // Sub-filter by name/tags
         const sf = sub.filter.toLowerCase();
         items = items.filter(p =>
           p.name.toLowerCase().includes(sf) ||
           p.category.toLowerCase().includes(sf) ||
-          (p.tags || []).some((t: string) => t.toLowerCase().includes(sf))
-        );
+          (p.tags || []).some((t: string) => t.toLowerCase().includes(sf)));
       } else {
-        // Filter by mapped category
         items = items.filter(p => p.category === cat.filter);
       }
     }
@@ -533,17 +257,15 @@ export class ProductsComponent implements OnInit {
     this.productService.getProducts().subscribe(p => this.allProducts.set(p));
     this.route.queryParams.subscribe(params => {
       if (params['category']) {
-        const catLabel = params['category'];
-        const found = NAV_CATS.find(c => c.filter === catLabel || c.label.toLowerCase() === catLabel.toLowerCase());
+        const found = NAV_CATS.find(c =>
+          c.filter === params['category'] ||
+          c.label.toLowerCase() === params['category'].toLowerCase());
         if (found) this.setFilter(found, null);
       }
       if (params['sort'] === 'sale') {
-        const sale = NAV_CATS.find(c => c.label === 'Sale')!;
-        this.setFilter(sale, null);
+        this.setFilter(NAV_CATS.find(c => c.label === 'Sale')!, null);
       }
-      if (params['q']) {
-        this.searchQuery.set(params['q']);
-      }
+      if (params['q']) this.searchQuery.set(params['q']);
     });
   }
 }
