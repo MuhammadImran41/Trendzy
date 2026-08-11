@@ -14,13 +14,14 @@ interface NavCat {
 
 const NAV_CATS: NavCat[] = [
   { label: 'Women', filter: 'Clothing', sub: [
-    { label: "Women's Stitched",   filter: "Women's Stitched" },
-    { label: "Women's Unstitched", filter: "Women's Unstitched" },
+    { label: "Stitched",   filter: "Women's Stitched" },
+    { label: "Unstitched", filter: "Women's Unstitched" },
+    { label: "Casual",     filter: "Women's Casual" },
   ]},
   { label: 'Men', filter: 'Clothing', sub: [
-    { label: "Men's Stitched",   filter: "Men's Stitched" },
-    { label: "Men's Unstitched", filter: "Men's Unstitched" },
-    { label: "Men's Casual",     filter: "Men's Casual" },
+    { label: "Stitched",   filter: "Men's Stitched" },
+    { label: "Unstitched", filter: "Men's Unstitched" },
+    { label: "Casual",     filter: "Men's Casual" },
   ]},
   { label: 'Beauty',   filter: 'Beauty' },
   { label: 'Footwear', filter: 'Footwear' },
@@ -227,41 +228,39 @@ export class ProductsComponent implements OnInit {
     const sub  = this._activeNavSub();
     const sort = this.sortBy();
 
-    // Search filter
+    // Search
     if (q) items = items.filter(p =>
       p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
 
     if (cat) {
       if (cat.label === 'Sale') {
-        // Show items with a discount
         items = items.filter(p => p.originalPrice > p.sellerPrice);
 
       } else if (sub) {
-        // Sub selected — filter by category AND matching tag
-        const sf = sub.filter.toLowerCase();
+        // Sub selected — match exact tag
         items = items.filter(p =>
           p.category === cat.filter &&
-          (p.tags || []).some((t: string) => t.toLowerCase() === sf)
+          (p.tags || []).includes(sub.filter)
         );
 
       } else if (cat.label === 'Women') {
-        // Women — all Clothing EXCEPT tags that are Men's
-        const menTags = ["men's stitched","men's unstitched","men's casual","men's shawls"];
+        // Women = Clothing where first tag starts with "Women's" OR has women/girls tag
+        const womenTags = ["Women's Stitched","Women's Unstitched","Women's Casual","women","girls","abaya","modest","frock","lawn"];
         items = items.filter(p =>
           p.category === 'Clothing' &&
-          !(p.tags || []).some((t: string) => menTags.includes(t.toLowerCase()))
+          (p.tags || []).some((t: string) => womenTags.includes(t))
         );
 
       } else if (cat.label === 'Men') {
-        // Men — Clothing with Men's tags OR no gender tag
-        const menTags = ["men's stitched","men's unstitched","men's casual","men's shawls"];
+        // Men = Clothing where tags include Men's tags
+        const menTags = ["Men's Stitched","Men's Unstitched","Men's Casual","men","polo","denim","jeans","t-shirt"];
         items = items.filter(p =>
           p.category === 'Clothing' &&
-          (p.tags || []).some((t: string) => menTags.includes(t.toLowerCase()))
+          (p.tags || []).some((t: string) => menTags.includes(t))
         );
 
       } else {
-        // Beauty, Footwear, Handbags — direct category match
+        // Beauty, Footwear, Accessories — direct category match
         items = items.filter(p => p.category === cat.filter);
       }
     }
