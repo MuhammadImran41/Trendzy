@@ -144,18 +144,22 @@ import { ProductService } from '../../services/product.service';
       .nav-links { display: none; }
       .btn-ghost { display: none; }
       .hamburger { display: flex; }
-      .nav-outer { padding: 10px 12px; }
-      nav { padding: 0 6px 0 16px; }
+      .nav-outer { padding: 8px 10px; }
+      nav { padding: 0 6px 0 14px; height: 60px; }
       .logo-wordmark { font-size: 17px; letter-spacing: 3px; }
       .topbar {
         font-size: 0.65rem; letter-spacing: 0.06em;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        padding: 0.45rem 0.75rem;
+        padding: 0.4rem 0.75rem;
       }
+      /* Show checkout on mobile inside hamburger menu only */
+      .btn-primary { font-size: 0.75rem; padding: 0.4rem 0.875rem; }
     }
     @media (max-width: 480px) {
-      .topbar { font-size: 0.6rem; letter-spacing: 0.04em; padding: 0.4rem 0.5rem; }
+      .topbar { font-size: 0.6rem; letter-spacing: 0.04em; padding: 0.35rem 0.5rem; }
       .logo-wordmark { font-size: 15px; letter-spacing: 2px; }
+      .nav-outer { padding: 7px 8px; }
+      nav { height: 56px; }
     }
   `],
   template: `
@@ -205,9 +209,11 @@ import { ProductService } from '../../services/product.service';
         <a routerLink="/products" (click)="mobileOpen.set(false)" class="mobile-link">Shop All</a>
         <a routerLink="/products" [queryParams]="{sort:'new'}" (click)="mobileOpen.set(false)" class="mobile-link">New Arrivals</a>
         <a routerLink="/products" [queryParams]="{sort:'sale'}" (click)="mobileOpen.set(false)" class="mobile-link">Sale</a>
+        <a routerLink="/try-on" (click)="mobileOpen.set(false)" class="mobile-link" style="color:#c9a96e;">✨ Try On</a>
         <a routerLink="/cart" (click)="mobileOpen.set(false)" class="mobile-link">
-          Bag @if (cart.totalItems() > 0) { ({{ cart.totalItems() }}) }
+          Bag @if (cart.totalItems() > 0) { <span class="cart-count" style="display:inline-flex;">{{ cart.totalItems() }}</span> }
         </a>
+        <a routerLink="/checkout" (click)="mobileOpen.set(false)" class="mobile-link" style="color:#b3924e;font-weight:600;">Checkout →</a>
       </div>
     }
     }

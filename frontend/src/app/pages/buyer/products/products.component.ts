@@ -16,7 +16,7 @@ import { Product } from '../../../models/product.model';
     .cat-nav {
       border-bottom: 1px solid #e8e0d6;
       background: #faf7f4;
-      position: sticky; top: 122px; z-index: 50;
+      position: sticky; top: 110px; z-index: 50;
     }
     .cat-nav-wrap {
       position: relative;
@@ -145,14 +145,17 @@ import { Product } from '../../../models/product.model';
 
     /* ── Cat nav responsive ── */
     @media (max-width: 768px) {
-      .cat-nav { top: 98px; }
+      .cat-nav { top: 88px; }
       .cat-nav-inner { padding: 0 0.75rem; }
+      .cat-dropdown { min-width: calc(100vw - 2rem); max-width: calc(100vw - 2rem); left: 1rem !important; }
+      .cat-dropdown-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 480px) {
-      .cat-nav { top: 92px; }
+      .cat-nav { top: 82px; }
+      .cat-dropdown-grid { grid-template-columns: 1fr 1fr; }
     }
   `],
-  template: `<div style="padding-top:122px;">
+  template: `<div style="padding-top:110px;">
     <!-- ── Category tab bar with dropdowns ── -->
     <div class="cat-nav">
       <div class="cat-nav-wrap">

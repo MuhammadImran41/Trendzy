@@ -81,6 +81,16 @@ import { Order } from '../../../models/order.model';
     .order-left { flex:1; min-width:0; }
     .order-right { text-align:right; flex-shrink:0; }
 
+    @media (max-width: 600px) {
+      .order-right { width: 100%; text-align: left; flex-shrink: unset; }
+      .order-top { flex-direction: column; }
+      .actions { justify-content: flex-start; }
+      .tracking-row { justify-content: flex-start; }
+      .filter-tabs { flex-wrap: nowrap; overflow-x: auto; }
+      .filter-tab { flex-shrink: 0; }
+      .page-title { font-size: 1.75rem; }
+    }
+
     .order-meta { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; flex-wrap:wrap; }
     .order-id { font-family:'JetBrains Mono','Courier New',monospace; font-size:0.72rem; color:#b0a898; }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, HostListener } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
@@ -212,15 +212,58 @@ import { OrderService } from '../../services/order.service';
     }
 
     @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); }
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 200;
+      }
+      .sidebar.open { transform: translateX(0); }
       .main { margin-left: 0; }
+
+      /* Overlay behind sidebar */
+      .sidebar-overlay {
+        display: block;
+        position: fixed; inset: 0; z-index: 199;
+        background: rgba(26,20,16,0.5);
+        backdrop-filter: blur(2px);
+      }
+
+      /* Hamburger button */
+      .mobile-menu-btn {
+        display: flex;
+      }
+
+      .topbar { padding: 0 1rem; }
+      .content { padding: 1.5rem 1rem; }
+    }
+
+    .sidebar-overlay { display: none; }
+
+    .mobile-menu-btn {
+      display: none;
+      align-items: center; justify-content: center;
+      width: 38px; height: 38px;
+      background: none; border: 1px solid #ddd8d0;
+      cursor: pointer; margin-right: 0.75rem;
+      flex-direction: column; gap: 4px;
+      transition: border-color 0.2s;
+    }
+    .mobile-menu-btn:hover { border-color: #c9a96e; }
+    .mobile-menu-btn span {
+      display: block; width: 18px; height: 1.5px;
+      background: #6b6560; transition: all 0.3s;
     }
   `],
   template: `
     <div class="shell">
 
+      <!-- Sidebar overlay (mobile) -->
+      @if (sidebarOpen()) {
+        <div class="sidebar-overlay" (click)="sidebarOpen.set(false)"></div>
+      }
+
       <!-- Sidebar -->
-      <aside class="sidebar">
+      <aside class="sidebar" [class.open]="sidebarOpen()">
         <div class="sidebar-logo">
           <div class="logo-text-block">
             <div class="logo-wordmark-s"><span class="trend">TREND</span><span class="zy">ZY</span></div>
@@ -231,7 +274,8 @@ import { OrderService } from '../../services/order.service';
         <nav class="sidebar-nav">
           <div class="nav-section-label">Menu</div>
           @for (link of navLinks; track link.path) {
-            <a [routerLink]="link.path" routerLinkActive="active" class="nav-item">
+            <a [routerLink]="link.path" routerLinkActive="active" class="nav-item"
+               (click)="sidebarOpen.set(false)">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path [attr.d]="link.svg"/>
@@ -259,6 +303,10 @@ import { OrderService } from '../../services/order.service';
       <div class="main">
         <header class="topbar">
           <div class="topbar-left">
+            <!-- Mobile hamburger -->
+            <button class="mobile-menu-btn" (click)="sidebarOpen.set(!sidebarOpen())" aria-label="Menu">
+              <span></span><span></span><span></span>
+            </button>
             <span class="topbar-label">Trendzy</span>
             <div class="topbar-divider"></div>
             <span class="topbar-page">Seller Panel</span>
@@ -284,6 +332,13 @@ export class SellerLayoutComponent implements OnInit, OnDestroy {
 
   pendingCount = signal(0);
   private pollInterval: ReturnType<typeof setInterval> | null = null;
+
+  sidebarOpen = signal(false);
+
+  @HostListener('window:resize')
+  onResize() {
+    if (window.innerWidth > 768) this.sidebarOpen.set(false);
+  }
 
   navLinks = [
     { path: '/seller/dashboard', label: 'Dashboard', svg: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },

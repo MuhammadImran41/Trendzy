@@ -105,6 +105,7 @@ import { Product } from '../../../models/product.model';
       .hero-btns a { width: 100%; text-align: center; justify-content: center; }
       .hero-stats { flex-wrap: wrap; gap: 1rem; }
       .stat-item { padding-right: 1.25rem; margin-right: 1.25rem; border-right: 1px solid #e8e0d6; }
+      .slider-arrow { display: none; }
     }
 
     /* ── Text content ── */

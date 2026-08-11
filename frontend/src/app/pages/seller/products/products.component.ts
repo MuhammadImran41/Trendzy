@@ -56,6 +56,33 @@ import { CategoryService, Category } from '../../../services/category.service';
     .table-row:last-child { border-bottom:none; }
     .table-row:hover { background:#faf7f4; }
 
+    /* ── Mobile product cards ── */
+    @media (max-width: 768px) {
+      .table-head { display: none; }
+      .table-row {
+        display: flex; flex-direction: column; gap: 0;
+        padding: 1rem; align-items: stretch;
+      }
+      .table-row > * { display: none; }
+      .prod-cell { display: flex !important; }
+      .mobile-card-row { display: flex !important; }
+
+      .search-input { width: 100%; }
+      .toolbar { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+      .add-btn { width: 100%; justify-content: center; }
+
+      .modal-body { grid-template-columns: 1fr; }
+      .modal-body .full-col { grid-column: 1 / -1; }
+      .modal-body .full-col > div { grid-template-columns: 1fr !important; }
+    }
+    .mobile-card-row {
+      display: none;
+      align-items: center; justify-content: space-between;
+      padding-top: 0.75rem; margin-top: 0.75rem;
+      border-top: 1px solid #f0ebe4;
+      gap: 0.5rem; flex-wrap: wrap;
+    }
+
     .prod-cell { display:flex; align-items:center; gap:0.75rem; }
     .prod-img  { width:40px; height:40px; object-fit:cover; background:#f5f0e8; flex-shrink:0; }
     .prod-name { font-family:'Inter', sans-serif; font-size:0.82rem; font-weight:500; color:#1a1410; }
@@ -169,6 +196,18 @@ import { CategoryService, Category } from '../../../services/category.service';
               {{ p.isActive ? 'Active' : 'Hidden' }}
             </span>
             <div>
+              <button class="btn-edit" (click)="openEditModal(p)">Edit</button>
+              <button class="btn-delete" (click)="deleteProduct(p)">Delete</button>
+            </div>
+            <!-- Mobile-only info row -->
+            <div class="mobile-card-row">
+              <span class="cell-price">PKR {{ p.sellerPrice | number }}</span>
+              <span [class.stock-ok]="p.stock > 10" [class.stock-low]="p.stock <= 10 && p.stock > 0" [class.stock-out]="p.stock === 0">
+                Stock: {{ p.stock }}
+              </span>
+              <span [class.status-active]="p.isActive" [class.status-hidden]="!p.isActive">
+                {{ p.isActive ? 'Active' : 'Hidden' }}
+              </span>
               <button class="btn-edit" (click)="openEditModal(p)">Edit</button>
               <button class="btn-delete" (click)="deleteProduct(p)">Delete</button>
             </div>

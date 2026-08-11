@@ -30,6 +30,7 @@ import { FormsModule } from '@angular/forms';
       .nl-btn { width: 100%; padding: 0.7rem; }
       .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding: 1.25rem 1rem; }
       .footer-badges { flex-wrap: wrap; }
+      .footer-main { padding: 2rem 1rem 1.5rem; }
     }
 
     /* ── Main footer grid ── */
@@ -200,7 +201,7 @@ import { FormsModule } from '@angular/forms';
 
     <!-- ── Help Center Chat Bot ── -->
     @if (chatOpen()) {
-      <div style="position:fixed;bottom:90px;right:24px;width:340px;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.18);z-index:9999;overflow:hidden;border:1px solid #e8e0d6;">
+      <div style="position:fixed;bottom:max(90px,calc(env(safe-area-inset-bottom,0px) + 90px));right:24px;width:min(340px,calc(100vw - 32px));background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.18);z-index:9999;overflow:hidden;border:1px solid #e8e0d6;">
         <!-- header -->
         <div style="background:#1a1410;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;">
           <div style="display:flex;align-items:center;gap:0.625rem;">
@@ -249,7 +250,7 @@ import { FormsModule } from '@angular/forms';
 
     <!-- Chat toggle button -->
     <button (click)="chatOpen.set(!chatOpen())"
-            style="position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:linear-gradient(135deg,#c9a96e,#8b6914);border:none;border-radius:16px;cursor:pointer;box-shadow:0 8px 24px rgba(201,169,110,0.4);display:flex;align-items:center;justify-content:center;z-index:9999;transition:transform 0.2s,border-radius 0.2s;"
+            style="position:fixed;bottom:max(24px,env(safe-area-inset-bottom,24px));right:24px;width:52px;height:52px;background:linear-gradient(135deg,#c9a96e,#8b6914);border:none;border-radius:16px;cursor:pointer;box-shadow:0 8px 24px rgba(201,169,110,0.4);display:flex;align-items:center;justify-content:center;z-index:9999;transition:transform 0.2s,border-radius 0.2s;"
             [style.border-radius]="chatOpen() ? '50%' : '16px'"
             title="Help Center">
       @if (!chatOpen()) {

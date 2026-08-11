@@ -187,8 +187,9 @@ import { environment } from '../../../../environments/environment';
     .s-cancelled { background: rgba(220,38,38,0.08);  border: 1px solid rgba(220,38,38,0.25);  color: #dc2626; }
 
     /* ── Buyers table ── */
-    .buyers-table { width:100%; border-collapse:collapse; font-family:'Inter',sans-serif; font-size:0.8rem; }
-    .buyers-table th { padding:10px 14px; text-align:left; font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#9e9890; background:#faf7f4; border-bottom:1px solid #e8e0d6; }
+    .buyers-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .buyers-table { width:100%; border-collapse:collapse; font-family:'Inter',sans-serif; font-size:0.8rem; min-width: 640px; }
+    .buyers-table th { padding:10px 14px; text-align:left; font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#9e9890; background:#faf7f4; border-bottom:1px solid #e8e0d6; white-space:nowrap; }
     .buyers-table td { padding:12px 14px; border-bottom:1px solid #f5f0e8; color:#1a1410; vertical-align:middle; }
     .buyers-table tr:hover td { background:#faf7f4; }
     .buyer-name { font-weight:600; color:#1a1410; }
@@ -199,6 +200,17 @@ import { environment } from '../../../../environments/environment';
     .buyer-spent { color:#16a34a; font-weight:700; }
     .buyer-date { color:#b0a898; font-size:0.72rem; }
     .buyers-empty { text-align:center; padding:3rem; color:#b0a898; font-family:'Inter',sans-serif; font-size:0.85rem; }
+
+    /* ── Dashboard mobile fixes ── */
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .actions-grid { grid-template-columns: 1fr; }
+      .stat-value { font-size: 1.75rem; }
+      .page-title { font-size: 1.75rem; }
+    }
+    @media (max-width: 400px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
   `],
   template: `
     <div>
@@ -273,6 +285,7 @@ import { environment } from '../../../../environments/environment';
         @if (buyers().length === 0) {
           <div class="buyers-empty">No customers yet — buyers appear here when they place orders.</div>
         } @else {
+          <div class="buyers-table-wrap">
           <table class="buyers-table">
             <thead>
               <tr>
@@ -299,6 +312,7 @@ import { environment } from '../../../../environments/environment';
               }
             </tbody>
           </table>
+          </div>
         }
       </div>
     </div>
