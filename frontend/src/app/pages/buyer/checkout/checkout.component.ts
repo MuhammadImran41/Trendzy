@@ -14,18 +14,18 @@ import { OrderService } from '../../../services/order.service';
     .page {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 110px 2rem 4rem;
+      padding: 96px 2rem 4rem;
       display: grid;
       grid-template-columns: 1fr 380px;
       gap: 3rem;
       align-items: flex-start;
     }
     @media (max-width: 900px) {
-      .page { grid-template-columns: 1fr; padding-top: 100px; }
+      .page { grid-template-columns: 1fr; padding-top: 90px; }
       .summary-col { order: -1; position: static; }
     }
     @media (max-width: 600px) {
-      .page { padding: 95px 1rem 3rem; gap: 1.5rem; }
+      .page { padding: 86px 1rem 3rem; gap: 1.5rem; }
       .page-title { font-size: 1.75rem; }
       .field-input { padding: 0.65rem 0.875rem; }
       .cod-notice { flex-direction: column; align-items: flex-start; gap: 0.5rem; }

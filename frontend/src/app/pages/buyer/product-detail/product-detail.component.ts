@@ -14,13 +14,13 @@ import { environment } from '../../../../environments/environment';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   styles: [`
-    .page { max-width: 1280px; margin: 0 auto; padding: 110px 2rem 5rem; }
+    .page { max-width: 1280px; margin: 0 auto; padding: 96px 2rem 5rem; }
 
     @media (max-width: 768px) {
-      .page { padding: 100px 1rem 3rem; }
+      .page { padding: 90px 1rem 3rem; }
     }
     @media (max-width: 600px) {
-      .page { padding: 95px 1rem 3rem; }
+      .page { padding: 86px 1rem 3rem; }
       .breadcrumb { margin-bottom: 1.5rem; flex-wrap: wrap; }
       .product-grid { gap: 1.5rem !important; margin-bottom: 2.5rem; }
       .price-block { flex-direction: column; align-items: flex-start; gap: 0.75rem; }

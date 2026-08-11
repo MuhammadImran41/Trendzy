@@ -8,13 +8,13 @@ import { CartService } from '../../../services/cart.service';
   standalone: true,
   imports: [RouterLink, CommonModule],
   styles: [`
-    .page { max-width: 900px; margin: 0 auto; padding: 110px 2rem 4rem; }
+    .page { max-width: 900px; margin: 0 auto; padding: 96px 2rem 4rem; }
 
     @media (max-width: 768px) {
-      .page { padding: 100px 1rem 3rem; }
+      .page { padding: 90px 1rem 3rem; }
     }
     @media (max-width: 600px) {
-      .page { padding: 95px 1rem 3rem; }
+      .page { padding: 86px 1rem 3rem; }
       .page-title { font-size: 1.75rem; }
       .cart-item { flex-wrap: wrap; gap: 1rem; }
       .item-img { width: 70px; height: 70px; }
