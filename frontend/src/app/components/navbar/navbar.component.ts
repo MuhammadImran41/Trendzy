@@ -3,7 +3,6 @@ import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
-import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-navbar',
@@ -315,7 +314,5 @@ export class NavbarComponent {
 
   shopCategories: string[] = [];
 
-  constructor() {
-    inject(ProductService).getCategories().subscribe(c => this.shopCategories = c);
-  }
+  constructor() { }
 }

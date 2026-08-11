@@ -8,9 +8,9 @@ frontend:
     build:
       commands:
         - echo "Building with production configuration..."
-        - cat src/environments/environment.ts
+        - cat src/environments/environment.prod.ts
         - npm run build -- --configuration production
-        - echo "Build complete. Checking output..."
+        - echo "Build complete."
         - ls dist/trendzy/browser/ || true
   artifacts:
     baseDirectory: frontend/dist/trendzy/browser
@@ -19,3 +19,7 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+customRules:
+  - source: '</^[^.]+$|\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json)$)([^.]+$)/>'
+    target: /index.html
+    status: '200'
