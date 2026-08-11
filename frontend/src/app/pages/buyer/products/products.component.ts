@@ -135,7 +135,8 @@ import { Product } from '../../../models/product.model';
     }
 
     /* ── Grid ── */
-    .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    @media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 900px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 480px) { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; } }
     .empty {

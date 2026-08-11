@@ -228,8 +228,9 @@ import { Product } from '../../../models/product.model';
     .view-more-btn:hover { background: #2d2520; transform: translateY(-1px); }
 
     /* ── Products grid ────────────────────────────────────── */
-    .products-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; }
-    @media (max-width: 900px) { .products-grid { grid-template-columns: repeat(2,1fr); gap: 1.25rem; } }
+    .products-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
+    @media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 900px) { .products-grid { grid-template-columns: repeat(2,1fr); gap: 1rem; } }
     @media (max-width: 480px) { .products-grid { grid-template-columns: repeat(2,1fr); gap: 0.75rem; } }
 
     /* ── How it works ─────────────────────────────────────── */
@@ -704,7 +705,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.startSlider();
     this.productService.getProducts().subscribe(p => {
-      this.products.set(p.slice(0, 6));
+      this.products.set(p.slice(0, 8));
       this.stats.update(s => s.map((st, i) =>
         i === 0 ? { ...st, num: p.length > 0 ? p.length + '+' : '0' } : st
       ));
