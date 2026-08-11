@@ -7,7 +7,6 @@ frontend:
         - npm install --legacy-peer-deps
     build:
       commands:
-        - cd frontend
         - npm run build -- --configuration production
   artifacts:
     baseDirectory: frontend/dist/trendzy/browser
@@ -15,4 +14,4 @@ frontend:
       - '**/*'
   cache:
     paths:
-      - frontend/node_modules/**/*
+      - node_modules/**/*

@@ -5,15 +5,18 @@ import os
 import sys
 import asyncio
 
-# Fix for Playwright on Windows — must use SelectorEventLoop
-if sys.platform == 'win32':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
 load_dotenv()
 
 from app.database import init_db
-from app.routes import products, orders, scraper, reviews, categories, tryon
+from app.routes import products, orders, scraper, reviews, categories
 from app.email_service import send_order_notification, GMAIL_USER, GMAIL_PASS, SELLER_EMAIL, FROM_ADDRESS
+
+# Try to import tryon (may fail if playwright not installed)
+try:
+    from app.routes import tryon
+    tryon_available = True
+except Exception:
+    tryon_available = False
 
 app = FastAPI(title='Trendzy API', version='1.0.0')
 
@@ -38,7 +41,8 @@ app.include_router(orders.router,     prefix='/api/orders',     tags=['orders'])
 app.include_router(scraper.router,    prefix='/api/scraper',    tags=['scraper'])
 app.include_router(reviews.router,    prefix='/api/reviews',    tags=['reviews'])
 app.include_router(categories.router, prefix='/api/categories', tags=['categories'])
-app.include_router(tryon.router,      prefix='/api/try-on',     tags=['try-on'])
+if tryon_available:
+    app.include_router(tryon.router,  prefix='/api/try-on',     tags=['try-on'])
 
 # Buyers list for seller panel
 from fastapi import Depends
