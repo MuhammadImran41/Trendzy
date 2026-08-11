@@ -16,7 +16,6 @@ const NAV_CATS: NavCat[] = [
   { label: 'Women', filter: 'Clothing', sub: [
     { label: "Women's Stitched",   filter: "Women's Stitched" },
     { label: "Women's Unstitched", filter: "Women's Unstitched" },
-    { label: "Abayas & Modest",    filter: "Abayas" },
   ]},
   { label: 'Men', filter: 'Clothing', sub: [
     { label: "Men's Stitched",   filter: "Men's Stitched" },
@@ -228,19 +227,41 @@ export class ProductsComponent implements OnInit {
     const sub  = this._activeNavSub();
     const sort = this.sortBy();
 
+    // Search filter
     if (q) items = items.filter(p =>
       p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
 
     if (cat) {
       if (cat.label === 'Sale') {
+        // Show items with a discount
         items = items.filter(p => p.originalPrice > p.sellerPrice);
+
       } else if (sub) {
+        // Sub selected — filter by category AND matching tag
         const sf = sub.filter.toLowerCase();
         items = items.filter(p =>
-          p.name.toLowerCase().includes(sf) ||
-          p.category.toLowerCase().includes(sf) ||
-          (p.tags || []).some((t: string) => t.toLowerCase().includes(sf)));
+          p.category === cat.filter &&
+          (p.tags || []).some((t: string) => t.toLowerCase() === sf)
+        );
+
+      } else if (cat.label === 'Women') {
+        // Women — all Clothing EXCEPT tags that are Men's
+        const menTags = ["men's stitched","men's unstitched","men's casual","men's shawls"];
+        items = items.filter(p =>
+          p.category === 'Clothing' &&
+          !(p.tags || []).some((t: string) => menTags.includes(t.toLowerCase()))
+        );
+
+      } else if (cat.label === 'Men') {
+        // Men — Clothing with Men's tags OR no gender tag
+        const menTags = ["men's stitched","men's unstitched","men's casual","men's shawls"];
+        items = items.filter(p =>
+          p.category === 'Clothing' &&
+          (p.tags || []).some((t: string) => menTags.includes(t.toLowerCase()))
+        );
+
       } else {
+        // Beauty, Footwear, Handbags — direct category match
         items = items.filter(p => p.category === cat.filter);
       }
     }
