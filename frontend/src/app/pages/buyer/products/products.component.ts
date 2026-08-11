@@ -35,10 +35,11 @@ const NAV_CATS: NavCat[] = [
   imports: [CommonModule, FormsModule, ProductCardComponent],
   styles: [`
     .cat-nav {
-      border-bottom: 1px solid #e8e0d6;
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(232,224,214,0.6);
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(20px);
       position: sticky; top: 86px; z-index: 49;
+      border-top: 1px solid rgba(232,224,214,0.4);
     }
     .cat-nav-inner {
       max-width: 1280px; margin: 0 auto; padding: 0 2rem;
@@ -132,36 +133,7 @@ const NAV_CATS: NavCat[] = [
       .cat-dropdown { position: fixed; top: auto !important; left: 0 !important; right: 0; border-radius: 0 0 12px 12px; }
     }
   `],
-  template: `<div style="padding-top:86px;">
-
-    <div class="cat-nav">
-      <div class="cat-nav-inner">
-        @for (cat of navCats; track cat.label) {
-          <div class="cat-tab-wrap"
-               (mouseenter)="cat.sub?.length ? hovered.set(cat.label) : null"
-               (mouseleave)="hovered.set('')">
-            <button class="cat-tab"
-                    [class.active]="activeCat()===cat.label"
-                    [class.sale-tab]="cat.label==='Sale'"
-                    (click)="setFilter(cat,null)">
-              {{ cat.label }}
-              @if (cat.sub?.length) { <span class="chevron">▾</span> }
-            </button>
-            @if (hovered()===cat.label && cat.sub?.length) {
-              <div class="cat-dropdown">
-                <button class="cat-dropdown-item" (click)="setFilter(cat,null)">All {{ cat.label }}</button>
-                <div class="cat-dropdown-divider"></div>
-                @for (s of cat.sub; track s.label) {
-                  <button class="cat-dropdown-item"
-                          [class.active]="activeSub()===s.label"
-                          (click)="setFilter(cat,s)">{{ s.label }}</button>
-                }
-              </div>
-            }
-          </div>
-        }
-      </div>
-    </div>
+  template: `<div style="padding-top:118px;">
 
     <div class="page">
       <div class="page-header">

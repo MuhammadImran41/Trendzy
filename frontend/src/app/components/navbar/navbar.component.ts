@@ -15,37 +15,63 @@ import { CartService } from '../../services/cart.service';
     .nav-outer {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
       display: flex; justify-content: center;
-      padding: 12px 24px;
+      padding: 10px 24px 0;
       pointer-events: none;
     }
 
-    /* ── Floating pill nav ── */
+    /* ── Floating card nav (no longer pill — card shape to fit tabs) ── */
     .nav-pill {
       pointer-events: all;
-      width: 100%; max-width: 1200px;
-      background: rgba(255,255,255,0.82);
+      width: 100%; max-width: 1280px;
+      background: rgba(255,255,255,0.88);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255,255,255,0.6);
-      border-radius: 999px;
-      display: flex; align-items: center;
-      padding: 0 8px 0 28px;
-      height: 62px;
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 20px;
+      overflow: hidden;
       box-shadow:
         0 4px 24px rgba(26,20,16,0.08),
         0 1px 0 rgba(255,255,255,0.9) inset;
       transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
-      position: relative;
     }
     .nav-pill.scrolled {
-      background: rgba(255,255,255,0.95);
-      box-shadow:
-        0 12px 40px rgba(26,20,16,0.14),
-        0 1px 0 rgba(255,255,255,0.9) inset;
-      border-color: rgba(232,224,214,0.8);
+      background: rgba(255,255,255,0.97);
+      box-shadow: 0 8px 36px rgba(26,20,16,0.12);
+      border-color: rgba(232,224,214,0.9);
     }
 
-    /* ── Logo ── */
+    /* ── Top row: logo + links + icons ── */
+    .nav-top {
+      display: flex; align-items: center;
+      padding: 0 10px 0 24px;
+      height: 58px;
+      border-bottom: 1px solid rgba(232,224,214,0.5);
+      position: relative;
+    }
+
+    /* ── Category tab row inside navbar ── */
+    .nav-cats {
+      display: flex; align-items: center;
+      padding: 0 24px;
+      overflow-x: auto;
+      gap: 0;
+    }
+    .nav-cats::-webkit-scrollbar { display: none; }
+    .nav-cat-tab {
+      font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #6b6560; text-decoration: none;
+      padding: 0.7rem 1rem;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap; flex-shrink: 0;
+      transition: color 0.2s, border-color 0.2s;
+      position: relative;
+    }
+    .nav-cat-tab:hover { color: #1a1410; }
+    .nav-cat-tab.sale-tab { color: #c9a96e; }
+    .nav-cat-tab.sale-tab:hover { color: #8b6914; }
+    /* hidden on mobile — hamburger shows */
+    @media (max-width: 900px) { .nav-cats { display: none; } }
     .logo {
       text-decoration: none; flex-shrink: 0;
       display: flex; align-items: center; gap: 0;
@@ -211,73 +237,85 @@ import { CartService } from '../../services/cart.service';
       padding: 0.2rem 0.5rem; border-radius: 99px;
     }
 
-    /* ── Responsive ── */
     @media (max-width: 900px) {
       .nav-links { display: none; }
       .hamburger { display: flex; }
-      .nav-outer { padding: 10px 12px; }
-      .nav-pill { padding: 0 6px 0 18px; height: 56px; }
+      .nav-outer { padding: 10px 12px 0; }
+      .nav-top { height: 52px; padding: 0 6px 0 16px; }
       .logo-wordmark { font-size: 18px; letter-spacing: 3px; }
     }
     @media (max-width: 480px) {
-      .topbar { font-size: 0.58rem; padding: 0.32rem 0.5rem; }
-      .nav-outer { padding: 8px 10px; top: 26px; }
+      .nav-outer { padding: 8px 10px 0; }
       .logo-wordmark { font-size: 16px; letter-spacing: 2.5px; }
     }
   `],
   template: `
     @if (!isSellerRoute()) {
 
-    <!-- Floating pill navbar -->
+    <!-- Floating card navbar with built-in category tabs -->
     <div class="nav-outer">
       <div class="nav-pill" [class.scrolled]="scrolled">
 
-        <!-- Logo -->
-        <a routerLink="/" class="logo">
-          <div class="logo-wordmark"><span class="shop">SHOP</span><span class="zee">ZEE</span></div>
-        </a>
+        <!-- Top row: Logo + Center links + Icons -->
+        <div class="nav-top">
 
-        <!-- Center links -->
-        <nav class="nav-links">
-          <a routerLink="/products" [queryParams]="{category:'Women'}" class="nav-link">Women</a>
-          <a routerLink="/products" [queryParams]="{category:'Men'}" class="nav-link">Men</a>
-          <a routerLink="/products" [queryParams]="{category:'Beauty'}" class="nav-link">Beauty</a>
-          <a routerLink="/products" [queryParams]="{category:'Footwear'}" class="nav-link">Footwear</a>
-          <a routerLink="/products" [queryParams]="{category:'Accessories'}" class="nav-link">Handbags</a>
-          <a routerLink="/products" [queryParams]="{sort:'sale'}" class="nav-link sale">Sale</a>
-        </nav>
+          <!-- Logo -->
+          <a routerLink="/" class="logo">
+            <div class="logo-wordmark"><span class="shop">SHOP</span><span class="zee">ZEE</span></div>
+          </a>
 
-        <!-- Right icons -->
-        <div class="nav-actions">
-          <button class="icon-btn" (click)="searchOpen.set(true)" aria-label="Search">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-          </button>
-          <a routerLink="/login" class="icon-btn" aria-label="Account">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-            </svg>
-          </a>
-          <button class="icon-btn" aria-label="Wishlist">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-            </svg>
-          </button>
-          <a routerLink="/cart" class="icon-btn" aria-label="Cart">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 01-8 0"/>
-            </svg>
-            @if (cart.totalItems() > 0) {
-              <span class="cart-badge">{{ cart.totalItems() }}</span>
-            }
-          </a>
-          <!-- Hamburger -->
-          <button class="hamburger" (click)="mobileOpen.set(true)" aria-label="Menu">
-            <span></span><span></span><span></span>
-          </button>
+          <!-- Center links (desktop) -->
+          <nav class="nav-links">
+            <a routerLink="/products" [queryParams]="{category:'Women'}" class="nav-link">Women</a>
+            <a routerLink="/products" [queryParams]="{category:'Men'}" class="nav-link">Men</a>
+            <a routerLink="/products" [queryParams]="{category:'Beauty'}" class="nav-link">Beauty</a>
+            <a routerLink="/products" [queryParams]="{category:'Footwear'}" class="nav-link">Footwear</a>
+            <a routerLink="/products" [queryParams]="{category:'Accessories'}" class="nav-link">Handbags</a>
+            <a routerLink="/products" [queryParams]="{sort:'sale'}" class="nav-link sale">Sale</a>
+          </nav>
+
+          <!-- Right icons -->
+          <div class="nav-actions">
+            <button class="icon-btn" (click)="searchOpen.set(true)" aria-label="Search">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </button>
+            <a routerLink="/login" class="icon-btn" aria-label="Account">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </a>
+            <button class="icon-btn" aria-label="Wishlist">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+              </svg>
+            </button>
+            <a routerLink="/cart" class="icon-btn" aria-label="Cart">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 01-8 0"/>
+              </svg>
+              @if (cart.totalItems() > 0) {
+                <span class="cart-badge">{{ cart.totalItems() }}</span>
+              }
+            </a>
+            <button class="hamburger" (click)="mobileOpen.set(true)" aria-label="Menu">
+              <span></span><span></span><span></span>
+            </button>
+          </div>
         </div>
+
+        <!-- Category tab row (inside the same floating card) -->
+        <div class="nav-cats">
+          <a routerLink="/products" [queryParams]="{category:'Women'}" class="nav-cat-tab">Women</a>
+          <a routerLink="/products" [queryParams]="{category:'Men'}" class="nav-cat-tab">Men</a>
+          <a routerLink="/products" [queryParams]="{category:'Beauty'}" class="nav-cat-tab">Beauty</a>
+          <a routerLink="/products" [queryParams]="{category:'Footwear'}" class="nav-cat-tab">Footwear</a>
+          <a routerLink="/products" [queryParams]="{category:'Accessories'}" class="nav-cat-tab">Handbags</a>
+          <a routerLink="/products" [queryParams]="{sort:'sale'}" class="nav-cat-tab sale-tab">Sale</a>
+        </div>
+
       </div>
     </div>
 
