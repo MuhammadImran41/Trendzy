@@ -51,7 +51,7 @@ def get_orders(db: Session = Depends(get_db)):
 @router.post('/')
 def place_order(order: Order, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     import json
-    order_id   = f'SZ-{str(uuid.uuid4())[:6].upper()}'
+    order_id   = f'TZ-{str(uuid.uuid4())[:6].upper()}'
     items_json = json.dumps([i.model_dump() for i in order.items])
 
     new_order = OrderDB(

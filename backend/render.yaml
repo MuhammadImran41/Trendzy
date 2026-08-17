@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: glowmart-api
+    name: trendzy-api
     runtime: python
     rootDir: backend
     buildCommand: pip install -r requirements.txt
@@ -10,7 +10,9 @@ services:
         sync: false
       - key: SELLER_EMAIL
         sync: false
-      - key: RESEND_API_KEY
+      - key: GMAIL_USER
+        sync: false
+      - key: GMAIL_PASS
         sync: false
       - key: ALLOWED_ORIGINS
         sync: false

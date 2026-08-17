@@ -3,14 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { timeout } from 'rxjs/operators';
 import { Order } from '../models/order.model';
-
-// Production API URL - Railway backend
-const RAILWAY_URL = 'http://localhost:8001/api';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
   private http = inject(HttpClient);
-  private apiUrl = RAILWAY_URL;
+  private apiUrl = environment.apiUrl;
 
   placeOrder(order: Omit<Order, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Observable<Order> {
     return this.http.post<Order>(`${this.apiUrl}/orders/`, order).pipe(timeout(30000));

@@ -3,7 +3,7 @@ Database connection and table definitions using SQLAlchemy.
 """
 from sqlalchemy import (
     create_engine, Column, String, Float, Integer,
-    Boolean, DateTime, Text, JSON
+    Boolean, DateTime, Text, JSON, UniqueConstraint
 )
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime
@@ -25,6 +25,20 @@ Base = declarative_base()
 
 
 # ── ORM Models ────────────────────────────────────────────────────────────────
+
+class UserDB(Base):
+    __tablename__ = 'users'
+
+    id          = Column(String, primary_key=True)
+    name        = Column(String, nullable=False)
+    email       = Column(String, nullable=False, unique=True, index=True)
+    phone       = Column(String, nullable=True)
+    password    = Column(String, nullable=False)          # bcrypt hash
+    role        = Column(String, default='buyer')         # 'buyer' | 'seller'
+    isActive    = Column(Boolean, default=True)
+    createdAt   = Column(DateTime, default=datetime.utcnow)
+    lastLoginAt = Column(DateTime, nullable=True)
+
 
 class CategoryDB(Base):
     __tablename__ = 'categories'
