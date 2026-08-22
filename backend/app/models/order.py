@@ -5,7 +5,7 @@ from datetime import datetime
 class OrderItem(BaseModel):
     productId:    str
     productName:  str
-    productImage: str
+    productImage: Optional[str] = ''
     quantity:     int
     price:        float
 

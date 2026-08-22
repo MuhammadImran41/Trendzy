@@ -44,7 +44,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": { "buildTarget": "trendzy:build:production" },
-            "development": { "buildTarget": "trendzy:build:development" }
+            "development": {
+              "buildTarget": "trendzy:build:development",
+              "proxyConfig": "proxy.conf.json"
+            }
           },
           "defaultConfiguration": "development"
         }

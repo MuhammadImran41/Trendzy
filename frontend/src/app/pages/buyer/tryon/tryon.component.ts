@@ -230,28 +230,56 @@ import { Product } from '../../../models/product.model';
               </div>
             }
 
-            <!-- Result -->
-            @if (resultUrl()) {
-              <div class="result-section">
-                <div class="result-card">
-                  <div class="result-header">
-                    <div>
-                      <div class="result-header-text">✨ Your Try-On Result</div>
-                      <div class="result-header-sub">{{ resultProductName() }}</div>
-                    </div>
-                  </div>
-                  <img [src]="resultUrl()" class="result-img" alt="Try-on result" />
-                  <div class="result-actions">
-                    <a [href]="resultUrl()" [download]="'trendzy-tryon.jpg'" class="btn-download">
-                      ⬇ Download
-                    </a>
-                    <button class="btn-retry" (click)="resultUrl.set(''); error.set('')">
-                      Try Another
-                    </button>
-                  </div>
+    // Result
+    @if (resultUrl()) {
+      <div class="result-section">
+        <div class="result-card">
+          <div class="result-header">
+            <div>
+              <div class="result-header-text">✨ Your Try-On Result</div>
+              <div class="result-header-sub">{{ resultProductName() }}</div>
+            </div>
+          </div>
+          <img [src]="resultUrl()" class="result-img" alt="Try-on result" />
+
+          <!-- AI Analysis -->
+          @if (analysis()) {
+            <div style="padding:1.25rem 1.5rem;background:#faf7f4;border-top:1px solid #f0ebe4;">
+              <div style="display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;">
+                <div style="background:#1a1410;color:#c9a96e;padding:0.4rem 1rem;border-radius:99px;font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:700;">
+                  Fit Score: {{ analysis()?.fit_score }}/10
+                </div>
+                <div style="background:#f5f0e8;color:#1a1410;padding:0.4rem 1rem;border-radius:99px;font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:600;">
+                  {{ analysis()?.style_match }} Match
+                </div>
+                <div style="background:#f5f0e8;color:#6b6560;padding:0.4rem 1rem;border-radius:99px;font-family:'Inter',sans-serif;font-size:0.75rem;">
+                  {{ analysis()?.occasion }}
                 </div>
               </div>
-            }
+              <p style="font-family:'Inter',sans-serif;font-size:0.85rem;color:#1a1410;font-weight:600;margin:0 0 0.5rem;">How it looks on you:</p>
+              <p style="font-family:'Inter',sans-serif;font-size:0.82rem;color:#6b6560;line-height:1.7;margin:0 0 1rem;">{{ analysis()?.how_it_looks }}</p>
+              @if (analysis()?.styling_tips?.length) {
+                <p style="font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:600;color:#1a1410;margin:0 0 0.4rem;">Styling Tips:</p>
+                <ul style="font-family:'Inter',sans-serif;font-size:0.8rem;color:#6b6560;line-height:1.8;margin:0;padding-left:1.25rem;">
+                  @for (tip of analysis()?.styling_tips; track tip) {
+                    <li>{{ tip }}</li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+
+          <div class="result-actions">
+            <a [href]="resultUrl()" [download]="'trendzy-tryon.jpg'" class="btn-download">
+              ⬇ Download
+            </a>
+            <button class="btn-retry" (click)="resultUrl.set(''); analysis.set(null); error.set('')">
+              Try Another
+            </button>
+          </div>
+        </div>
+      </div>
+    }
 
             <!-- Tips -->
             @if (!resultUrl()) {
@@ -288,6 +316,7 @@ export class TryonComponent implements OnInit {
   error           = signal('');
   resultUrl       = signal('');
   resultProductName = signal('');
+  analysis        = signal<any>(null);
 
   ngOnInit() {
     // Load all clothing products
@@ -345,6 +374,7 @@ export class TryonComponent implements OnInit {
     this.loading.set(true);
     this.error.set('');
     this.resultUrl.set('');
+    this.analysis.set(null);
 
     const formData = new FormData();
     formData.append('user_photo',  file);
@@ -353,8 +383,9 @@ export class TryonComponent implements OnInit {
     this.http.post<any>(`${this.api}/try-on/`, formData).subscribe({
       next: (res) => {
         this.loading.set(false);
-        this.resultUrl.set('http://localhost:8001' + res.result_url);
+        this.resultUrl.set(res.result_url);  // relative URL through proxy
         this.resultProductName.set(res.product_name);
+        this.analysis.set(res.analysis || null);
       },
       error: (err) => {
         this.loading.set(false);
