@@ -8,19 +8,19 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [RouterLink, CommonModule, FormsModule],
   styles: [`
-    footer { background: #0f0d0a; color: #9e9890; }
+    footer { background: #0f0d0a; color: #c9c4bc; }
 
     /* ── Top gold line ── */
     .gold-line { height: 2px; background: linear-gradient(90deg, transparent, #c9a96e, transparent); }
 
     /* ── Newsletter ── */
-    .newsletter { background: #1a1410; padding: 2.5rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .newsletter { background: #faf7f4; padding: 2.5rem 2rem; border-bottom: 1px solid #e8e0d6; }
     .nl-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
-    .nl-text h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: #faf7f4; margin-bottom: 0.25rem; }
+    .nl-text h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: #1a1410; margin-bottom: 0.25rem; }
     .nl-text p { font-family: 'Inter', sans-serif; font-size: 0.82rem; color: #6b6560; }
     .nl-form { display: flex; gap: 0; }
-    .nl-input { background: #0f0d0a; border: 1px solid #3a3530; border-right: none; padding: 0.7rem 1.25rem; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #faf7f4; outline: none; min-width: 260px; }
-    .nl-input::placeholder { color: #4a4540; }
+    .nl-input { background: #fff; border: 1px solid #ddd8d0; border-right: none; padding: 0.7rem 1.25rem; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #1a1410; outline: none; min-width: 260px; }
+    .nl-input::placeholder { color: #9e9890; }
     .nl-btn { background: #c9a96e; color: #0f0d0a; border: none; padding: 0.7rem 1.5rem; font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
     .nl-btn:hover { background: #d4b87a; }
     @media (max-width: 640px) { .nl-inner { flex-direction: column; align-items: flex-start; } .nl-input { min-width: 200px; } }
@@ -37,31 +37,30 @@ import { FormsModule } from '@angular/forms';
     .brand-wordmark .trend { color: #faf7f4; }
     .brand-wordmark .zy { background: linear-gradient(135deg, #8b6010, #c8920a, #7a5008); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .brand-tagline { font-family: 'Inter', sans-serif; font-size: 5px; letter-spacing: 2.5px; color: #c9a96e; text-transform: uppercase; }
-    .brand-desc { font-family: 'Inter', sans-serif; font-size: 0.82rem; line-height: 1.8; color: #4a4540; margin-bottom: 1.5rem; }
+    .brand-desc { font-family: 'Inter', sans-serif; font-size: 0.82rem; line-height: 1.8; color: #c9c4bc; margin-bottom: 1.5rem; }
     .brand-pills { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.75rem; }
-    .brand-pill { display: flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #6b6560; }
+    .brand-pill { display: flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #c9c4bc; }
     .brand-pill svg { flex-shrink: 0; }
 
     /* social */
     .social-row { display: flex; gap: 0.625rem; margin-top: 0.25rem; }
-    .social-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: #6b6560; }
+    .social-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: #c9c4bc; }
     .social-btn:hover { border-color: #c9a96e; color: #c9a96e; background: rgba(201,169,110,0.08); }
 
     /* columns */
     .col-title { font-family: 'Inter', sans-serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: #faf7f4; margin-bottom: 1.25rem; }
     .col-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
-    .col-links a, .col-links span, .col-links button { font-family: 'Inter', sans-serif; font-size: 0.82rem; color: #4a4540; text-decoration: none; transition: color 0.2s; cursor: pointer; background: none; border: none; padding: 0; text-align: left; }
+    .col-links a, .col-links span, .col-links button { font-family: 'Inter', sans-serif; font-size: 0.82rem; color: #c9c4bc; text-decoration: none; transition: color 0.2s; cursor: pointer; background: none; border: none; padding: 0; text-align: left; }
     .col-links a:hover, .col-links span:hover, .col-links button:hover { color: #c9a96e; }
 
     /* bottom bar */
     .footer-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding: 1.5rem 2rem; max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-    .footer-copy { font-family: 'Inter', sans-serif; font-size: 0.72rem; color: #3a3530; }
+    .footer-copy { font-family: 'Inter', sans-serif; font-size: 0.72rem; color: #c9c4bc; }
     .footer-badges { display: flex; gap: 0.5rem; align-items: center; }
-    .payment-badge { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); padding: 0.2rem 0.6rem; font-family: 'Inter', sans-serif; font-size: 0.65rem; color: #4a4540; border-radius: 3px; }
+    .payment-badge { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); padding: 0.2rem 0.6rem; font-family: 'Inter', sans-serif; font-size: 0.65rem; color: #c9c4bc; border-radius: 3px; }
   `],
   template: `
     <footer>
-      <div class="gold-line"></div>
 
       <!-- Newsletter -->
       <div class="newsletter">
