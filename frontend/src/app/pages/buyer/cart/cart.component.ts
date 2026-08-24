@@ -8,7 +8,7 @@ import { CartService } from '../../../services/cart.service';
   standalone: true,
   imports: [RouterLink, CommonModule],
   styles: [`
-    .page { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+    .page { max-width: 900px; margin: 0 auto; padding: 142px 2rem 4rem; }
 
     @media (max-width: 600px) {
       .page { padding: 2rem 1rem; }
@@ -18,6 +18,12 @@ import { CartService } from '../../../services/cart.service';
       .item-total { min-width: unset; text-align: left; width: 100%; }
       .qty-ctrl { margin-left: auto; }
       .summary { padding: 1.25rem; }
+      .checkout-btn { padding: 0.875rem; font-size: 0.75rem; }
+    }
+    @media (max-width: 480px) {
+      .cart-item { gap: 0.75rem; }
+      .item-img { width: 60px; height: 60px; flex-shrink: 0; }
+      .remove-btn { margin-left: auto; }
     }
 
     .page-title {

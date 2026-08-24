@@ -22,11 +22,19 @@ import { OrderService } from '../../../services/order.service';
     }
     @media (max-width: 900px) {
       .page { grid-template-columns: 1fr; }
-      .summary-col { order: -1; }
+      .summary-col { order: -1; position: static; }
     }
     @media (max-width: 600px) {
       .page { padding: 1.5rem 1rem; gap: 1.5rem; }
       .page-title { font-size: 1.75rem; }
+      .field-input { padding: 0.65rem 0.875rem; }
+      .cod-notice { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .submit-btn { padding: 0.875rem; font-size: 0.75rem; }
+    }
+    @media (max-width: 480px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .summary-body { padding: 1rem; }
+      .summary-header, .summary-footer { padding: 1rem; }
     }
 
     /* ── Left: Form ── */

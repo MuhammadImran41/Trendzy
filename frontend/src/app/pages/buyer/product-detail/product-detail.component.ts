@@ -21,6 +21,17 @@ import { environment } from '../../../../environments/environment';
       .breadcrumb { margin-bottom: 1.5rem; flex-wrap: wrap; }
       .product-grid { gap: 1.5rem !important; margin-bottom: 2.5rem; }
       .price-block { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .cta-row { flex-direction: column; gap: 0.75rem; }
+      .cta-row .btn-primary,
+      .cta-row .btn-outline,
+      .cta-row .btn-tryon { width: 100%; justify-content: center; }
+      .qty-row { flex-wrap: wrap; }
+      .rating-summary { flex-direction: column; gap: 1.25rem; padding: 1.25rem; }
+    }
+    @media (max-width: 480px) {
+      .product-title { font-size: 1.5rem; }
+      .price-main { font-size: 1.6rem; }
+      .reviews-section { max-width: 100%; }
     }
 
     .breadcrumb {

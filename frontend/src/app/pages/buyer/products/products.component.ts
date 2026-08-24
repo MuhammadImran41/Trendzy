@@ -16,7 +16,7 @@ import { Product } from '../../../models/product.model';
     .cat-nav {
       border-bottom: 1px solid #e8e0d6;
       background: #faf7f4;
-      position: sticky; top: 106px; z-index: 50;
+      position: sticky; top: 122px; z-index: 50;
     }
     .cat-nav-wrap {
       position: relative;
@@ -137,13 +137,22 @@ import { Product } from '../../../models/product.model';
     /* ── Grid ── */
     .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
     @media (max-width: 900px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px) { .products-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; } }
     .empty {
       grid-column: 1/-1; text-align: center; padding: 5rem 2rem;
       font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: #b0a898;
     }
+
+    /* ── Cat nav responsive ── */
+    @media (max-width: 768px) {
+      .cat-nav { top: 98px; }
+      .cat-nav-inner { padding: 0 0.75rem; }
+    }
+    @media (max-width: 480px) {
+      .cat-nav { top: 92px; }
+    }
   `],
-  template: `
+  template: `<div style="padding-top:122px;">
     <!-- ── Category tab bar with dropdowns ── -->
     <div class="cat-nav">
       <div class="cat-nav-wrap">
@@ -240,7 +249,7 @@ import { Product } from '../../../models/product.model';
         }
       </div>
     </div>
-  `
+  </div>`
 })
 export class ProductsComponent implements OnInit {
   private productService  = inject(ProductService);
@@ -296,9 +305,13 @@ export class ProductsComponent implements OnInit {
     this.hoveredCat.set(catId);
   }
 
+  private hiddenCategories = ['Electronics', 'Kitchen', 'Sports', 'Home Decor', 'Bedsheets', 'Kids & Toys', 'Daily Gadgets', 'Stationery'];
+
   ngOnInit() {
     this.productService.getProducts().subscribe(p => this.allProducts.set(p));
-    this.categoryService.getCategories().subscribe(c => this.dbCategories.set(c));
+    this.categoryService.getCategories().subscribe(c =>
+      this.dbCategories.set(c.filter(cat => !this.hiddenCategories.includes(cat.name)))
+    );
     this.route.queryParams.subscribe(params => {
       if (params['category']) {
         this.selectedCategory.set(params['category']);

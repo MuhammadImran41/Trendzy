@@ -15,214 +15,154 @@ import { Product } from '../../../models/product.model';
 
     /* ── Hero ─────────────────────────────────────────────── */
     .hero {
-      min-height: 0;
-      height: calc(100vh - 106px);
-      max-height: 570px;
+      height: 100vh;
+      min-height: 640px;
+      max-height: 900px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      align-items: center;
-      background: #faf7f4;
+      align-items: stretch;
+      position: relative;
       overflow: hidden;
-    }
-    @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; height: auto; max-height: none; }
-      .hero-carousel-side { display: none; }
-    }
-    @media (max-width: 768px) {
-      .hero { padding-top: 1rem; padding-bottom: 1rem; }
-      .hero-content { padding: 2rem 1.25rem 1.5rem 1.25rem !important; }
-      .hero-btns { flex-direction: column; }
-      .hero-btns a, .hero-btns button { width: 100%; justify-content: center; }
-      .hero-stats { gap: 1.25rem; flex-wrap: wrap; }
-      .stat-item { padding-right: 1.25rem; margin-right: 1.25rem; }
+      background: #faf7f4;
     }
 
-    /* Left content */
-    .hero-content {
-      padding: 2rem 3rem 2rem 5rem;
-      display: flex; flex-direction: column; justify-content: center;
+    /* LEFT side — cream bg with content */
+    .hero-left {
+      display: flex; align-items: center;
+      padding: 6rem 3rem 3rem 8rem;
+      position: relative; z-index: 1;
+      background: linear-gradient(to right, #faf7f4 60%, rgba(250,247,244,0.75) 85%, rgba(250,247,244,0) 100%);
     }
-    @media (max-width: 1200px) { .hero-content { padding: 2rem 2rem 2rem 3rem; } }
-    @media (max-width: 768px)  { .hero-content { padding: 2rem 1.5rem !important; } }
+
+    /* RIGHT side — slider */
+    .hero-right {
+      position: relative; overflow: hidden;
+    }
+
+    /* Slider track */
+    .slider-track {
+      display: flex;
+      width: 100%; height: 100%;
+      transition: transform 0.8s cubic-bezier(0.77,0,0.18,1);
+    }
+    .slide-img {
+      min-width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block; flex-shrink: 0;
+    }
+
+    /* Slider dots */
+    .slider-dots {
+      position: absolute; bottom: 2rem; right: 2rem;
+      display: flex; gap: 0.5rem; z-index: 5;
+    }
+    .slider-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.5); border: none; cursor: pointer;
+      transition: all 0.3s; padding: 0;
+    }
+    .slider-dot.active { background: #c9a96e; width: 24px; border-radius: 99px; }
+
+    /* Slider arrows */
+    .slider-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(250,247,244,0.9); border: 1px solid #e8e0d6;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 5; transition: all 0.2s;
+      font-size: 1.1rem; color: #1a1410;
+    }
+    .slider-arrow:hover { background: #c9a96e; color: #fff; border-color: #c9a96e; }
+    .slider-arrow.prev { left: 1rem; }
+    .slider-arrow.next { right: 1rem; }
+
+    /* blend left edge into cream */
+    .hero-right::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 2;
+      background: linear-gradient(to right,
+        rgba(250,247,244,1) 0%,
+        rgba(250,247,244,0.5) 15%,
+        rgba(250,247,244,0.1) 35%,
+        transparent 55%
+      );
+      pointer-events: none;
+    }
+
+    /* decorative vertical gold line removed */
+    .hero-left::after { display: none; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; min-height: 100svh; }
+      .hero-right { position: absolute; inset: 0; z-index: 0; }
+      .hero-right::before { background: linear-gradient(to bottom, rgba(250,247,244,0.85) 0%, rgba(250,247,244,0.7) 100%); }
+      .hero-left { background: transparent; padding: 9rem 1.5rem 3rem; z-index: 1; }
+      .hero-left::after { display: none; }
+    }
+    @media (max-width: 480px) {
+      .hero-left { padding: 7rem 1.25rem 2.5rem; }
+      .hero-btns { flex-direction: column; width: 100%; }
+      .hero-btns a { width: 100%; text-align: center; justify-content: center; }
+      .hero-stats { flex-wrap: wrap; gap: 1rem; }
+      .stat-item { padding-right: 1.25rem; margin-right: 1.25rem; border-right: 1px solid #e8e0d6; }
+    }
+
+    /* ── Text content ── */
+    .hero-content {
+      display: flex; flex-direction: column; align-items: flex-start;
+    }
 
     .hero-eyebrow {
       font-family: 'Inter', sans-serif;
-      font-size: 0.7rem; font-weight: 500;
-      letter-spacing: 0.3em; text-transform: uppercase;
-      color: #c9a96e; margin-bottom: 0.75rem;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: #c9a96e; margin-bottom: 1.25rem;
       display: flex; align-items: center; gap: 0.75rem;
     }
-    .hero-eyebrow::after { content: ''; width: 40px; height: 1px; background: #c9a96e; }
+    .hero-eyebrow::before { content: ''; width: 28px; height: 1px; background: #c9a96e; }
 
     .hero-title {
       font-family: 'DM Serif Display', Georgia, serif;
-      font-size: clamp(2.4rem, 4vw, 4rem);
-      font-weight: 300; line-height: 1.05;
-      color: #1a1410; margin-bottom: 1rem;
+      font-size: clamp(2.8rem, 4vw, 5rem);
+      font-weight: 400; line-height: 1.02;
+      color: #1a1410; margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
     }
     .hero-title em {
-      font-style: italic; font-weight: 400;
-      background: linear-gradient(135deg, #c9a96e, #8b6914);
+      font-style: italic;
+      background: linear-gradient(135deg, #b8920a, #c9a96e, #8b6914);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
 
     .hero-desc {
       font-family: 'Inter', sans-serif;
-      font-size: 0.88rem; color: #6b6560;
-      line-height: 1.7; max-width: 380px; margin-bottom: 1.75rem;
+      font-size: 0.95rem; color: #6b6560;
+      line-height: 1.8; max-width: 380px; margin-bottom: 2.5rem;
     }
 
-    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .hero-btns { display: flex; gap: 0.875rem; flex-wrap: wrap; margin-bottom: 3rem; }
 
     .hero-stats {
       display: flex; gap: 0;
-      padding-top: 1.5rem; border-top: 1px solid #ddd8d0;
+      padding-top: 1.75rem;
+      width: 100%;
     }
     .stat-item {
       display: flex; flex-direction: column;
-      padding-right: 2rem; margin-right: 2rem;
+      padding-right: 2.25rem; margin-right: 2.25rem;
       border-right: 1px solid #e8e0d6;
     }
     .stat-item:last-child { border-right: none; padding-right: 0; margin-right: 0; }
     .stat-num {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.75rem; font-weight: 400; line-height: 1;
+      font-size: 2rem; font-weight: 400; line-height: 1;
       background: linear-gradient(135deg, #c9a96e, #8b6914);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .stat-label {
-      font-family: 'Inter', sans-serif; font-size: 0.6rem;
-      letter-spacing: 0.18em; text-transform: uppercase; color: #9e9890; margin-top: 0.3rem;
+      font-family: 'Inter', sans-serif; font-size: 0.58rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #9e9890; margin-top: 0.4rem;
     }
-
-    /* ── Right: Cross Carousel ───────────────────────────── */
-    .hero-carousel-side {
-      position: relative;
-      height: 100%;
-      min-height: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex: 1.3;
-      padding-right: 4rem;
-    }
-
-    .carousel-track {
-      position: relative;
-      width: 560px;
-      height: 500px;
-      flex-shrink: 0;
-    }
-
-    /* Base card — all same 160x200 */
-    .c-card {
-      position: absolute;
-      width: 160px;
-      height: 200px;
-      border-radius: 12px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.65s cubic-bezier(0.4, 0, 0.2, 1);
-      /* default center anchor */
-      top: 50%;
-      left: 50%;
-      margin-top: -100px;
-      margin-left: -80px;
-    }
-
-    .c-card img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* ── CENTER — bigger, sharp, elevated ── */
-    .c-card.pos-center {
-      width: 260px;
-      height: 340px;
-      margin-top: -170px;
-      margin-left: -130px;
-      transform: translate(0, 0) translateZ(0);
-      z-index: 10;
-      filter: none;
-      box-shadow: 0 24px 60px rgba(26,20,16,0.30);
-      border-radius: 16px;
-    }
-
-    /* ── TOP ── */
-    .c-card.pos-top {
-      transform: translate(0, -210px);
-      z-index: 5;
-      filter: blur(1.5px) brightness(0.6);
-      opacity: 0.8;
-    }
-
-    /* ── BOTTOM ── */
-    .c-card.pos-bottom {
-      transform: translate(0, 210px);
-      z-index: 5;
-      filter: blur(1.5px) brightness(0.6);
-      opacity: 0.8;
-    }
-
-    /* ── LEFT ── */
-    .c-card.pos-left {
-      transform: translate(-185px, 0);
-      z-index: 5;
-      filter: blur(1.5px) brightness(0.65);
-      opacity: 0.85;
-    }
-
-    /* ── RIGHT ── */
-    .c-card.pos-right {
-      transform: translate(185px, 0);
-      z-index: 5;
-      filter: blur(1.5px) brightness(0.65);
-      opacity: 0.85;
-    }
-
-    /* Hidden */
-    .c-card.pos-hidden {
-      transform: translate(0, 0) scale(0.2);
-      z-index: 1;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* Label on active card only */
-    .c-card-label {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 1.5rem 1rem 1rem;
-      background: linear-gradient(to top, rgba(26,20,16,0.85) 0%, transparent 100%);
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-    .c-card.pos-center .c-card-label { opacity: 1; }
-
-    .c-label-cat {
-      font-family: 'Inter', sans-serif; font-size: 0.6rem;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: #c9a96e; margin-bottom: 0.2rem;
-    }
-    .c-label-name {
-      font-family: 'DM Serif Display', serif; font-size: 1.1rem;
-      font-weight: 500; color: #fff;
-    }
-
-    /* Dots */
-    .carousel-dots {
-      position: absolute; bottom: 1.5rem;
-      width: 100%; display: flex; gap: 0.5rem;
-      align-items: center; justify-content: center;
-    }
-    .cdot {
-      width: 20px; height: 2px;
-      background: #ddd8d0; border: none; padding: 0; cursor: pointer;
-      transition: all 0.3s;
-    }
-    .cdot.active { width: 36px; background: #c9a96e; }
 
     /* ── Marquee ──────────────────────────────────────────── */
     .marquee-bar { padding: 0.75rem 0; overflow: hidden; border-top: 1px solid #e8e0d6; border-bottom: 1px solid #e8e0d6; background: #faf7f4; }
@@ -245,49 +185,34 @@ import { Product } from '../../../models/product.model';
     }
     .section-title em { font-style: italic; }
 
-    /* ── Category grid — Clean vertical ──────────────────── */
-    .cat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
-    @media (max-width: 768px) { .cat-grid { grid-template-columns: repeat(2,1fr); gap: 0.75rem; } }
-    @media (max-width: 480px) { .cat-grid { grid-template-columns: 1fr; } }
-
-    .cat-card {
-      background: #fff; border: 1px solid #ede8e0; border-radius: 12px;
-      padding: 1.5rem; cursor: pointer; text-decoration: none; display: flex;
-      flex-direction: column; gap: 1rem;
-      transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+    /* ── Audience grid — circular cards ──────────────────── */
+    .audience-grid {
+      display: grid; grid-template-columns: repeat(6,1fr); gap: 1.5rem;
     }
-    .cat-card:hover { box-shadow: 0 8px 32px rgba(26,20,16,0.09); transform: translateY(-3px); border-color: #c9a96e; }
+    @media (max-width: 900px) { .audience-grid { grid-template-columns: repeat(3,1fr); gap: 1rem; } }
+    @media (max-width: 480px) { .audience-grid { grid-template-columns: repeat(3,1fr); gap: 0.75rem; } }
 
-    .cat-card-header { display: flex; align-items: center; justify-content: space-between; }
-    .cat-card-left { display: flex; align-items: center; gap: 0.75rem; }
-    .cat-card-icon {
-      width: 44px; height: 44px; border-radius: 10px;
-      background: linear-gradient(135deg, #f5f0e8, #ede8e0);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; flex-shrink: 0;
+    .audience-card {
+      display: flex; flex-direction: column; align-items: center; gap: 0.875rem;
+      text-decoration: none; cursor: pointer;
     }
-    .cat-card-title { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: #1a1410; line-height: 1.2; }
-    .cat-card-sub { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: #b0a898; margin-top: 2px; }
-    .cat-card-arrow {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: #f5f0e8; border: 1px solid #e8e0d6;
-      display: flex; align-items: center; justify-content: center;
-      color: #c9a96e; font-size: 1rem; flex-shrink: 0;
-      transition: background 0.2s, color 0.2s;
+    .audience-circle {
+      width: 120px; height: 120px; border-radius: 50%;
+      overflow: hidden; border: 3px solid #e8e0d6;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
     }
-    .cat-card:hover .cat-card-arrow { background: #c9a96e; color: #fff; border-color: #c9a96e; }
-
-    /* thin gold divider */
-    .cat-card-divider { height: 1px; background: #f0ebe4; }
-
-    /* subcategory tags */
-    .cat-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .cat-tag {
-      font-family: 'Inter', sans-serif; font-size: 0.7rem; color: #6b6560;
-      background: #f5f0e8; padding: 0.25rem 0.625rem; border-radius: 99px;
-      border: 1px solid #ede8e0; transition: background 0.15s, color 0.15s;
+    @media (max-width: 480px) { .audience-circle { width: 90px; height: 90px; } }
+    .audience-card:hover .audience-circle {
+      border-color: #c9a96e;
+      box-shadow: 0 0 0 5px rgba(201,169,110,0.15);
+      transform: translateY(-4px);
     }
-    .cat-card:hover .cat-tag { background: #faf7f4; }
+    .audience-circle img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+    .audience-label {
+      font-family: 'DM Serif Display', serif; font-size: 1rem;
+      color: #1a1410; transition: color 0.2s;
+    }
+    .audience-card:hover .audience-label { color: #c9a96e; }
 
     /* View More button */
     .view-more-wrap { text-align: center; margin-top: 2.5rem; }
@@ -410,18 +335,38 @@ import { Product } from '../../../models/product.model';
     .cta-eyebrow { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: #c9a96e; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem; }
     .cta-eyebrow::before, .cta-eyebrow::after { content: ''; width: 40px; height: 1px; background: rgba(201,169,110,0.5); }
 
+    /* ── Mobile section padding ───────────────────────────── */
+    @media (max-width: 768px) {
+      .hiw-section { padding: 4rem 1.25rem; }
+      .hiw-card { padding: 2rem 1.5rem; }
+      .cta-banner { padding: 3rem 1.25rem; }
+      .section-header { margin-bottom: 2rem; }
+      .view-more-wrap { margin-top: 1.75rem; }
+      .cat-grid { gap: 0.875rem; }
+    }
+    @media (max-width: 480px) {
+      .cat-grid { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: repeat(2,1fr); gap: 0.75rem; }
+      .view-more-btn { width: 100%; justify-content: center; }
+    }
+
     /* Local button overrides for home */
-    .btn-outline {
+    .hero-btns .btn-primary {
       display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
       padding: 0.875rem 2.5rem;
-      background: transparent; color: #1a1410;
-      border: 1.5px solid #1a1410;
-      font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      text-decoration: none; cursor: pointer;
+      background: #1a1410;
+      color: #faf7f4;
+      font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.8125rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      border: 1px solid #1a1410; cursor: pointer;
       transition: all 0.3s ease; border-radius: 2px;
+      text-decoration: none;
     }
-    .btn-outline:hover { background: #1a1410; color: #faf7f4; }
+    .hero-btns .btn-primary:hover {
+      background: #2d2520; border-color: #2d2520;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      transform: translateY(-1px);
+    }
 
     .btn-gold {
       display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
@@ -442,44 +387,46 @@ import { Product } from '../../../models/product.model';
     <section class="hero">
 
       <!-- Left: Content -->
-      <div class="hero-content">
-        <div class="hero-eyebrow">Everything in One Place</div>
-        <h1 class="hero-title">
-          Shop <em>Everything</em><br>You Love
-        </h1>
-        <p class="hero-desc">
-          Fashion, beauty, kitchen, electronics, accessories &amp; more —
-          all delivered to your door. Cash on delivery. No account needed.
-        </p>
-        <div class="hero-btns">
-          <a routerLink="/products" class="btn-primary">Shop Now</a>
-          <a href="#categories" class="btn-outline">Explore Categories</a>
-        </div>
-        <div class="hero-stats">
-          @for (s of stats(); track s.label) {
-            <div class="stat-item">
-              <div class="stat-num">{{ s.num }}</div>
-              <div class="stat-label">{{ s.label }}</div>
-            </div>
-          }
+      <div class="hero-left">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Discover<br><em>Everything</em><br>You Love
+          </h1>
+          <p class="hero-desc">
+            Your premier destination for fashion, beauty, electronics &amp; lifestyle —
+            delivered to your doorstep across Pakistan with cash on delivery.
+          </p>
+          <div class="hero-btns">
+            <a routerLink="/products" class="btn-primary">Shop Now</a>
+            <a href="#categories" class="btn-primary" style="background:transparent;color:#1a1410;border:1px solid #1a1410;">Explore Categories</a>
+          </div>
+          <div class="hero-stats">
+            @for (s of stats(); track s.label) {
+              <div class="stat-item">
+                <div class="stat-num">{{ s.num }}</div>
+                <div class="stat-label">{{ s.label }}</div>
+              </div>
+            }
+          </div>
         </div>
       </div>
 
-      <!-- Right: 3D Card Carousel -->
-      <div class="hero-carousel-side">
-        <div class="carousel-track">
-          @for (slide of heroSlides(); track slide.id; let i = $index) {
-            <div class="c-card" [ngClass]="getCardClass(i)" (click)="goToSlide(i)">
-              <img [src]="slide.img" [alt]="slide.name" loading="lazy" />
-              <div class="c-card-label">
-                <div class="c-label-cat">{{ slide.category }}</div>
-                <div class="c-label-name">{{ slide.name }}</div>
-              </div>
-            </div>
+      <!-- Right: Image Slider -->
+      <div class="hero-right">
+        <div class="slider-track" [style.transform]="'translateX(-' + activeSlide() * 100 + '%)'">
+          @for (s of slides; track s.img) {
+            <img class="slide-img" [src]="s.img" [alt]="s.alt" />
           }
         </div>
-
-      
+        <!-- Dots -->
+        <div class="slider-dots">
+          @for (s of slides; track $index; let i = $index) {
+            <button class="slider-dot" [class.active]="activeSlide() === i" (click)="goSlide(i)"></button>
+          }
+        </div>
+        <!-- Arrows -->
+        <button class="slider-arrow prev" (click)="prevSlide()">‹</button>
+        <button class="slider-arrow next" (click)="nextSlide()">›</button>
       </div>
 
     </section>
@@ -502,38 +449,51 @@ import { Product } from '../../../models/product.model';
         <div class="section-eyebrow">Browse</div>
         <h2 class="section-title">Shop by <em>Category</em></h2>
       </div>
-      <div class="cat-grid">
-        @if (categories().length === 0) {
-          <div style="grid-column:1/-1;text-align:center;padding:3rem;color:#9e9890;font-family:'Inter',sans-serif;font-size:0.9rem;">
-            No categories yet — add products from seller panel to see categories here.
+
+      <!-- Audience Row -->
+      <div class="audience-grid">
+        <a routerLink="/products" [queryParams]="{category:'Clothing'}" class="audience-card">
+          <div class="audience-circle">
+            <img src="https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=400&q=85&fit=crop&crop=top" alt="Women" />
           </div>
-        }
-        @for (cat of categories().slice(0, 6); track cat.name) {
-          <a routerLink="/products" [queryParams]="{category: cat.name}" class="cat-card">
-            <div class="cat-card-header">
-              <div class="cat-card-left">
-                <div class="cat-card-icon">{{ cat.icon }}</div>
-                <div>
-                  <div class="cat-card-title">{{ cat.name }}</div>
-                  <div class="cat-card-sub">{{ cat.subcategories?.length || 0 }} subcategories</div>
-                </div>
-              </div>
-              <div class="cat-card-arrow">›</div>
-            </div>
-            <div class="cat-card-divider"></div>
-            <div class="cat-tags">
-              @for (sub of (cat.subcategories || []).slice(0, 6); track sub) {
-                <span class="cat-tag">{{ sub }}</span>
-              }
-            </div>
-          </a>
-        }
+          <div class="audience-label">Women</div>
+        </a>
+        <a routerLink="/products" [queryParams]="{category:'Clothing'}" class="audience-card">
+          <div class="audience-circle">
+            <img src="https://images.unsplash.com/photo-1598032895397-b9472444bf93?w=400&q=85&fit=crop&crop=top" alt="Men" />
+          </div>
+          <div class="audience-label">Men</div>
+        </a>
+        <a routerLink="/products" [queryParams]="{category:'Clothing'}" class="audience-card">
+          <div class="audience-circle">
+            <img src="https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=400&q=85&fit=crop&crop=top" alt="Kids" />
+          </div>
+          <div class="audience-label">Kids</div>
+        </a>
+        <a routerLink="/products" [queryParams]="{category:'Beauty'}" class="audience-card">
+          <div class="audience-circle">
+            <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=85&fit=crop" alt="Beauty" />
+          </div>
+          <div class="audience-label">Beauty</div>
+        </a>
+        <a routerLink="/products" [queryParams]="{category:'Accessories'}" class="audience-card">
+          <div class="audience-circle">
+            <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&q=85&fit=crop" alt="Handbags" />
+          </div>
+          <div class="audience-label">Handbags</div>
+        </a>
+        <a routerLink="/products" [queryParams]="{category:'Footwear'}" class="audience-card">
+          <div class="audience-circle">
+            <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&q=85&fit=crop" alt="Footwear" />
+          </div>
+          <div class="audience-label">Footwear</div>
+        </a>
       </div>
 
       <!-- View More -->
       <div class="view-more-wrap">
         <a routerLink="/products" class="view-more-btn">
-          View All Categories
+          View All Products
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
@@ -661,6 +621,30 @@ export class HomeComponent implements OnInit, OnDestroy {
   heroSlides = signal<{id:number,category:string,name:string,img:string}[]>([]);
   categories = signal<Category[]>([]);
 
+  // ── Hero image slider ────────────────────────────────────
+  activeSlide = signal(0);
+  private sliderTimer: any;
+
+  slides = [
+    { img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1200&q=90&fit=crop&crop=top', alt: 'Women Fashion' },
+    { img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1200&q=90&fit=crop&crop=top', alt: 'Cosmetics' },
+    { img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=1200&q=90&fit=crop', alt: 'Handbags' },
+    { img: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=1200&q=90&fit=crop', alt: 'Women Shoes' },
+  ];
+
+  goSlide(i: number) {
+    this.activeSlide.set(i);
+    clearInterval(this.sliderTimer);
+    this.startSlider();
+  }
+  nextSlide() { this.goSlide((this.activeSlide() + 1) % this.slides.length); }
+  prevSlide() { this.goSlide((this.activeSlide() - 1 + this.slides.length) % this.slides.length); }
+  startSlider() {
+    this.sliderTimer = setInterval(() => {
+      this.activeSlide.set((this.activeSlide() + 1) % this.slides.length);
+    }, 4000);
+  }
+
   // Cross layout positions
   getCardClass(i: number): string {
     const total = this.heroSlides().length;
@@ -717,6 +701,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit() {
+    this.startSlider();
     this.productService.getProducts().subscribe(p => {
       this.products.set(p.slice(0, 6));
       this.stats.update(s => s.map((st, i) =>
@@ -724,9 +709,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       ));
     });
 
+    const hiddenCats = ['Electronics', 'Kitchen', 'Sports', 'Home Decor', 'Bedsheets', 'Kids & Toys', 'Daily Gadgets', 'Stationery'];
+
     // Load categories from DB
     this.categoryService.getCategories().subscribe(cats => {
-      this.categories.set(cats);
+      const filtered = cats.filter(c => !hiddenCats.includes(c.name));
+      this.categories.set(filtered);
       this.heroSlides.set(cats.slice(0, 7).map((c, i) => ({
         id: i, category: c.name, name: c.name, img: c.image
       })));
@@ -744,5 +732,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.startAutoPlay();
   }
 
-  ngOnDestroy() { clearInterval(this.slideInterval); }
+  ngOnDestroy() { clearInterval(this.slideInterval); clearInterval(this.sliderTimer); }
 }

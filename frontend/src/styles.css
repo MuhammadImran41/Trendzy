@@ -205,9 +205,6 @@ body {
 
 /* ── Mobile Global ─────────────────────────────────────────── */
 @media (max-width: 768px) {
-  /* Reduce topbar height on mobile */
-  main { padding-top: 90px !important; }
-
   /* Section padding reduction */
   section[style*="padding:6rem"] { padding: 3rem 1.25rem !important; }
   section[style*="padding:5rem"] { padding: 3rem 1.25rem !important; }
@@ -225,6 +222,5 @@ body {
 }
 
 @media (max-width: 480px) {
-  main { padding-top: 84px !important; }
   div[style*="grid-template-columns:repeat(auto-fit"] { grid-template-columns: repeat(2,1fr) !important; }
 }

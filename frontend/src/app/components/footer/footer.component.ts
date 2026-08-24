@@ -24,6 +24,13 @@ import { FormsModule } from '@angular/forms';
     .nl-btn { background: #c9a96e; color: #0f0d0a; border: none; padding: 0.7rem 1.5rem; font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
     .nl-btn:hover { background: #d4b87a; }
     @media (max-width: 640px) { .nl-inner { flex-direction: column; align-items: flex-start; } .nl-input { min-width: 200px; } }
+    @media (max-width: 480px) {
+      .nl-form { flex-direction: column; width: 100%; }
+      .nl-input { width: 100%; min-width: unset; border-right: 1px solid #ddd8d0; border-bottom: none; }
+      .nl-btn { width: 100%; padding: 0.7rem; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding: 1.25rem 1rem; }
+      .footer-badges { flex-wrap: wrap; }
+    }
 
     /* ── Main footer grid ── */
     .footer-main { max-width: 1280px; margin: 0 auto; padding: 4rem 2rem 3rem; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 3rem; }
